@@ -1,5 +1,7 @@
 package Service;
+
 import Entity.Patient;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,4 +27,13 @@ public class PatientService {
         }
         System.out.println("Patient not found: " + patientId);
     }
+
+    public static void removePatient(String patientId) {
+        boolean removed = patients.removeIf(p -> p.getPatientId().equals(patientId));
+        if (removed)
+            System.out.println("Patient removed: " + patientId);
+        else
+            System.out.println("Patient not found: " + patientId);
+    }
+    
 }
