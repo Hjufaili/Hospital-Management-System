@@ -9,12 +9,12 @@ public class Nurse extends Person {
     private String departmentIdl;
     private String shift;
     private String qualification;
-    private List <String> assignedPatients;
+    private List <Patient> assignedPatients;
 
     public Nurse(String id, String firstName, String lastName, LocalDate dateOfBirth,
                  String gender, String phoneNumber, String address, String email,
                  String nurseId, String departmentIdl, String shift,
-                 String qualification, List<String> assignedPatients) {
+                 String qualification, List<Patient> assignedPatients) {
         super(id, firstName, lastName, dateOfBirth, gender, phoneNumber, address, email);
         this.nurseId = nurseId;
         this.departmentIdl = departmentIdl;
@@ -24,7 +24,7 @@ public class Nurse extends Person {
     }
 
     public Nurse(String nurseId, String departmentIdl, String shift,
-                 String qualification, List<String> assignedPatients) {
+                 String qualification, List<Patient> assignedPatients) {
         this.nurseId = nurseId;
         this.departmentIdl = departmentIdl;
         this.shift = shift;
@@ -64,11 +64,11 @@ public class Nurse extends Person {
         this.qualification = qualification;
     }
 
-    public List<String> getAssignedPatients() {
+    public List<Patient> getAssignedPatients() {
         return assignedPatients;
     }
 
-    public void setAssignedPatients(List<String> assignedPatients) {
+    public void setAssignedPatients(List<Patient> assignedPatients) {
         this.assignedPatients = assignedPatients;
     }
 
@@ -83,4 +83,18 @@ public class Nurse extends Person {
 
 
     }
+
+    public void assignPatient(Patient patient) {
+        if (patient != null && !assignedPatients.contains(patient)) {
+            assignedPatients.add(patient);
+            System.out.println("Assigned patient " + patient.getFirstName() +
+                    " to Nurse " + getFirstName());
+        }
+    }
+
+    public void removePatient(String patientId) {
+        assignedPatients.removeIf(p -> p.getPatientId().equals(patientId));
+        System.out.println("Removed patient " + patientId + " from Nurse " + getFirstName());
+    }
+
 }
