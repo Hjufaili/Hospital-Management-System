@@ -16,7 +16,18 @@ public class DoctorService {
         } else {
             System.out.println("Cannot null doctor");
         }
+    }
 
+    public static void editDoctor(String doctorId, Doctor updatedDoctor) {
+
+        for (int i = 0; i < doctors.size(); i++) {
+            if (doctors.get(i).getId().equals(doctorId)){
+                doctors.add(i,updatedDoctor);
+                System.out.println("updated successfully!");
+                return;
+            }
+        }
+        System.out.println("Not found doctor:");
     }
 
 }
