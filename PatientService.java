@@ -14,4 +14,15 @@ public class PatientService {
             System.out.println("Cannot null patient.");
         }
     }
+
+    public void editPatient(String patientId, Patient updatedPatient) {
+        for (int i = 0; i < patients.size(); i++) {
+            if (patients.get(i).getPatientId().equals(patientId)) {
+                patients.set(i, updatedPatient);
+                System.out.println(" updated successfully!");
+                return;
+            }
+        }
+        System.out.println("Patient not found: " + patientId);
+    }
 }
