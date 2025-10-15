@@ -46,4 +46,16 @@ public class PatientService {
         return null;
     }
 
+    public static void displayAllPatients() {
+        if (patients.isEmpty()) {
+            System.out.println("No patients available.");
+            return;
+        }
+        System.out.println("All patients ");
+        for (Patient p:patients){
+            System.out.println(p);
+        }
+        System.out.println("------------------");
+    }
+
 }
