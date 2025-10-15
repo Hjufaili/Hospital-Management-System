@@ -25,7 +25,8 @@ public class Appointment {
         this.notes = notes;
     }
 
-    public Appointment(){}
+    public Appointment() {
+    }
 
 
     public String getAppointmentId() {
@@ -115,5 +116,23 @@ public class Appointment {
                 ", reason='" + reason + '\'' +
                 ", notes='" + notes + '\'' +
                 '}';
+    }
+
+    public void reschedule(LocalDate newDate, String newTime) {
+        this.appointmentDate = newDate;
+        this.appointmentTime = newTime;
+        this.status = "Rescheduled";
+        System.out.println("Appointment " + appointmentId + " rescheduled to " + newDate + " at " + newTime);
+    }
+
+    public void cancel() {
+        this.status = "Cancelled";
+        System.out.println("Appointment " + appointmentId + " has been cancelled.");
+    }
+
+    public void complete() {
+        this.status = "Completed";
+        System.out.println("Appointment " + appointmentId + " marked as completed.");
+
     }
 }
