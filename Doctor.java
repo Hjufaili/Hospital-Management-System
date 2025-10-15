@@ -43,4 +43,30 @@ public class Doctor extends Person {
         this.availableSlots = availableSlots;
         this.assignedPatients = assignedPatients;
     }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("doctorId:           " + doctorId);
+        System.out.println("specialization:           " + specialization);
+        System.out.println("qualification:           " + qualification);
+        System.out.println("experienceYears:           " + experienceYears);
+        System.out.println("departmentId:           " + departmentId);
+        System.out.println("consultationFee:           " + consultationFee);
+        System.out.println("availableSlots:           " + availableSlots);
+        System.out.println("assignedPatients:           " + assignedPatients);
+
+    }
+
+    @Override
+    public String toString() {
+        return "Doctor{" +
+                "doctorId='" + doctorId + '\'' +
+                ", specialization='" + specialization + '\'' +
+                ", qualification='" + qualification + '\'' +
+                ", experienceYears=" + experienceYears +
+                ", departmentId='" + departmentId + '\'' +
+                ", consultationFee=" + consultationFee +
+                '}';
+    }
 }
