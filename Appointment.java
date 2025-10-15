@@ -91,4 +91,29 @@ public class Appointment {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+
+    public void displayInfo() {
+        System.out.println("appointmentId:     " + appointmentId);
+        System.out.println("patientId:     " + patientId);
+        System.out.println("doctorId:     " + doctorId);
+        System.out.println("appointmentDate:     " + appointmentDate);
+        System.out.println("appointmentTime:     " + appointmentTime);
+        System.out.println("status:     " + status);
+        System.out.println("reason:     " + reason);
+        System.out.println("notes:     " + notes);
+    }
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "appointmentId='" + appointmentId + '\'' +
+                ", patientId='" + patientId + '\'' +
+                ", doctorId='" + doctorId + '\'' +
+                ", appointmentDate=" + appointmentDate +
+                ", appointmentTime='" + appointmentTime + '\'' +
+                ", status='" + status + '\'' +
+                ", reason='" + reason + '\'' +
+                ", notes='" + notes + '\'' +
+                '}';
+    }
 }
