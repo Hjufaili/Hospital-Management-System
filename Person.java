@@ -93,5 +93,20 @@ public class Person {
         this.firstName = firstName;
     }
 
+    public void displayInfo() {
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String dob = (dateOfBirth != null) ? dateOfBirth.format(fmt) : "N/A";
+
+        System.out.println("----- Person Info -----");
+        System.out.println("ID:           " + id);
+        System.out.println("Name:         " + firstName + " " + lastName);
+        System.out.println("DOB:          " + dob);
+        System.out.println("Gender:       " + gender);
+        System.out.println("Phone:        " + phoneNumber);
+        System.out.println("Email:        " + email);
+        System.out.println("Address:      " + address);
+        System.out.println("-----------------------");
+    }
+
 
 }
