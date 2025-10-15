@@ -4,16 +4,18 @@ import java.time.LocalDate;
 import java.util.List;
 
 
-
 public class Doctor extends Person {
     private String doctorId;
-    private String specialization ;
+    private String specialization;
     private String qualification;
     private Integer experienceYears;
-    private String departmentId ;
-    private Double consultationFee ;
+    private String departmentId;
+    private Double consultationFee;
     private static List<String> availableSlots;
     private static List<Patient> assignedPatients;
+
+    public Doctor() {
+    }
 
     public Doctor(String id, String firstName, String lastName, LocalDate dateOfBirth,
                   String gender, String phoneNumber, String address, String email,
@@ -70,15 +72,15 @@ public class Doctor extends Person {
                 '}';
     }
 
-    public static void assignPatient(Patient patient){
-        if (patient != null && !assignedPatients.contains(patient)){
+    public static void assignPatient(Patient patient) {
+        if (patient != null && !assignedPatients.contains(patient)) {
             assignedPatients.add(patient);
             System.out.println("add");
         }
 
     }
 
-    public static void removePatient(String patientId){
+    public static void removePatient(String patientId) {
         if (assignedPatients == null || assignedPatients.isEmpty()) return;
         assignedPatients.removeIf(p -> p.getPatientId().equals(patientId));
         System.out.println(" removed");
@@ -88,5 +90,69 @@ public class Doctor extends Person {
         this.availableSlots = newSlots;
         System.out.println("Updated available slots for Dr. " + getFirstName());
 
+    }
+
+    public String getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(String doctorId) {
+        this.doctorId = doctorId;
+    }
+
+    public String getSpecialization() {
+        return specialization;
+    }
+
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
+    }
+
+    public String getQualification() {
+        return qualification;
+    }
+
+    public void setQualification(String qualification) {
+        this.qualification = qualification;
+    }
+
+    public Integer getExperienceYears() {
+        return experienceYears;
+    }
+
+    public void setExperienceYears(Integer experienceYears) {
+        this.experienceYears = experienceYears;
+    }
+
+    public String getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public Double getConsultationFee() {
+        return consultationFee;
+    }
+
+    public void setConsultationFee(Double consultationFee) {
+        this.consultationFee = consultationFee;
+    }
+
+    public static List<String> getAvailableSlots() {
+        return availableSlots;
+    }
+
+    public static void setAvailableSlots(List<String> availableSlots) {
+        Doctor.availableSlots = availableSlots;
+    }
+
+    public static List<Patient> getAssignedPatients() {
+        return assignedPatients;
+    }
+
+    public static void setAssignedPatients(List<Patient> assignedPatients) {
+        Doctor.assignedPatients = assignedPatients;
     }
 }
