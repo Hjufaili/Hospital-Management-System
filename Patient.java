@@ -136,4 +136,23 @@ public class Patient extends Person {
                 '}';
     }
 
+    public void addMedicalRecord(MedicalRecord record) {
+        if (record != null) {
+            medicalRecords.add(record);
+            System.out.println("Medical record added for patient " + getFirstName());
+        }
+    }
+
+    public void addAppointment(Appointment appointment) {
+        if (appointment != null) {
+            appointments.add(appointment);
+            System.out.println("Appointment added for patient " + getFirstName());
+        }
+    }
+
+    public void updateInsurance(String newInsuranceId) {
+        this.insuranceId = newInsuranceId;
+        System.out.println("Insurance updated for patient " + getFirstName());
+    }
+
 }
