@@ -69,4 +69,24 @@ public class Doctor extends Person {
                 ", consultationFee=" + consultationFee +
                 '}';
     }
+
+    public static void assignPatient(Patient patient){
+        if (patient != null && !assignedPatients.contains(patient)){
+            assignedPatients.add(patient);
+            System.out.println("add");
+        }
+
+    }
+
+    public static void removePatient(String patientId){
+        if (assignedPatients == null || assignedPatients.isEmpty()) return;
+        assignedPatients.removeIf(p -> p.getPatientId().equals(patientId));
+        System.out.println(" removed");
+    }
+
+    public void updateAvailability(List<String> newSlots) {
+        this.availableSlots = newSlots;
+        System.out.println("Updated available slots for Dr. " + getFirstName());
+
+    }
 }
