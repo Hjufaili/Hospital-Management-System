@@ -108,4 +108,32 @@ public class Patient extends Person {
         this.appointments = appointments;
     }
 
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("patientId:           " + patientId);
+        System.out.println("bloodGroup:         " + bloodGroup );
+        System.out.println("allergies:         " + allergies );
+        System.out.println("emergencyContact:         " + emergencyContact );
+        System.out.println("registrationDate:         " + registrationDate );
+        System.out.println("insuranceId:         " + insuranceId );
+        System.out.println("medicalRecords:         " + medicalRecords );
+        System.out.println("appointments:         " + appointments );
+
+    }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "patientId='" + patientId + '\'' +
+                ", bloodGroup='" + bloodGroup + '\'' +
+                ", allergies=" + allergies +
+                ", emergencyContact='" + emergencyContact + '\'' +
+                ", registrationDate=" + registrationDate +
+                ", insuranceId='" + insuranceId + '\'' +
+                ", medicalRecords=" + medicalRecords +
+                ", appointments=" + appointments +
+                '}';
+    }
+
 }
