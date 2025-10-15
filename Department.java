@@ -81,4 +81,27 @@ public class Department {
     public void setAvailableBeds(Integer availableBeds) {
         this.availableBeds = availableBeds;
     }
+
+    public void displayInfo() {
+        System.out.println("departmentId:     " + departmentId);
+        System.out.println("departmentName:     " + departmentName);
+        System.out.println("headDoctorId:     " + headDoctorId);
+        System.out.println("doctors:     " + doctors);
+        System.out.println("nurses:     " + nurses);
+        System.out.println("bedCapacity:     " + bedCapacity);
+        System.out.println("availableBeds:     " + availableBeds);
+    }
+
+    @Override
+    public String toString() {
+        return "Department{" +
+                "departmentId='" + departmentId + '\'' +
+                ", departmentName='" + departmentName + '\'' +
+                ", headDoctorId='" + headDoctorId + '\'' +
+                ", doctors=" + doctors +
+                ", nurses=" + nurses +
+                ", bedCapacity=" + bedCapacity +
+                ", availableBeds=" + availableBeds +
+                '}';
+    }
 }
