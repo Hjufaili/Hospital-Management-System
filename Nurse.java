@@ -31,4 +31,44 @@ public class Nurse extends Person {
         this.qualification = qualification;
         this.assignedPatients = assignedPatients;
     }
+
+    public String getNurseId() {
+        return nurseId;
+    }
+
+    public void setNurseId(String nurseId) {
+        this.nurseId = nurseId;
+    }
+
+    public String getDepartmentIdl() {
+        return departmentIdl;
+    }
+
+    public void setDepartmentIdl(String departmentIdl) {
+        this.departmentIdl = departmentIdl;
+    }
+
+    public String getShift() {
+        return shift;
+    }
+
+    public void setShift(String shift) {
+        this.shift = shift;
+    }
+
+    public String getQualification() {
+        return qualification;
+    }
+
+    public void setQualification(String qualification) {
+        this.qualification = qualification;
+    }
+
+    public List<String> getAssignedPatients() {
+        return assignedPatients;
+    }
+
+    public void setAssignedPatients(List<String> assignedPatients) {
+        this.assignedPatients = assignedPatients;
+    }
 }
