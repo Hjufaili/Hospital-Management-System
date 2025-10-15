@@ -104,4 +104,27 @@ public class Department {
                 ", availableBeds=" + availableBeds +
                 '}';
     }
+
+    public void assignDoctor(Doctor doctor) {
+        if (doctor != null && !doctors.contains(doctor)) {
+            doctors.add(doctor);
+            System.out.println("Doctor " + doctor.getFirstName() +
+                    " assigned to department " + departmentName);
+        }
+    }
+
+    public void assignNurse(Nurse nurse) {
+        if (nurse != null && !nurses.contains(nurse)) {
+            nurses.add(nurse);
+            System.out.println("Nurse " + nurse.getFirstName() +
+                    " assigned to department " + departmentName);
+        }
+    }
+
+    public void updateBedAvailability(int occupiedBeds) {
+        int newAvailable = bedCapacity - occupiedBeds;
+        this.availableBeds = Math.max(0, newAvailable);
+        System.out.println("Updated bed availability for " + departmentName +
+                ": " + availableBeds + "/" + bedCapacity);
+    }
 }
