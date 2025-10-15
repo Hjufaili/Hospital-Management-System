@@ -50,4 +50,16 @@ public class DoctorService {
         return null;
     }
 
+    public static void displayAllDoctors() {
+        if (doctors.isEmpty()){
+            System.out.println("No doctor");
+            return;
+        }
+        System.out.println("All doctors");
+        for (Doctor d:doctors){
+            System.out.println(d);
+        }
+
+    }
+
 }
