@@ -35,5 +35,15 @@ public class PatientService {
         else
             System.out.println("Patient not found: " + patientId);
     }
-    
+
+    public static Patient getPatientById(String patientId) {
+        for (Patient p:patients) {
+            if (p.getPatientId().equals(patientId)){
+                return p;
+            }
+        }
+        System.out.println("Patient not found:" + patientId);
+        return null;
+    }
+
 }
