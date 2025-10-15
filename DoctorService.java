@@ -46,20 +46,29 @@ public class DoctorService {
                 return d;
             }
         }
-        System.out.println("Doctor not found:" +doctorId);
+        System.out.println("Doctor not found:" + doctorId);
         return null;
     }
 
     public static void displayAllDoctors() {
-        if (doctors.isEmpty()){
+        if (doctors.isEmpty()) {
             System.out.println("No doctor");
             return;
         }
         System.out.println("All doctors");
-        for (Doctor d:doctors){
+        for (Doctor d : doctors) {
             System.out.println(d);
         }
+    }
 
+    public static Doctor getDoctorsBySpecialization(String specialization) {
+        for (Doctor d:doctors){
+            if (d.getSpecialization().equals(specialization)){
+                return d;
+            }
+        }
+        System.out.println("Doctor not found");
+        return null;
     }
 
 }
