@@ -71,4 +71,16 @@ public class Nurse extends Person {
     public void setAssignedPatients(List<String> assignedPatients) {
         this.assignedPatients = assignedPatients;
     }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("nurseId:           " + nurseId);
+        System.out.println("departmentIdl:           " + departmentIdl);
+        System.out.println("shift:           " + shift);
+        System.out.println("qualification:           " + qualification);
+        System.out.println("assignedPatients:           " + assignedPatients);
+
+
+    }
 }
