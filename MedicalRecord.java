@@ -87,4 +87,30 @@ public class MedicalRecord {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+
+    public void displayInfo(){
+        System.out.println("recordId:     " + recordId);
+        System.out.println("patientId:     " + patientId);
+        System.out.println("doctorId:     " + doctorId);
+        System.out.println("visitDate:     " + visitDate);
+        System.out.println("diagnosis:     " + diagnosis);
+        System.out.println("prescription:     " + prescription);
+        System.out.println("testResults:     " + testResults);
+        System.out.println("notes:     " + notes);
+
+    }
+
+    @Override
+    public String toString() {
+        return "MedicalRecord{" +
+                "recordId='" + recordId + '\'' +
+                ", patientId='" + patientId + '\'' +
+                ", doctorId='" + doctorId + '\'' +
+                ", visitDate=" + visitDate +
+                ", diagnosis='" + diagnosis + '\'' +
+                ", prescription='" + prescription + '\'' +
+                ", testResults='" + testResults + '\'' +
+                ", notes='" + notes + '\'' +
+                '}';
+    }
 }
