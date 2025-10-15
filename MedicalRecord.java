@@ -23,4 +23,68 @@ public class MedicalRecord {
         this.testResults = testResults;
         this.notes = notes;
     }
+
+    public String getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(String recordId) {
+        this.recordId = recordId;
+    }
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
+
+    public String getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(String doctorId) {
+        this.doctorId = doctorId;
+    }
+
+    public LocalDate getVisitDate() {
+        return visitDate;
+    }
+
+    public void setVisitDate(LocalDate visitDate) {
+        this.visitDate = visitDate;
+    }
+
+    public String getDiagnosis() {
+        return diagnosis;
+    }
+
+    public void setDiagnosis(String diagnosis) {
+        this.diagnosis = diagnosis;
+    }
+
+    public String getPrescription() {
+        return prescription;
+    }
+
+    public void setPrescription(String prescription) {
+        this.prescription = prescription;
+    }
+
+    public String getTestResults() {
+        return testResults;
+    }
+
+    public void setTestResults(String testResults) {
+        this.testResults = testResults;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 }
