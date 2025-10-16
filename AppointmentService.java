@@ -4,6 +4,7 @@ import Entity.Appointment;
 import Entity.MedicalRecord;
 import Entity.Patient;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,6 +92,23 @@ public class AppointmentService {
 
         if (results.isEmpty()) {
             System.out.println("No appointments found for doctor:" + doctorId);
+        } else {
+            System.out.println("Appointments found");
+        }
+        return results;
+    }
+
+    public static List<Appointment> getAppointmentsByDate(LocalDate date) {
+        List<Appointment> results = new ArrayList<>();
+
+        for (Appointment m : appointments) {
+            if (m.getAppointmentDate().equals(date)) {
+                results.add(m);
+            }
+        }
+
+        if (results.isEmpty()) {
+            System.out.println("No appointments found for Date:" + date);
         } else {
             System.out.println("Appointments found");
         }
