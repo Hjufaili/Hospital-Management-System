@@ -91,4 +91,19 @@ public class MedicalRecordService {
         }
         return results;
     }
+
+    public static void displayPatientHistory(String patientId) {
+        List<MedicalRecord> patientRecords = getRecordsByPatientId(patientId);
+        if (patientRecords.isEmpty()) return;
+
+        System.out.println("Medical History for Patient: " + patientId );
+        for (MedicalRecord r : patientRecords) {
+            r.displayInfo();
+        }
+        System.out.println("===========================");
+    }
+
+    public List<MedicalRecord> getAllRecords() {
+        return medicalRecords;
+    }
 }
