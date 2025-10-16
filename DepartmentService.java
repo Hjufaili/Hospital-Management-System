@@ -16,4 +16,15 @@ public class DepartmentService {
         }
         System.out.println("Cannot add null department ");
     }
+
+    public static void editDepartment(String departmentId, Department updateddepartment) {
+        for (int i = 0; i < departments.size(); i++) {
+            if (departments.get(i).getDepartmentId().equals(departmentId)) {
+                departments.set(i, updateddepartment);
+                System.out.println("Department is updated: " + departmentId);
+                return;
+            }
+        }
+        System.out.println("departmentId not found: " + departmentId);
+    }
 }
