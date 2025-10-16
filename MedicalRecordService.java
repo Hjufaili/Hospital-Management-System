@@ -30,12 +30,22 @@ public class MedicalRecordService {
     }
 
     public static void removeMedicalRecord(String medicalRecordsId) {
-        boolean removed= medicalRecords.removeIf(m->m.getRecordId().equals(medicalRecordsId));
+        boolean removed = medicalRecords.removeIf(m -> m.getRecordId().equals(medicalRecordsId));
 
-        if (removed){
-            System.out.println("medicalRecord is removed: "+medicalRecordsId);
-        }else {
-            System.out.println("medicalRecord not found: "+ medicalRecordsId);
+        if (removed) {
+            System.out.println("medicalRecord is removed: " + medicalRecordsId);
+        } else {
+            System.out.println("medicalRecord not found: " + medicalRecordsId);
         }
+    }
+
+    public static MedicalRecord getMedicalRecordById(String medicalRecordsId) {
+        for (MedicalRecord m : medicalRecords) {
+            if (m.getRecordId() !=null && m.getRecordId().equals(medicalRecordsId)){
+                return m;
+            }
+        }
+        System.out.println("medicalRecord not found: " + medicalRecordsId);
+        return null;
     }
 }
