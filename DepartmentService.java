@@ -27,4 +27,14 @@ public class DepartmentService {
         }
         System.out.println("departmentId not found: " + departmentId);
     }
+
+    public static void removeDepartment(String departmentId) {
+        boolean removed = departments.removeIf(m -> m.getDepartmentId().equals(departmentId));
+
+        if (removed) {
+            System.out.println("Appointment is removed: " + departmentId);
+        } else {
+            System.out.println("Appointment not found: " + departmentId);
+        }
+    }
 }
