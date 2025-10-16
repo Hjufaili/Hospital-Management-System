@@ -114,4 +114,14 @@ public class AppointmentService {
         }
         return results;
     }
+
+    public static void rescheduleAppointment(String appointmentId, LocalDate newDate, String newTime) {
+        Appointment a = getAppointmentById(appointmentId);
+        if (a != null) {
+            a.setAppointmentDate(newDate);
+            a.setAppointmentTime(newTime);
+            a.setStatus("Rescheduled");
+            System.out.println("Appointment " + appointmentId + " rescheduled to " + newDate + " at " + newTime);
+        }
+    }
 }
