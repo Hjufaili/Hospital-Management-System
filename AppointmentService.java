@@ -132,4 +132,16 @@ public class AppointmentService {
             System.out.println("Appointment cancelled: "+ appointmentId);
         }
     }
+
+    public void completeAppointment(String appointmentId) {
+        Appointment a = getAppointmentById(appointmentId);
+        if (a != null) {
+            a.setStatus("Completed");
+            System.out.println("Appointment completed" + appointmentId);
+        }
+    }
+
+    public List<Appointment> getAllAppointments() {
+        return appointments;
+    }
 }
