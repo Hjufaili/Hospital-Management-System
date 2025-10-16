@@ -17,4 +17,15 @@ public class AppointmentService {
         }
         System.out.println("Cannot add null appointment ");
     }
+
+    public static void editAppointment(String appointmentId, Appointment updatedAppointments) {
+        for (int i = 0; i < appointments.size(); i++) {
+            if (appointments.get(i).getAppointmentId().equals(appointmentId)) {
+                appointments.set(i, updatedAppointments);
+                System.out.println("Appointment is updated: " + appointmentId);
+                return;
+            }
+        }
+        System.out.println("appointmentId not found: " + appointmentId);
+    }
 }
