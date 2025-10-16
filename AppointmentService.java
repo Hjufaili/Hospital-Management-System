@@ -1,6 +1,7 @@
 package Service;
 
 import Entity.Appointment;
+import Entity.MedicalRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,5 +38,15 @@ public class AppointmentService {
         } else {
             System.out.println("Appointment not found: " + appointmentsId);
         }
+    }
+
+    public static Appointment getAppointmentById(String appointmentsId) {
+        for (Appointment m : appointments) {
+            if (m.getAppointmentId() != null && m.getAppointmentId().equals(appointmentsId)) {
+                return m;
+            }
+        }
+        System.out.println("Appointment not found: " + appointmentsId);
+        return null;
     }
 }
