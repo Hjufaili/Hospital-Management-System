@@ -57,6 +57,7 @@ public class NurseService {
             System.out.println("No nurses available");
             return;
         }
+        System.out.println("----All Nurses-----");
         for (Nurse n : nurses) {
             System.out.println(n);
         }
@@ -67,14 +68,14 @@ public class NurseService {
         List<Nurse> results = new ArrayList<>();
 
         for (Nurse n : nurses) {
-            if (n.getDepartmentId().equals(departmentId)) {
+            if (n.getDepartmentId() != null && n.getDepartmentId().equalsIgnoreCase(departmentId)) {
                 results.add(n);
             }
         }
         if (results.isEmpty()) {
-            System.out.println("No nurses in department: "+ departmentId);
-        }else {
-            System.out.println("Nurses in department: "+ departmentId);
+            System.out.println("No nurses in department: " + departmentId);
+        } else {
+            System.out.println("Nurses in department: " + departmentId);
         }
         return results;
     }
@@ -84,18 +85,21 @@ public class NurseService {
         List<Nurse> results = new ArrayList<>();
 
         for (Nurse n : nurses) {
-            if (n.getShift().equals(shift)) {
+            if (n.getShift() != null && n.getShift().equals(shift)) {
                 results.add(n);
             }
         }
         if (results.isEmpty()) {
-            System.out.println("No nurses in shift: "+ shift);
-        }else {
-            System.out.println("Nurses in shift: "+ shift);
+            System.out.println("No nurses in shift: " + shift);
+        } else {
+            System.out.println("Nurses in shift: " + shift);
         }
         return results;
     }
-    
+
+    public List<Nurse> getAllNurses() {
+        return nurses;
+    }
 
 
 }
