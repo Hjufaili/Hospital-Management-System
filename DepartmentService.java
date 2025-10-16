@@ -2,9 +2,12 @@ package Service;
 
 import Entity.Appointment;
 import Entity.Department;
+import Entity.Doctor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static Service.DoctorService.doctors;
 
 public class DepartmentService {
     private static List<Department> departments = new ArrayList<>();
@@ -58,6 +61,28 @@ public class DepartmentService {
         for (Department a : departments) {
             System.out.println(a);
         }
-        System.out.println("------------------"); 
+        System.out.println("------------------");
+    }
+
+    public static void assignDoctorToDepartment(String doctorId, String departmentId) {
+        Doctor doctor = DoctorService.getDoctorById(doctorId);
+        Department department = getDepartmentById(departmentId);
+
+        if (doctor == null) {
+            System.out.println("Doctor not found: " + doctorId);
+            return;
+        }
+        if (department == null) {
+            System.out.println("Department not found: " + departmentId);
+            return;
+        }
+
+        doctor.setDepartmentId(departmentId);
+        System.out.println("Assigned Dr. " + doctor.getFirstName() +
+                " to Department " + department.getDepartmentName());
+    }
+
+    public List<Department> getAllDepartments() {
+        return departments;
     }
 }
