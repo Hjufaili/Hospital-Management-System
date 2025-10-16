@@ -28,4 +28,14 @@ public class MedicalRecordService {
         }
         System.out.println("MedicalRecordId not found: " + medicalRecordsId);
     }
+
+    public static void removeMedicalRecord(String medicalRecordsId) {
+        boolean removed= medicalRecords.removeIf(m->m.getRecordId().equals(medicalRecordsId));
+
+        if (removed){
+            System.out.println("medicalRecord is removed: "+medicalRecordsId);
+        }else {
+            System.out.println("medicalRecord not found: "+ medicalRecordsId);
+        }
+    }
 }
