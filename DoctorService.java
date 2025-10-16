@@ -64,24 +64,37 @@ public class DoctorService {
     public static List<Doctor> getDoctorsBySpecialization(String specialization) {
         List<Doctor> results = new ArrayList<>();
         for (Doctor d : doctors) {
-            if (d.getSpecialization().equalsIgnoreCase(specialization) && d.getSpecialization()!=null) {
+            if (d.getSpecialization().equalsIgnoreCase(specialization) && d.getSpecialization() != null) {
                 results.add(d);
             }
         }
         if (results.isEmpty()) {
-            System.out.println("No doctor in specialization:  "+ specialization);
-        }else {
-            System.out.println("All doctors in specialization"+ specialization);
+            System.out.println("No doctor in specialization:  " + specialization);
+        } else {
+            System.out.println("All doctors in specialization" + specialization);
         }
 
         return results;
     }
 
     public static List<Doctor> getAvailableDoctors() {
+        List<Doctor> available = new ArrayList<>();
+        for (Doctor d : doctors) {
+            if (d.getAvailableSlots() != null && !d.getAvailableSlots().isEmpty()) {
+                available.add(d);
+            }
+        }
 
+        if (available.isEmpty()) {
+            System.out.println("No doctors currently available.");
+        } else {
+            System.out.println(" available doctors:" + available.size() +" doctors");
+        }
+
+        return available;
     }
 
-    public static List<Doctor> getAllDoctor(){
+    public static List<Doctor> getAllDoctor() {
         return doctors;
     }
 
