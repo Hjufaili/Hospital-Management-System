@@ -24,6 +24,7 @@ public class NurseService {
             for (int i = 0; i < nurses.size(); i++) {
                 if (nurses.get(i).getId().equals(nurseId)) {
                     nurses.set(i, updatednurse);
+                    return;
                 }
             }
             System.out.println("No nurse found: " + nurseId);
