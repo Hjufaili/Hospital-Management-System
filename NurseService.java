@@ -43,12 +43,23 @@ public class NurseService {
     }
 
     public static Nurse getNurseById(String nurseId) {
-        for (Nurse n: nurses){
-            if (n.getNurseId().equals(nurseId)){
+        for (Nurse n : nurses) {
+            if (n.getNurseId().equals(nurseId)) {
                 return n;
             }
         }
-        System.out.println("Nurse not found: "+ nurseId);
+        System.out.println("Nurse not found: " + nurseId);
         return null;
+    }
+
+    public static void displayAllNurses() {
+        if (nurses.isEmpty()){
+            System.out.println("No nurses available");
+            return;
+        }
+        for (Nurse n:nurses){
+            System.out.println(n);
+        }
+        System.out.println("---------------");
     }
 }
