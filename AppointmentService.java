@@ -2,6 +2,7 @@ package Service;
 
 import Entity.Appointment;
 import Entity.MedicalRecord;
+import Entity.Patient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ public class AppointmentService {
 
 
     public static void addAppointment(Appointment appointment) {
-        if (appointment !=null){
+        if (appointment != null) {
             appointments.add(appointment);
             System.out.println("appointment is added: " + appointment);
         }
@@ -48,5 +49,17 @@ public class AppointmentService {
         }
         System.out.println("Appointment not found: " + appointmentsId);
         return null;
+    }
+
+    public static void displayAllAppointments() {
+        if (appointments.isEmpty()) {
+            System.out.println("No appointments available.");
+            return;
+        }
+        System.out.println("All patients ");
+        for (Appointment a : appointments) {
+            System.out.println(a);
+        }
+        System.out.println("------------------");
     }
 }
