@@ -11,10 +11,10 @@ public class NurseService {
 
 
     public static void addNurse(Nurse nurse) {
-        if (nurse !=null){
+        if (nurse != null) {
             nurses.add(nurse);
             System.out.println("Nurse added");
-        }else {
+        } else {
             System.out.println("Cannot add null nurse");
         }
     }
@@ -22,13 +22,24 @@ public class NurseService {
     public static void editNurse(String nurseId, Nurse updatednurse) {
         if (!nurses.isEmpty()) {
             for (int i = 0; i < nurses.size(); i++) {
-                if (nurses.get(i).getId().equals(nurseId)){
-                    nurses.set(i,updatednurse);
+                if (nurses.get(i).getId().equals(nurseId)) {
+                    nurses.set(i, updatednurse);
                 }
             }
-            System.out.println("No nurse found: "+ nurseId);
+            System.out.println("No nurse found: " + nurseId);
         }
         System.out.println("No nurse");
+    }
+
+
+    public static void removeNurse(String nurseId) {
+        boolean removed = nurses.removeIf(n->n.getNurseId().equals(nurseId));
+
+        if (removed){
+            System.out.println("Nurse removed: "+nurseId);
+        }else {
+            System.out.println("nurse not found: "+nurseId);
+        }
     }
 
 
