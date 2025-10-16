@@ -80,4 +80,22 @@ public class NurseService {
     }
 
 
+    public static List<Nurse> getNursesByShift(String shift) {
+        List<Nurse> results = new ArrayList<>();
+
+        for (Nurse n : nurses) {
+            if (n.getShift().equals(shift)) {
+                results.add(n);
+            }
+        }
+        if (results.isEmpty()) {
+            System.out.println("No nurses in shift: "+ shift);
+        }else {
+            System.out.println("Nurses in shift: "+ shift);
+        }
+        return results;
+    }
+    
+
+
 }
