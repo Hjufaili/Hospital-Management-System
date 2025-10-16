@@ -53,13 +53,31 @@ public class NurseService {
     }
 
     public static void displayAllNurses() {
-        if (nurses.isEmpty()){
+        if (nurses.isEmpty()) {
             System.out.println("No nurses available");
             return;
         }
-        for (Nurse n:nurses){
+        for (Nurse n : nurses) {
             System.out.println(n);
         }
         System.out.println("---------------");
     }
+
+    public static List<Nurse> getNursesByDepartment(String departmentId) {
+        List<Nurse> results = new ArrayList<>();
+
+        for (Nurse n : nurses) {
+            if (n.getDepartmentId().equals(departmentId)) {
+                results.add(n);
+            }
+        }
+        if (results.isEmpty()) {
+            System.out.println("No nurses in department: "+ departmentId);
+        }else {
+            System.out.println("Nurses in department: "+ departmentId);
+        }
+        return results;
+    }
+
+
 }
