@@ -62,4 +62,21 @@ public class AppointmentService {
         }
         System.out.println("------------------");
     }
+
+    public static List<Appointment> getAppointmentsByPatient(String patientId) {
+        List<Appointment> results = new ArrayList<>();
+
+        for (Appointment m : appointments) {
+            if (m.getPatientId().equals(patientId)) {
+                results.add(m);
+            }
+        }
+
+        if (results.isEmpty()) {
+            System.out.println("No Appointments found for patient:" + patientId);
+        } else {
+            System.out.println("Appointments found");
+        }
+        return results;
+    }
 }
