@@ -1,7 +1,6 @@
 package Service;
 
 import Entity.MedicalRecord;
-import Entity.Nurse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,7 @@ public class MedicalRecordService {
 
     public static MedicalRecord getMedicalRecordById(String medicalRecordsId) {
         for (MedicalRecord m : medicalRecords) {
-            if (m.getRecordId() !=null && m.getRecordId().equals(medicalRecordsId)){
+            if (m.getRecordId() != null && m.getRecordId().equals(medicalRecordsId)) {
                 return m;
             }
         }
@@ -50,10 +49,10 @@ public class MedicalRecordService {
     }
 
     public static void displayAllMedicalRecords() {
-        if (medicalRecords.isEmpty()){
+        if (medicalRecords.isEmpty()) {
             System.out.println("No medical records available");
         }
-        for (MedicalRecord m:medicalRecords){
+        for (MedicalRecord m : medicalRecords) {
             System.out.println(m);
         }
         System.out.println("---------------");
@@ -62,15 +61,32 @@ public class MedicalRecordService {
     public static List<MedicalRecord> getRecordsByPatientId(String patientId) {
         List<MedicalRecord> results = new ArrayList<>();
 
-        for (MedicalRecord m:medicalRecords){
-            if (m.getPatientId().equals(patientId)){
+        for (MedicalRecord m : medicalRecords) {
+            if (m.getPatientId().equals(patientId)) {
                 results.add(m);
             }
         }
 
-        if (results.isEmpty()){
+        if (results.isEmpty()) {
             System.out.println("No records found for patient:" + patientId);
-        }else {
+        } else {
+            System.out.println("records found");
+        }
+        return results;
+    }
+
+    public static List<MedicalRecord> getRecordsByDoctorId(String doctorId) {
+        List<MedicalRecord> results = new ArrayList<>();
+
+        for (MedicalRecord m : medicalRecords) {
+            if (m.getDoctorId().equals(doctorId)) {
+                results.add(m);
+            }
+        }
+
+        if (results.isEmpty()) {
+            System.out.println("No records found for doctor:" + doctorId);
+        } else {
             System.out.println("records found");
         }
         return results;
