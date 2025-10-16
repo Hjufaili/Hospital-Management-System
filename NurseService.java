@@ -33,14 +33,22 @@ public class NurseService {
 
 
     public static void removeNurse(String nurseId) {
-        boolean removed = nurses.removeIf(n->n.getNurseId().equals(nurseId));
+        boolean removed = nurses.removeIf(n -> n.getNurseId().equals(nurseId));
 
-        if (removed){
-            System.out.println("Nurse removed: "+nurseId);
-        }else {
-            System.out.println("nurse not found: "+nurseId);
+        if (removed) {
+            System.out.println("Nurse removed: " + nurseId);
+        } else {
+            System.out.println("nurse not found: " + nurseId);
         }
     }
 
-
+    public static Nurse getNurseById(String nurseId) {
+        for (Nurse n: nurses){
+            if (n.getNurseId().equals(nurseId)){
+                return n;
+            }
+        }
+        System.out.println("Nurse not found: "+ nurseId);
+        return null;
+    }
 }
