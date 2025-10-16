@@ -48,4 +48,16 @@ public class DepartmentService {
         System.out.println("Department not found: " + departmentId);
         return null;
     }
+
+    public static void displayAllDepartments() {
+        if (departments.isEmpty()) {
+            System.out.println("No departments available.");
+            return;
+        }
+        System.out.println("All departments ");
+        for (Department a : departments) {
+            System.out.println(a);
+        }
+        System.out.println("------------------"); 
+    }
 }
