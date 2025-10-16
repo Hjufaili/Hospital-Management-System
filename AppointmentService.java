@@ -28,4 +28,14 @@ public class AppointmentService {
         }
         System.out.println("appointmentId not found: " + appointmentId);
     }
+
+    public static void removeAppointment(String appointmentsId) {
+        boolean removed = appointments.removeIf(m -> m.getAppointmentId().equals(appointmentsId));
+
+        if (removed) {
+            System.out.println("Appointment is removed: " + appointmentsId);
+        } else {
+            System.out.println("Appointment not found: " + appointmentsId);
+        }
+    }
 }
