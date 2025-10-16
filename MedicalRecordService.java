@@ -48,4 +48,14 @@ public class MedicalRecordService {
         System.out.println("medicalRecord not found: " + medicalRecordsId);
         return null;
     }
+
+    public static void displayAllMedicalRecords() {
+        if (medicalRecords.isEmpty()){
+            System.out.println("No medical records available");
+        }
+        for (MedicalRecord m:medicalRecords){
+            System.out.println(m);
+        }
+        System.out.println("---------------");
+    }
 }
