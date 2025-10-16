@@ -124,4 +124,12 @@ public class AppointmentService {
             System.out.println("Appointment " + appointmentId + " rescheduled to " + newDate + " at " + newTime);
         }
     }
+
+    public void cancelAppointment(String appointmentId) {
+        Appointment a = getAppointmentById(appointmentId);
+        if (a != null) {
+            a.setStatus("Cancelled");
+            System.out.println("Appointment cancelled: "+ appointmentId);
+        }
+    }
 }
