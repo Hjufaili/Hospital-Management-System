@@ -55,20 +55,34 @@ public class DoctorService {
             System.out.println("No doctor");
             return;
         }
-        System.out.println("All doctors");
+        System.out.println("-----All doctors-----");
         for (Doctor d : doctors) {
             System.out.println(d);
         }
     }
 
-    public static Doctor getDoctorsBySpecialization(String specialization) {
-        for (Doctor d:doctors){
-            if (d.getSpecialization().equals(specialization)){
-                return d;
+    public static List<Doctor> getDoctorsBySpecialization(String specialization) {
+        List<Doctor> results = new ArrayList<>();
+        for (Doctor d : doctors) {
+            if (d.getSpecialization().equalsIgnoreCase(specialization) && d.getSpecialization()!=null) {
+                results.add(d);
             }
         }
-        System.out.println("Doctor not found");
-        return null;
+        if (results.isEmpty()) {
+            System.out.println("No doctor in specialization:  "+ specialization);
+        }else {
+            System.out.println("All doctors in specialization"+ specialization);
+        }
+
+        return results;
+    }
+
+    public static List<Doctor> getAvailableDoctors() {
+
+    }
+
+    public static List<Doctor> getAllDoctor(){
+        return doctors;
     }
 
 }
