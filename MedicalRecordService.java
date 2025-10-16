@@ -58,4 +58,21 @@ public class MedicalRecordService {
         }
         System.out.println("---------------");
     }
+
+    public static List<MedicalRecord> getRecordsByPatientId(String patientId) {
+        List<MedicalRecord> results = new ArrayList<>();
+
+        for (MedicalRecord m:medicalRecords){
+            if (m.getPatientId().equals(patientId)){
+                results.add(m);
+            }
+        }
+
+        if (results.isEmpty()){
+            System.out.println("No records found for patient:" + patientId);
+        }else {
+            System.out.println("records found");
+        }
+        return results;
+    }
 }
