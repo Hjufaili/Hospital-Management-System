@@ -1,5 +1,6 @@
 package Service;
 
+import Entity.Appointment;
 import Entity.Department;
 
 import java.util.ArrayList;
@@ -32,9 +33,19 @@ public class DepartmentService {
         boolean removed = departments.removeIf(m -> m.getDepartmentId().equals(departmentId));
 
         if (removed) {
-            System.out.println("Appointment is removed: " + departmentId);
+            System.out.println("Department is removed: " + departmentId);
         } else {
-            System.out.println("Appointment not found: " + departmentId);
+            System.out.println("Department not found: " + departmentId);
         }
+    }
+
+    public static Department getDepartmentById(String departmentId) {
+        for (Department m : departments) {
+            if (m.getDepartmentId() != null && m.getDepartmentId().equals(departmentId)) {
+                return m;
+            }
+        }
+        System.out.println("Department not found: " + departmentId);
+        return null;
     }
 }
