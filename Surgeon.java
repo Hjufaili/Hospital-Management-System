@@ -74,5 +74,13 @@ public class Surgeon extends Doctor{
                 "Total surgeries: " + surgeriesPerformed);
     }
 
-    
+    public void updateSurgeryCount(int newCount){
+        if (newCount < 0) {
+            System.out.println("⚠️ Surgery count cannot be negative!");
+            return;
+        }
+        this.surgeriesPerformed = newCount;
+        System.out.println("Dr. " + getFirstName() +
+                "'s surgery count updated to: " + surgeriesPerformed);
+    }
 }
