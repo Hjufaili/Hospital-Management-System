@@ -83,4 +83,12 @@ public class Surgeon extends Doctor{
         System.out.println("Dr. " + getFirstName() +
                 "'s surgery count updated to: " + surgeriesPerformed);
     }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Surgeries Performed: " + surgeriesPerformed);
+        System.out.println("Surgery Types: " + surgeryTypes);
+        System.out.println("Operation Theatre Access: " + (operationTheatreAccess ? "Yes" : "No"));
+    }
 }
