@@ -63,4 +63,13 @@ public class Consultant extends Doctor{
         this.consultationDuration = consultationDuration;
     }
 
+    public void scheduleConsultation(String type) {
+        if (!consultationTypes.contains(type)) {
+            System.out.println( "does not provide consultations in: " + type);
+        } else {
+            System.out.println("scheduled a " + type +
+                    " consultation. Duration: " + consultationDuration + " minutes.");
+        }
+    }
+
 }
