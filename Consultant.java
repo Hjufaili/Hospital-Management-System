@@ -70,6 +70,12 @@ public class Consultant extends Doctor{
             System.out.println("scheduled a " + type +
                     " consultation. Duration: " + consultationDuration + " minutes.");
         }
+
+
+    }
+
+    public void provideSecondOpinion(String diagnosis) {
+        System.out.println("provided a second opinion on diagnosis: " + diagnosis);
     }
 
 }
