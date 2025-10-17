@@ -9,5 +9,35 @@ public class Surgeon extends Doctor{
     private List<String> surgeryTypes;
     private Boolean operationTheatreAccess;
 
-    
+    public Surgeon(Integer surgeriesPerformed, List<String> surgeryTypes,
+                   Boolean operationTheatreAccess) {
+        this.surgeriesPerformed = surgeriesPerformed;
+        this.surgeryTypes = surgeryTypes;
+        this.operationTheatreAccess = operationTheatreAccess;
+    }
+
+    public Surgeon(String id, String firstName, String lastName, LocalDate dateOfBirth,
+                   String gender, String phoneNumber, String address, String email,
+                   String doctorId, String specialization, String qualification,
+                   Integer experienceYears, String departmentId, Double consultationFee,
+                   List<String> availableSlots, List<Patient> assignedPatients,
+                   Integer surgeriesPerformed, List<String> surgeryTypes, Boolean operationTheatreAccess) {
+        super(id, firstName, lastName, dateOfBirth, gender, phoneNumber, address, email, doctorId,
+                specialization, qualification, experienceYears, departmentId, consultationFee,
+                availableSlots, assignedPatients);
+        this.surgeriesPerformed = surgeriesPerformed;
+        this.surgeryTypes = surgeryTypes;
+        this.operationTheatreAccess = operationTheatreAccess;
+    }
+
+    public Surgeon(String doctorId, String specialization, String qualification,
+                   Integer experienceYears, String departmentId, Double consultationFee,
+                   List<String> availableSlots, List<Patient> assignedPatients,
+                   Integer surgeriesPerformed, List<String> surgeryTypes,
+                   Boolean operationTheatreAccess) {
+        super(doctorId, specialization, qualification, experienceYears, departmentId, consultationFee, availableSlots, assignedPatients);
+        this.surgeriesPerformed = surgeriesPerformed;
+        this.surgeryTypes = surgeryTypes;
+        this.operationTheatreAccess = operationTheatreAccess;
+    }
 }
