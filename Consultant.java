@@ -39,4 +39,28 @@ public class Consultant extends Doctor{
         this.consultationDuration = consultationDuration;
     }
 
+    public List<String> getConsultationTypes() {
+        return consultationTypes;
+    }
+
+    public void setConsultationTypes(List<String> consultationTypes) {
+        this.consultationTypes = consultationTypes;
+    }
+
+    public Boolean getOnlineConsultationAvailable() {
+        return onlineConsultationAvailable;
+    }
+
+    public void setOnlineConsultationAvailable(Boolean onlineConsultationAvailable) {
+        this.onlineConsultationAvailable = onlineConsultationAvailable;
+    }
+
+    public Integer getConsultationDuration() {
+        return consultationDuration;
+    }
+
+    public void setConsultationDuration(Integer consultationDuration) {
+        this.consultationDuration = consultationDuration;
+    }
+
 }
