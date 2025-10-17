@@ -53,4 +53,36 @@ public class EmergencyPatient extends InPatient{
         this.triageLevel = triageLevel;
         this.admittedViaER = admittedViaER;
     }
+
+    public String getEmergencyType() {
+        return emergencyType;
+    }
+
+    public void setEmergencyType(String emergencyType) {
+        this.emergencyType = emergencyType;
+    }
+
+    public String getArrivalMode() {
+        return arrivalMode;
+    }
+
+    public void setArrivalMode(String arrivalMode) {
+        this.arrivalMode = arrivalMode;
+    }
+
+    public Integer getTriageLevel() {
+        return triageLevel;
+    }
+
+    public void setTriageLevel(Integer triageLevel) {
+        this.triageLevel = triageLevel;
+    }
+
+    public Boolean getAdmittedViaER() {
+        return admittedViaER;
+    }
+
+    public void setAdmittedViaER(Boolean admittedViaER) {
+        this.admittedViaER = admittedViaER;
+    }
 }
