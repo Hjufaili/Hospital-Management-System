@@ -6,7 +6,7 @@ import java.util.List;
 public class Surgeon extends Doctor{
 
     private static Integer surgeriesPerformed;
-    private List<String> surgeryTypes;
+    private static List<String> surgeryTypes;
     private Boolean operationTheatreAccess;
 
     public Surgeon(Integer surgeriesPerformed, List<String> surgeryTypes,
@@ -65,11 +65,14 @@ public class Surgeon extends Doctor{
         this.operationTheatreAccess = operationTheatreAccess;
     }
 
-    public static void performSurgery(){
-
+    public static void performSurgery(String surgeryType){
+        surgeriesPerformed++;
+        if (!surgeryTypes.contains(surgeryType)) {
+            surgeryTypes.add(surgeryType);
+        }
+        System.out.println("Dr. " + getFirstName() + " performed a " + surgeryType + " surgery. " +
+                "Total surgeries: " + surgeriesPerformed);
     }
 
-    public static void updateSurgeryCount(){
-
-    }
+    
 }
