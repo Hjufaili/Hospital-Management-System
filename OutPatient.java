@@ -74,4 +74,13 @@ public class OutPatient extends Patient{
         System.out.println("Visit count for " + getFirstName() +
                 " updated to " + visitCount + ". Last visit date: " + lastVisitDate);
     }
+
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Visit Count: " + visitCount);
+        System.out.println("Last Visit Date: " + lastVisitDate);
+        System.out.println("Preferred Doctor ID: " + preferredDoctorId);
+    }
 }
