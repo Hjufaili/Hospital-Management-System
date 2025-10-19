@@ -110,4 +110,12 @@ public class InPatient extends Patient{
         }
         return ChronoUnit.DAYS.between(admissionDate, dischargeDate);
     }
+
+    public double calculateTotalCharges() {
+        long days = calculateStayDuration();
+        double total = days * dailyCharges;
+        System.out.println("Total Charges "+ total );
+        return total;
+    }
+
 }
