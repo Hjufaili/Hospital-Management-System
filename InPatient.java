@@ -1,6 +1,7 @@
 package Entity;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class InPatient extends Patient{
@@ -100,5 +101,13 @@ public class InPatient extends Patient{
 
     public void setAdmissionDate(LocalDate admissionDate) {
         this.admissionDate = admissionDate;
+    }
+
+    public long calculateStayDuration() {
+        if (dischargeDate == null) {
+            System.out.println("Patient has not been discharged yet");
+            return 0;
+        }
+        return ChronoUnit.DAYS.between(admissionDate, dischargeDate);
     }
 }
