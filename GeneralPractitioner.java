@@ -64,4 +64,13 @@ public class GeneralPractitioner extends Doctor{
     public void setVaccinationCertified(Boolean vaccinationCertified) {
         this.vaccinationCertified = vaccinationCertified;
     }
+
+    public void scheduleHomeVisit(String patientName, String address) {
+        if (homeVisitAvailable) {
+            System.out.println(" scheduled a home visit for patient " +
+                    patientName + " at address: " + address);
+        } else {
+            System.out.println(" does not offer home visits.");
+        }
+    }
 }
