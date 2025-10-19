@@ -22,7 +22,9 @@ public class Consultant extends Doctor{
                       List<String> availableSlots, List<Patient> assignedPatients,
                       List<String> consultationTypes, Boolean onlineConsultationAvailable,
                       Integer consultationDuration) {
-        super(id, firstName, lastName, dateOfBirth, gender, phoneNumber, address, email, doctorId, specialization, qualification, experienceYears, departmentId, consultationFee, availableSlots, assignedPatients);
+        super(id, firstName, lastName, dateOfBirth, gender, phoneNumber, address, email,
+                doctorId, specialization, qualification, experienceYears, departmentId,
+                consultationFee, availableSlots, assignedPatients);
         this.consultationTypes = consultationTypes;
         this.onlineConsultationAvailable = onlineConsultationAvailable;
         this.consultationDuration = consultationDuration;
@@ -33,7 +35,8 @@ public class Consultant extends Doctor{
                       List<String> availableSlots, List<Patient> assignedPatients,
                       List<String> consultationTypes, Boolean onlineConsultationAvailable,
                       Integer consultationDuration) {
-        super(doctorId, specialization, qualification, experienceYears, departmentId, consultationFee, availableSlots, assignedPatients);
+        super(doctorId, specialization, qualification, experienceYears, departmentId,
+                consultationFee, availableSlots, assignedPatients);
         this.consultationTypes = consultationTypes;
         this.onlineConsultationAvailable = onlineConsultationAvailable;
         this.consultationDuration = consultationDuration;
@@ -76,6 +79,14 @@ public class Consultant extends Doctor{
 
     public void provideSecondOpinion(String diagnosis) {
         System.out.println("provided a second opinion on diagnosis: " + diagnosis);
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Consultation Types: " + consultationTypes);
+        System.out.println("Online Consultation Available: " + (onlineConsultationAvailable ? "Yes" : "No"));
+        System.out.println("Consultation Duration: " + consultationDuration + " minutes");
     }
 
 }
