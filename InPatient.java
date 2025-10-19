@@ -118,4 +118,18 @@ public class InPatient extends Patient{
         return total;
     }
 
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Admission Date: " + admissionDate);
+        System.out.println("Discharge Date: " + dischargeDate);
+        System.out.println("Room Number: " + roomNumber);
+        System.out.println("Bed Number: " + bedNumber);
+        System.out.println("Admitting Doctor ID: " + admittingDoctorId);
+        System.out.println("Daily Charges: " + dailyCharges);
+        System.out.println("Stay Duration (days): " + calculateStayDuration());
+        System.out.println("Total Charges: " + calculateTotalCharges());
+    }
+
 }
