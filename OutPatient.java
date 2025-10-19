@@ -62,4 +62,9 @@ public class OutPatient extends Patient{
     public void setPreferredDoctorId(String preferredDoctorId) {
         this.preferredDoctorId = preferredDoctorId;
     }
+
+    public void scheduleFollowUp(LocalDate nextVisitDate) {
+        System.out.println("Follow-up visit for " + getFirstName() +
+                " scheduled on " + nextVisitDate + " with doctor ID: " + preferredDoctorId);
+    }
 }
