@@ -73,4 +73,13 @@ public class GeneralPractitioner extends Doctor{
             System.out.println(" does not offer home visits.");
         }
     }
+
+    public void administerVaccine(String patientName, String vaccineName) {
+        if (vaccinationCertified) {
+            System.out.println(" administered the " + vaccineName +
+                    " vaccine to patient " + patientName);
+        } else {
+            System.out.println(" is not certified to administer vaccines.");
+        }
+    }
 }
