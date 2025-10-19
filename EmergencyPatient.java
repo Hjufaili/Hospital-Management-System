@@ -85,4 +85,12 @@ public class EmergencyPatient extends InPatient{
     public void setAdmittedViaER(Boolean admittedViaER) {
         this.admittedViaER = admittedViaER;
     }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Emergency Type: " + emergencyType);
+        System.out.println("Arrival Mode: " + arrivalMode);
+        System.out.println("Triage Level: " + triageLevel);
+        System.out.println("Admitted via ER: " + (admittedViaER ? "Yes" : "No"));
 }
