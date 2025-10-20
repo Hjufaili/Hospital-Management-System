@@ -37,8 +37,8 @@ public class PatientService {
     }
 
     public static Patient getPatientById(String patientId) {
-        for (Patient p:patients) {
-            if (p.getPatientId().equals(patientId)){
+        for (Patient p : patients) {
+            if (p.getPatientId().equals(patientId)) {
                 return p;
             }
         }
@@ -52,10 +52,25 @@ public class PatientService {
             return;
         }
         System.out.println("All patients ");
-        for (Patient p:patients){
+        for (Patient p : patients) {
             System.out.println(p);
         }
         System.out.println("------------------");
     }
 
+    public List<Patient> getAllPatients() {
+        return patients;
+    }
+
+    public static Patient searchPatientsByName(String firstName, String lastName) {
+        for (Patient p : patients) {
+            if (p.getFirstName().equalsIgnoreCase(firstName)
+                    && p.getLastName().equalsIgnoreCase(lastName)) {
+                return p;
+            }
+
+        }
+        System.out.println("No patient found with name: " + firstName + " " + lastName);
+        return null;
+    }
 }
