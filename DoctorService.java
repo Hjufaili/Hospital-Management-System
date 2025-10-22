@@ -180,4 +180,16 @@ public class DoctorService {
         System.out.println("Bulk assigned " + patientIds.size() + " patients to Dr. " + doctorId);
     }
 
+    public static void displayDoctors(String specialization){
+        boolean found = false;
+        System.out.println("----- Doctors in Specialization: " + specialization + " -----");
+        for (Doctor d : doctors) {
+            if (d.getSpecialization() != null && d.getSpecialization().equalsIgnoreCase(specialization)) {
+                d.displayInfo();
+                found = true;
+            }
+        }
+        if (!found) System.out.println("No doctors found in specialization: " + specialization);
+    }
+
 }
