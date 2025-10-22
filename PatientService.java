@@ -4,6 +4,7 @@ import Entity.Patient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class PatientService {
     private static List<Patient> patients = new ArrayList<>();
@@ -71,6 +72,26 @@ public class PatientService {
 
         }
         System.out.println("No patient found with name: " + firstName + " " + lastName);
+        return null;
+    }
+
+    public static List<Patient> searchPatients(String keyword) {
+        List<Patient> results = new ArrayList<>();
+        keyword=keyword.toLowerCase();
+        for (Patient p : patients) {
+            if (p.getPatientId().toLowerCase().contains(keyword) ||
+                    p.getFirstName().toLowerCase().contains(keyword) ||
+                    p.getLastName().toLowerCase().contains(keyword) ||
+                    p.getEmail().toLowerCase().contains(keyword) ||
+                    p.getGender().toLowerCase().contains(keyword) ||
+                    p.getPhoneNumber().toLowerCase().contains(keyword) ||
+                    p.getBloodGroup().toLowerCase().contains(keyword) ||
+                    p.getEmergencyContact().toLowerCase().contains(keyword)) {
+                results.add(p);
+            }
+            results.add(p);
+        }
+        System.out.println("No patient found with : " + keyword);
         return null;
     }
 }
