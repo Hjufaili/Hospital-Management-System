@@ -129,7 +129,7 @@ public class AppointmentService {
         Appointment a = getAppointmentById(appointmentId);
         if (a != null) {
             a.setStatus("Cancelled");
-            System.out.println("Appointment cancelled: "+ appointmentId);
+            System.out.println("Appointment cancelled: " + appointmentId);
         }
     }
 
@@ -148,6 +148,13 @@ public class AppointmentService {
     public static Appointment createAppointment(String patientId, String doctorId, LocalDate date) {
         String id = "APT" + (appointments.size() + 1);
         Appointment a = new Appointment(id, patientId, doctorId, date, "Not Set", "Scheduled", "", "");
+        addAppointment(a);
+        return a;
+    }
+
+    public static Appointment createAppointment(String patientId, String doctorId, LocalDate date, String time) {
+        String id = "APT" + (appointments.size() + 1);
+        Appointment a = new Appointment(id, patientId, doctorId, date, time, "Scheduled", "", "");
         addAppointment(a);
         return a;
     }
