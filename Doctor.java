@@ -176,4 +176,16 @@ public class Doctor extends Person {
         }
     }
 
-}
+    public void addAvailability(List<String> slots) {
+        if (availableSlots != null) {
+            for (String slot : slots) {
+                if (!availableSlots.contains(slot)) {
+                    availableSlots.add(slot);
+                }
+            }
+            System.out.println("Added availability slots");
+        }
+    }
+
+
+    }
