@@ -123,7 +123,7 @@ public class DoctorService {
     }
 
     public static void assignPatient(String doctorId, String patientId) {
-        Doctor doctor=getDoctorById(doctorId);
+        Doctor doctor = getDoctorById(doctorId);
         if (doctor == null) {
             System.out.println("Doctor not found: " + doctorId);
             return;
@@ -154,6 +154,30 @@ public class DoctorService {
         System.out.println("Assigned " + patient.getPatientId() + " to Dr. " + doctor.getFirstName());
     }
 
+    public static void assignPatient(String doctorId, List<String> patientIds) {
+        Doctor doctor = getDoctorById(doctorId);
+        if (doctor == null) {
+            System.out.println("Doctor not found: " + doctorId);
+            return;
+        }
+        if (patientIds == null || patientIds.isEmpty()) {
+            System.out.println("No patient IDs provided for assignment.");
+            return;
+        }
 
+        List<Patient> assignedPatients = Doctor.getAssignedPatients();
+        if (assignedPatients == null) {
+            assignedPatients = new ArrayList<>();
+            Doctor.setAssignedPatients(assignedPatients);
+        }
 
+        for (String p : patientIds) {
+            Patient patient = new Patient();
+            patient.setPatientId(p);
+            assignedPatients.add(patient);
+        }
+
+        System.out.println("Bulk assigned " + patientIds.size() + " patients to Dr. " + doctorId);
     }
+
+}
