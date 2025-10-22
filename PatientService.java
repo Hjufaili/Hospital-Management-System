@@ -117,4 +117,17 @@ public class PatientService {
         System.out.println("No patient found with name: " + firstName + " " + lastName);
         return null;
     }
+
+    public static void displayPatients(String filter) {
+        List<Patient> filtered = searchPatients(filter);
+        if (filtered.isEmpty()) {
+            System.out.println("No patients match the filter: " + filter);
+            return;
+        }
+        System.out.println("Filtered Patients (" + filter + "):");
+        for (Patient p : filtered) {
+            System.out.println(p);
+        }
+        System.out.println("--------------------");
+    }
 }
