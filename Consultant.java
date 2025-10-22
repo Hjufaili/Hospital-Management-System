@@ -1,9 +1,11 @@
 package Entity;
 
+import Interface.Displayable;
+
 import java.time.LocalDate;
 import java.util.List;
 
-public class Consultant extends Doctor{
+public class Consultant extends Doctor implements Displayable {
     private List<String> consultationTypes;
     private Boolean onlineConsultationAvailable;
     private Integer consultationDuration;
@@ -68,7 +70,7 @@ public class Consultant extends Doctor{
 
     public void scheduleConsultation(String type) {
         if (!consultationTypes.contains(type)) {
-            System.out.println( "does not provide consultations in: " + type);
+            System.out.println("does not provide consultations in: " + type);
         } else {
             System.out.println("scheduled a " + type +
                     " consultation. Duration: " + consultationDuration + " minutes.");
@@ -87,6 +89,13 @@ public class Consultant extends Doctor{
         System.out.println("Consultation Types: " + consultationTypes);
         System.out.println("Online Consultation Available: " + (onlineConsultationAvailable ? "Yes" : "No"));
         System.out.println("Consultation Duration: " + consultationDuration + " minutes");
+    }
+
+    @Override
+    public void displaySummary() {
+        System.out.println("Consultation Types: " + consultationTypes);
+        System.out.println("Online Consultation Available: " + (onlineConsultationAvailable ? "Yes" : "No"));
+
     }
 
 }
