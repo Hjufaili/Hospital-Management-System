@@ -84,18 +84,6 @@ public class PatientService {
         System.out.println("Patient added (with blood group): " + firstName + " " + lastName);
     }
 
-    public static Patient searchPatientsByName(String firstName, String lastName) {
-        for (Patient p : patients) {
-            if (p.getFirstName().equalsIgnoreCase(firstName)
-                    && p.getLastName().equalsIgnoreCase(lastName)) {
-                return p;
-            }
-
-        }
-        System.out.println("No patient found with name: " + firstName + " " + lastName);
-        return null;
-    }
-
     public static List<Patient> searchPatients(String keyword) {
         List<Patient> results = new ArrayList<>();
         keyword = keyword.toLowerCase();
@@ -116,5 +104,17 @@ public class PatientService {
             System.out.println("No patient found with : " + keyword);
         }
         return results;
+    }
+
+    public static Patient searchPatients(String firstName, String lastName) {
+        for (Patient p : patients) {
+            if (p.getFirstName().equalsIgnoreCase(firstName)
+                    && p.getLastName().equalsIgnoreCase(lastName)) {
+                return p;
+            }
+
+        }
+        System.out.println("No patient found with name: " + firstName + " " + lastName);
+        return null;
     }
 }
