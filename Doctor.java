@@ -1,10 +1,12 @@
 package Entity;
 
+import Interface.Displayable;
+
 import java.time.LocalDate;
 import java.util.List;
 
 
-public class Doctor extends Person {
+public class Doctor extends Person implements Displayable {
     private String doctorId;
     private String specialization;
     private String qualification;
@@ -58,6 +60,12 @@ public class Doctor extends Person {
         System.out.println("availableSlots:           " + availableSlots);
         System.out.println("assignedPatients:           " + assignedPatients);
 
+    }
+
+    @Override
+    public void displaySummary() {
+        System.out.println("Dr. " + getFirstName() + " " + getLastName() +
+                " | " + specialization + " | " + experienceYears + " yrs");
     }
 
     @Override
