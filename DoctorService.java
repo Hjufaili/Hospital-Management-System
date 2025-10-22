@@ -109,4 +109,17 @@ public class DoctorService {
         }
     }
 
-}
+    public static void addDoctor(String name, String specialization, String phone, double consultationFee) {
+        Doctor doctor = new Doctor();
+        if (name != null && specialization != null && phone != null) {
+            doctor.setFirstName(name);
+            doctor.setSpecialization(specialization);
+            doctor.setPhoneNumber(phone);
+            doctor.setConsultationFee(consultationFee);
+            doctors.add(doctor);
+            System.out.println("Doctor added: " + name);
+        }
+    }
+
+
+    }
