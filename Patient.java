@@ -14,6 +14,9 @@ public class Patient extends Person {
     private List<MedicalRecord> medicalRecords;
     private List<Appointment> appointments;
 
+    public Patient() {
+    }
+
     public Patient(String id, String firstName, String lastName, LocalDate dateOfBirth,
                    String gender, String phoneNumber, String address, String email,
                    String patientId, String bloodGroup, List<String> allergies, String emergencyContact,
@@ -112,13 +115,13 @@ public class Patient extends Person {
     public void displayInfo() {
         super.displayInfo();
         System.out.println("patientId:           " + patientId);
-        System.out.println("bloodGroup:         " + bloodGroup );
-        System.out.println("allergies:         " + allergies );
-        System.out.println("emergencyContact:         " + emergencyContact );
-        System.out.println("registrationDate:         " + registrationDate );
-        System.out.println("insuranceId:         " + insuranceId );
-        System.out.println("medicalRecords:         " + medicalRecords );
-        System.out.println("appointments:         " + appointments );
+        System.out.println("bloodGroup:         " + bloodGroup);
+        System.out.println("allergies:         " + allergies);
+        System.out.println("emergencyContact:         " + emergencyContact);
+        System.out.println("registrationDate:         " + registrationDate);
+        System.out.println("insuranceId:         " + insuranceId);
+        System.out.println("medicalRecords:         " + medicalRecords);
+        System.out.println("appointments:         " + appointments);
 
     }
 
@@ -155,4 +158,9 @@ public class Patient extends Person {
         System.out.println("Insurance updated for patient " + getFirstName());
     }
 
+    public void updateContact(String phone) {
+        setPhoneNumber(phone);
+        System.out.println("Updated phone number for patient " + getFirstName() + " to: " + phone);
+    }
+    
 }
