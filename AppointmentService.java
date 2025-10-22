@@ -159,7 +159,16 @@ public class AppointmentService {
         return a;
     }
 
-    public static void createAppointment(Appointment appointment){
+    public static void createAppointment(Appointment appointment) {
         addAppointment(appointment);
+    }
+
+    public static void rescheduleAppointment(String appointmentId, LocalDate newDate) {
+        Appointment a = getAppointmentById(appointmentId);
+        if (a != null) {
+            a.setAppointmentDate(newDate);
+            a.setStatus("Rescheduled");
+            System.out.println("Appointment " + appointmentId + " rescheduled to " + newDate);
+        }
     }
 }
