@@ -1,6 +1,7 @@
 package Service;
 
 import Entity.Doctor;
+import Entity.Patient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,5 +122,23 @@ public class DoctorService {
         }
     }
 
+    public static void assignPatient(String doctorId, String patientId) {
+        Doctor doctor=getDoctorById(doctorId);
+        if (doctor == null) {
+            System.out.println("Doctor not found: " + doctorId);
+            return;
+        }
+        List<Patient> assignedPatients = Doctor.getAssignedPatients();
+        if (assignedPatients == null) {
+            assignedPatients = new ArrayList<>();
+            Doctor.setAssignedPatients(assignedPatients);
+        }
 
+        Patient patient = new Patient();
+        patient.setPatientId(patientId);
+        assignedPatients.add(patient);
+        System.out.println("Assigned patient " + patientId + " to doctor " + doctorId);
     }
+
+
+}
