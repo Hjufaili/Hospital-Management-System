@@ -143,6 +143,11 @@ public class Appointment {
         }
     }
 
-    
+    public void addNotes(String notes, String addedBy){
+        if (notes != null && !notes.isEmpty()) {
+            this.notes = notes + " (added by: " + addedBy + ")";
+            System.out.println("Notes added by " + addedBy + ": " + notes);
+        }
+    }
 
 }
