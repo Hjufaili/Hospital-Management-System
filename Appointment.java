@@ -135,4 +135,14 @@ public class Appointment {
         System.out.println("Appointment " + appointmentId + " marked as completed.");
 
     }
+
+    public void addNotes(String notes){
+        if (notes != null && !notes.isEmpty()) {
+            this.notes=notes;
+            System.out.println("Notes added: "+ notes);
+        }
+    }
+
+    
+
 }
