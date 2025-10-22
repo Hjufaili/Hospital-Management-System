@@ -88,7 +88,7 @@ public class DoctorService {
         if (available.isEmpty()) {
             System.out.println("No doctors currently available.");
         } else {
-            System.out.println(" available doctors:" + available.size() +" doctors");
+            System.out.println(" available doctors:" + available.size() + " doctors");
         }
 
         return available;
@@ -96,6 +96,17 @@ public class DoctorService {
 
     public static List<Doctor> getAllDoctor() {
         return doctors;
+    }
+
+    public static void addDoctor(String name, String specialization, String phone) {
+        Doctor doctor = new Doctor();
+        if (name != null && specialization != null && phone != null) {
+            doctor.setFirstName(name);
+            doctor.setSpecialization(specialization);
+            doctor.setPhoneNumber(phone);
+            doctors.add(doctor);
+            System.out.println("Doctor added: " + name);
+        }
     }
 
 }
