@@ -98,21 +98,23 @@ public class PatientService {
 
     public static List<Patient> searchPatients(String keyword) {
         List<Patient> results = new ArrayList<>();
-        keyword=keyword.toLowerCase();
+        keyword = keyword.toLowerCase();
         for (Patient p : patients) {
-            if (p.getPatientId().toLowerCase().contains(keyword) ||
-                    p.getFirstName().toLowerCase().contains(keyword) ||
-                    p.getLastName().toLowerCase().contains(keyword) ||
-                    p.getEmail().toLowerCase().contains(keyword) ||
-                    p.getGender().toLowerCase().contains(keyword) ||
-                    p.getPhoneNumber().toLowerCase().contains(keyword) ||
-                    p.getBloodGroup().toLowerCase().contains(keyword) ||
-                    p.getEmergencyContact().toLowerCase().contains(keyword)) {
+            if (
+                    (p.getPatientId() != null && p.getPatientId().toLowerCase().contains(keyword)) ||
+                            (p.getFirstName() != null && p.getFirstName().toLowerCase().contains(keyword)) ||
+                            (p.getLastName() != null && p.getLastName().toLowerCase().contains(keyword)) ||
+                            (p.getEmail() != null && p.getEmail().toLowerCase().contains(keyword)) ||
+                            (p.getGender() != null && p.getGender().toLowerCase().contains(keyword)) ||
+                            (p.getPhoneNumber() != null && p.getPhoneNumber().toLowerCase().contains(keyword)) ||
+                            (p.getBloodGroup() != null && p.getBloodGroup().toLowerCase().contains(keyword)) ||
+                            (p.getEmergencyContact() != null && p.getEmergencyContact().toLowerCase().contains(keyword))) {
                 results.add(p);
             }
-            results.add(p);
         }
-        System.out.println("No patient found with : " + keyword);
-        return null;
+        if (results.isEmpty()) {
+            System.out.println("No patient found with : " + keyword);
+        }
+        return results;
     }
 }
