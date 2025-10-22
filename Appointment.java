@@ -1,6 +1,7 @@
 package Entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Appointment {
     private String appointmentId;
@@ -147,6 +148,13 @@ public class Appointment {
         if (notes != null && !notes.isEmpty()) {
             this.notes = notes + " (added by: " + addedBy + ")";
             System.out.println("Notes added by " + addedBy + ": " + notes);
+        }
+    }
+
+    public void addNotes(String notes, String addedBy, LocalDateTime timestamp) {
+        if (notes != null && !notes.isEmpty()) {
+            this.notes = notes + " (added by: " + addedBy + " at " + timestamp + ")";
+            System.out.println("Notes added by " + addedBy + " at " + timestamp + ": " + notes);
         }
     }
 
