@@ -130,4 +130,17 @@ public class PatientService {
         }
         System.out.println("--------------------");
     }
+
+    public static void displayPatients(int limit) {
+        if (patients.isEmpty()) {
+            System.out.println("No patients available.");
+            return;
+        }
+
+        System.out.println("Displaying first " + limit + " patients:");
+        for (int i = 0; i < Math.min(limit, patients.size()); i++) {
+            System.out.println(patients.get(i));
+        }
+        System.out.println("--------------------");
+    }
 }
