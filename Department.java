@@ -1,8 +1,11 @@
 package Entity;
 
+import Interface.Displayable;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class Department {
+public class Department implements Displayable {
     private String departmentId;
     private String departmentName;
     private String headDoctorId;
@@ -23,8 +26,20 @@ public class Department {
         this.availableBeds = availableBeds;
     }
 
+    public Department(String departmentId, String departmentName,
+                      String headDoctorId, int bedCapacity) {
+        this.departmentId = departmentId;
+        this.departmentName = departmentName;
+        this.headDoctorId = headDoctorId;
+        this.bedCapacity = bedCapacity;
+        this.availableBeds = bedCapacity; // initially all beds available
+        this.doctors = new ArrayList<>();
+        this.nurses = new ArrayList<>();
+    }
+
     public Department() {
     }
+
 
     public String getDepartmentId() {
         return departmentId;
@@ -90,6 +105,14 @@ public class Department {
         System.out.println("nurses:     " + nurses);
         System.out.println("bedCapacity:     " + bedCapacity);
         System.out.println("availableBeds:     " + availableBeds);
+    }
+
+    @Override
+    public void displaySummary() {
+        System.out.println("departmentName:     " + departmentName);
+        System.out.println("doctors:     " + doctors);
+        System.out.println("nurses:     " + nurses);
+
     }
 
     @Override
