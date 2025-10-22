@@ -183,4 +183,18 @@ public class AppointmentService {
                     ". Reason: " + reason);
         }
     }
+
+    public static void displayAppointments(LocalDate date) {
+        List<Appointment> list = getAppointmentsByDate(date);
+        if (!list.isEmpty()) {
+            System.out.println("Appointments on " + date + ":");
+            for (Appointment a : list) {
+                a.displayInfo();
+                System.out.println("----------------");
+            }
+        }else {
+            System.out.println("No Appointments ");
+        }
+    }
+
 }
