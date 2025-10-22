@@ -192,8 +192,20 @@ public class AppointmentService {
                 a.displayInfo();
                 System.out.println("----------------");
             }
-        }else {
+        } else {
             System.out.println("No Appointments ");
+        }
+    }
+
+    public static void displayAppointments(String doctorId, LocalDate startDate, LocalDate endDate) {
+        System.out.println("Appointments for Doctor " + doctorId + " between " + startDate + " and " + endDate + ":");
+        for (Appointment a : appointments) {
+            if (a.getDoctorId().equals(doctorId) &&
+                    (a.getAppointmentDate().isEqual(startDate) || a.getAppointmentDate().isAfter(startDate)) &&
+                    (a.getAppointmentDate().isEqual(endDate) || a.getAppointmentDate().isBefore(endDate))) {
+                a.displayInfo();
+                System.out.println("----------------");
+            }
         }
     }
 
