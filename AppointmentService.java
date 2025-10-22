@@ -158,4 +158,8 @@ public class AppointmentService {
         addAppointment(a);
         return a;
     }
+
+    public static void createAppointment(Appointment appointment){
+        addAppointment(appointment);
+    }
 }
