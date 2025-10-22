@@ -72,6 +72,18 @@ public class PatientService {
         System.out.println("Patient added (minimal info): " + firstName + " " + lastName);
     }
 
+    public static void addPatient(String firstName, String lastName, String phone,
+                                  String bloodGroup, String email) {
+        Patient patient = new Patient();
+        patient.setFirstName(firstName);
+        patient.setLastName(lastName);
+        patient.setPhoneNumber(phone);
+        patient.setBloodGroup(bloodGroup);
+        patient.setEmail(email);
+        patients.add(patient);
+        System.out.println("Patient added (with blood group): " + firstName + " " + lastName);
+    }
+
     public static Patient searchPatientsByName(String firstName, String lastName) {
         for (Patient p : patients) {
             if (p.getFirstName().equalsIgnoreCase(firstName)
