@@ -155,4 +155,11 @@ public class Doctor extends Person {
     public static void setAssignedPatients(List<Patient> assignedPatients) {
         Doctor.assignedPatients = assignedPatients;
     }
+
+    public void updateFee(double fee){
+        setConsultationFee(fee);
+        System.out.println("Updated Consultation Fee for doctor " + getFirstName() + " to: " + fee);
+    }
+
+
 }
