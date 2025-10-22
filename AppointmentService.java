@@ -171,4 +171,16 @@ public class AppointmentService {
             System.out.println("Appointment " + appointmentId + " rescheduled to " + newDate);
         }
     }
+
+    public static void rescheduleAppointment(Appointment appointment, LocalDate newDate, String newTime, String reason) {
+        if (appointment != null) {
+            appointment.setAppointmentDate(newDate);
+            appointment.setAppointmentTime(newTime);
+            appointment.setStatus("Rescheduled");
+            appointment.setReason(reason);
+            System.out.println("Appointment " + appointment.getAppointmentId() +
+                    " rescheduled to " + newDate + " at " + newTime +
+                    ". Reason: " + reason);
+        }
+    }
 }
