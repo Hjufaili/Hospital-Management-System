@@ -162,5 +162,12 @@ public class Patient extends Person {
         setPhoneNumber(phone);
         System.out.println("Updated phone number for patient " + getFirstName() + " to: " + phone);
     }
+
+    public void updateContact(String phone, String email) {
+        setPhoneNumber(phone);
+        setEmail(email);
+        System.out.println("Updated for patient " + getFirstName() + "new phone"+ phone+
+                "new email: "+ email);
+    }
     
 }
