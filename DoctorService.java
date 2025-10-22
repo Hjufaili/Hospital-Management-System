@@ -140,5 +140,20 @@ public class DoctorService {
         System.out.println("Assigned patient " + patientId + " to doctor " + doctorId);
     }
 
+    public static void assignPatient(Doctor doctor, Patient patient) {
+        if (doctor == null || patient == null) {
+            System.out.println("Doctor or Patient is null.");
+            return;
+        }
+        List<Patient> assignedPatients = Doctor.getAssignedPatients();
+        if (assignedPatients == null) {
+            assignedPatients = new ArrayList<>();
+            Doctor.setAssignedPatients(assignedPatients);
+        }
+        assignedPatients.add(patient);
+        System.out.println("Assigned " + patient.getPatientId() + " to Dr. " + doctor.getFirstName());
+    }
 
-}
+
+
+    }
