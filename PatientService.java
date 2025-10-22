@@ -63,6 +63,15 @@ public class PatientService {
         return patients;
     }
 
+    public static void addPatient(String firstName, String lastName, String phone) {
+        Patient patient = new Patient();
+        patient.setFirstName(firstName);
+        patient.setLastName(lastName);
+        patient.setPhoneNumber(phone);
+        patients.add(patient);
+        System.out.println("Patient added (minimal info): " + firstName + " " + lastName);
+    }
+
     public static Patient searchPatientsByName(String firstName, String lastName) {
         for (Patient p : patients) {
             if (p.getFirstName().equalsIgnoreCase(firstName)
