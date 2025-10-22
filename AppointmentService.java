@@ -57,7 +57,7 @@ public class AppointmentService {
             System.out.println("No appointments available.");
             return;
         }
-        System.out.println("All patients ");
+        System.out.println("All appointments ");
         for (Appointment a : appointments) {
             System.out.println(a);
         }
@@ -143,5 +143,12 @@ public class AppointmentService {
 
     public List<Appointment> getAllAppointments() {
         return appointments;
+    }
+
+    public static Appointment createAppointment(String patientId, String doctorId, LocalDate date) {
+        String id = "APT" + (appointments.size() + 1);
+        Appointment a = new Appointment(id, patientId, doctorId, date, "Not Set", "Scheduled", "", "");
+        addAppointment(a);
+        return a;
     }
 }
