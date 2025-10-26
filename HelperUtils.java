@@ -1,5 +1,8 @@
 package Utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -66,5 +69,51 @@ public class HelperUtils {
     public static String generateId(String prefix, String suffix) {
         int randomNum = new Random().nextInt(90000) + 10000;
         return prefix + "-" + randomNum + "-" + suffix;
+    }
+
+
+    public static boolean isValidDate(Date date) {
+        return (date != null);
+    }
+
+    public static boolean isValidDate(String dateStr) {
+        if (isNull(dateStr)) return false;
+        String[] formats = {"yyyy-MM-dd", "dd/MM/yyyy", "MM-dd-yyyy", "yyyy/MM/dd"};
+
+        for (String format : formats) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat(format);
+                sdf.setLenient(false);
+                Date date = sdf.parse(dateStr);
+                if (date != null) return true;
+            } catch (ParseException e) {
+            }
+        }
+        return false;
+    }
+
+    public static boolean isValidDate(Date date, Date minDate, Date maxDate) {
+        if (isNull(date) || isNull(minDate) || isNull(maxDate)) return false;
+        return (!date.before(minDate) && !date.after(maxDate));
+    }
+
+    public static boolean isFutureDate(Date date) {
+        if (isNull(date)) return false;
+        Date now = new Date();
+        return date.after(now);
+    }
+
+    public static boolean isPastDate(Date date) {
+        if (isNull(date)) return false;
+        Date now = new Date();
+        return date.before(now);
+    }
+
+    public static boolean isToday(Date date) {
+        if (isNull(date)) return false;
+
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        Date today = new Date();
+        return fmt.format(today).equals(fmt.format(date));
     }
 }
