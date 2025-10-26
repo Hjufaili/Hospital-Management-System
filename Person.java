@@ -1,17 +1,19 @@
 package Entity;
 
+import Interface.Displayable;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-public class Person {
+public class Person implements Displayable {
 
     private String id;
-    private String firstName;
+    private static String firstName;
     private String lastName;
     private LocalDate dateOfBirth;
     private String gender;
-    private String phoneNumber;
+    private static String phoneNumber;
     private String email;
     private String address;
 
@@ -85,7 +87,7 @@ public class Person {
         this.lastName = lastName;
     }
 
-    public String getFirstName() {
+    public static String getFirstName() {
         return firstName;
     }
 
@@ -109,6 +111,11 @@ public class Person {
     }
 
     @Override
+    public void displaySummary() {
+        System.out.println(" " + firstName + " " + lastName + " | " + gender + " | " + phoneNumber);
+    }
+
+    @Override
     public String toString() {
         return "Entity.Person{" +
                 "id='" + id + '\'' +
@@ -126,13 +133,11 @@ public class Person {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return Objects.equals(id, person.id) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(dateOfBirth, person.dateOfBirth) && Objects.equals(gender, person.gender) && Objects.equals(phoneNumber, person.phoneNumber) && Objects.equals(email, person.email) && Objects.equals(address, person.address);
+        return Objects.equals(id, person.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, dateOfBirth, gender, phoneNumber, email, address);
+        return Objects.hashCode(id);
     }
-
-
 }
