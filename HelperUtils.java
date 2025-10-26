@@ -2,6 +2,8 @@ package Utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
@@ -140,5 +142,19 @@ public class HelperUtils {
 
     public static boolean isNegative(double num) {
         return num < 0.0;
+    }
+
+
+    public static boolean isValidAge(int age) {
+        return (age >= 0 && age <= 120);
+    }
+
+    public static boolean isValidAge(LocalDate dateOfBirth) {
+        if (dateOfBirth == null) return false;
+        LocalDate today = LocalDate.now();
+        if (dateOfBirth.isAfter(today)) return false;
+
+        int age = Period.between(dateOfBirth, today).getYears();
+        return (age >= 0 && age <= 120);
     }
 }
