@@ -116,4 +116,29 @@ public class HelperUtils {
         Date today = new Date();
         return fmt.format(today).equals(fmt.format(date));
     }
+
+
+    public static boolean isValidNumber(int num, int min, int max) {
+        return (num >= min && num <= max);
+    }
+
+    public static boolean isValidNumber(double num, double min, double max) {
+        return (num >= min && num <= max);
+    }
+
+    public static boolean isPositive(int num) {
+        return num > 0;
+    }
+
+    public static boolean isPositive(double num) {
+        return num > 0.0;
+    }
+
+    public static boolean isNegative(int num) {
+        return num < 0;
+    }
+
+    public static boolean isNegative(double num) {
+        return num < 0.0;
+    }
 }
