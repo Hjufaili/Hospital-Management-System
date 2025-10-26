@@ -2,11 +2,13 @@ package Service;
 
 
 import Entity.Nurse;
+import Interface.Manageable;
+import Interface.Searchable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NurseService {
+public class NurseService implements Manageable, Searchable {
     private static List<Nurse> nurses = new ArrayList<>();
 
 
@@ -100,6 +102,62 @@ public class NurseService {
 
     public List<Nurse> getAllNurses() {
         return nurses;
+    }
+
+
+    @Override
+    public void add(Object entity) {
+        if (entity instanceof Nurse) {
+            Nurse nurse = (Nurse) entity;
+            nurses.add(nurse);
+            System.out.println("Nurse added: " + nurse.getFirstName() + " " + nurse.getLastName());
+        } else {
+            System.out.println("Invalid entity type. Must be Nurse.");
+        }
+    }
+
+    @Override
+    public void remove(String id) {
+        boolean removed = nurses.removeIf(n -> n.getNurseId().equals(id));
+        System.out.println(removed
+                ? "Nurse removed successfully (ID: " + id + ")"
+                : "Nurse not found with ID: " + id);
+    }
+
+    @Override
+    public void getAll() {
+        if (nurses.isEmpty()) {
+            System.out.println("No nurses available.");
+            return;
+        }
+        System.out.println("All Nurses:");
+        for (Nurse n : nurses) {
+            n.displaySummary();
+        }
+        System.out.println("--------------------------------");
+    }
+
+    @Override
+    public void search(String keyword) {
+        System.out.println("Searching for nurses containing: " + keyword);
+        boolean found = false;
+        for (Nurse n : nurses) {
+            if ((n.getFirstName() != null && n.getFirstName().toLowerCase().contains(keyword.toLowerCase())) ||
+                    (n.getLastName() != null && n.getLastName().toLowerCase().contains(keyword.toLowerCase())) ||
+                    (n.getDepartmentId() != null && n.getDepartmentId().equalsIgnoreCase(keyword))) {
+                n.displayInfo();
+                found = true;
+            }
+        }
+        if (!found) System.out.println("No nurses matched the keyword: " + keyword);
+
+    }
+
+    @Override
+    public void searchById(String id) {
+        Nurse nurse = getNurseById(id);
+        if (nurse != null) nurse.displayInfo();
+        else System.out.println("Nurse not found with ID: " + id);
     }
 
 
