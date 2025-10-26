@@ -1,12 +1,14 @@
 package Service;
 
 import Entity.Patient;
+import Interface.Manageable;
+import Interface.Searchable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class PatientService {
+public class PatientService implements Manageable, Searchable {
     private static List<Patient> patients = new ArrayList<>();
 
     public static void addPatient(Patient patient) {
@@ -65,11 +67,13 @@ public class PatientService {
 
     public static void addPatient(String firstName, String lastName, String phone) {
         Patient patient = new Patient();
-        patient.setFirstName(firstName);
-        patient.setLastName(lastName);
-        patient.setPhoneNumber(phone);
-        patients.add(patient);
-        System.out.println("Patient added (minimal info): " + firstName + " " + lastName);
+        if (firstName != null && lastName != null && phone != phone) {
+            patient.setFirstName(firstName);
+            patient.setLastName(lastName);
+            patient.setPhoneNumber(phone);
+            patients.add(patient);
+            System.out.println("Patient added (minimal info): " + firstName + " " + lastName);
+        }
     }
 
     public static void addPatient(String firstName, String lastName, String phone,
@@ -143,4 +147,69 @@ public class PatientService {
         }
         System.out.println("--------------------");
     }
+
+    @Override
+    public void add(Object entity) {
+
+        if (entity != null) {
+            Patient patient = (Patient) entity;
+            patients.add(patient);
+            System.out.println("Patient added: ");
+        } else {
+            System.out.println("Cannot null patient.");
+        }
+    }
+
+    @Override
+    public void remove(String id) {
+        boolean removed = patients.removeIf(p -> p.getPatientId().equals(id));
+        if (removed)
+            System.out.println("Patient removed: " + id);
+        else
+            System.out.println("Patient not found: " + id);
+    }
+
+    @Override
+    public void getAll() {
+        for (Patient p : patients) {
+            System.out.println(p);
+        }
+
+    }
+
+    @Override
+    public void search(String keyword) {
+        List<Patient> results = new ArrayList<>();
+        keyword = keyword.toLowerCase();
+        for (Patient p : patients) {
+            if (
+                    (p.getPatientId() != null && p.getPatientId().toLowerCase().contains(keyword)) ||
+                            (p.getFirstName() != null && p.getFirstName().toLowerCase().contains(keyword)) ||
+                            (p.getLastName() != null && p.getLastName().toLowerCase().contains(keyword)) ||
+                            (p.getEmail() != null && p.getEmail().toLowerCase().contains(keyword)) ||
+                            (p.getGender() != null && p.getGender().toLowerCase().contains(keyword)) ||
+                            (p.getPhoneNumber() != null && p.getPhoneNumber().toLowerCase().contains(keyword)) ||
+                            (p.getBloodGroup() != null && p.getBloodGroup().toLowerCase().contains(keyword)) ||
+                            (p.getEmergencyContact() != null && p.getEmergencyContact().toLowerCase().contains(keyword))) {
+                results.add(p);
+            }
+        }
+        if (results.isEmpty()) {
+            System.out.println("No patient found with : " + keyword);
+        }
+        for (Patient patient:results){
+            System.out.println(patient);
+        }
+    }
+
+    @Override
+    public void searchById(String id) {
+        for (Patient p:patients){
+            if (p.getPatientId().equalsIgnoreCase(id)){
+                System.out.println(p);
+            }
+        }
+
+    }
+
 }
