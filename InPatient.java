@@ -1,10 +1,13 @@
 package Entity;
 
+import Interface.Billable;
+import Interface.Displayable;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public class InPatient extends Patient{
+public class InPatient extends Patient implements Displayable,Billable {
 
     private LocalDate admissionDate;
     private LocalDate dischargeDate;
@@ -114,7 +117,7 @@ public class InPatient extends Patient{
     public double calculateTotalCharges() {
         long days = calculateStayDuration();
         double total = days * dailyCharges;
-        System.out.println("Total Charges "+ total );
+        System.out.println("Total Charges " + total);
         return total;
     }
 
@@ -132,4 +135,36 @@ public class InPatient extends Patient{
         System.out.println("Total Charges: " + calculateTotalCharges());
     }
 
+    @Override
+    public void displaySummary() {
+        System.out.println("InPatient " + getFirstName() + " " + getLastName() +
+                " | Room: " + roomNumber + " | Stay: " + admissionDate + " → " + dischargeDate);
+    }
+
+    @Override
+    public double calculateCharges() {
+        long stayDays = ChronoUnit.DAYS.between(admissionDate, dischargeDate);
+        return stayDays * dailyCharges;
+    }
+
+    @Override
+    public void generateBill() {
+        double total = calculateCharges();
+        System.out.println("Bill Generated:");
+        System.out.println("Patient: " + getFirstName() + " " + getLastName());
+        System.out.println("Room: " + roomNumber + " | Bed: " + bedNumber);
+        System.out.println("Stay Duration: " + calculateStayDuration() + " days");
+        System.out.println("Daily Charge: " + dailyCharges);
+        System.out.println("Total Amount: " + total);
+    }
+
+    @Override
+    public void processPayment(double amount) {
+        double total = calculateCharges();
+        if (amount >= total) {
+            System.out.println("Payment of " + amount + " processed successfully.");
+        } else {
+            System.out.println("Insufficient payment. Remaining balance: " + (total - amount));
+        }
+    }
 }
