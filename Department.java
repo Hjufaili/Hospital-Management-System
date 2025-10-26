@@ -109,9 +109,8 @@ public class Department implements Displayable {
 
     @Override
     public void displaySummary() {
-        System.out.println("departmentName:     " + departmentName);
-        System.out.println("doctors:     " + doctors);
-        System.out.println("nurses:     " + nurses);
+        System.out.println("Department: " + departmentName + " (" + departmentId + ") | Head Doctor: " + headDoctorId);
+
 
     }
 
