@@ -3,12 +3,16 @@ package Service;
 import Entity.Appointment;
 import Entity.MedicalRecord;
 import Entity.Patient;
+import Interface.Appointable;
+import Interface.Manageable;
+import Interface.Searchable;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppointmentService {
+public class AppointmentService implements Manageable, Searchable, Appointable {
 
     private static List<Appointment> appointments = new ArrayList<>();
 
@@ -122,6 +126,18 @@ public class AppointmentService {
             a.setAppointmentTime(newTime);
             a.setStatus("Rescheduled");
             System.out.println("Appointment " + appointmentId + " rescheduled to " + newDate + " at " + newTime);
+        } else {
+            System.out.println("Appointment not found: " + appointmentId);
+        }
+    }
+
+    @Override
+    public void scheduleAppointment(Appointment appointment) {
+        if (appointment != null) {
+            appointments.add(appointment);
+            System.out.println("Appointment created: " + appointment.getAppointmentId());
+        } else {
+            System.out.println("Cannot create null appointment.");
         }
     }
 
@@ -130,6 +146,8 @@ public class AppointmentService {
         if (a != null) {
             a.setStatus("Cancelled");
             System.out.println("Appointment cancelled: " + appointmentId);
+        } else {
+            System.out.println("Appointment not found: " + appointmentId);
         }
     }
 
@@ -138,6 +156,8 @@ public class AppointmentService {
         if (a != null) {
             a.setStatus("Completed");
             System.out.println("Appointment completed" + appointmentId);
+        } else {
+            System.out.println("Appointment not found: " + appointmentId);
         }
     }
 
@@ -160,15 +180,22 @@ public class AppointmentService {
     }
 
     public static void createAppointment(Appointment appointment) {
-        addAppointment(appointment);
+        if (appointment != null) {
+            appointments.add(appointment);
+            System.out.println("Appointment created: " + appointment.getAppointmentId());
+        } else {
+            System.out.println("Cannot create null appointment.");
+        }
     }
 
-    public static void rescheduleAppointment(String appointmentId, LocalDate newDate) {
+    public void rescheduleAppointment(String appointmentId, LocalDate newDate) {
         Appointment a = getAppointmentById(appointmentId);
         if (a != null) {
             a.setAppointmentDate(newDate);
             a.setStatus("Rescheduled");
             System.out.println("Appointment " + appointmentId + " rescheduled to " + newDate);
+        } else {
+            System.out.println("Appointment not found: " + appointmentId);
         }
     }
 
@@ -208,5 +235,57 @@ public class AppointmentService {
             }
         }
     }
+
+    @Override
+    public void add(Object entity) {
+        if (entity instanceof Appointment) {
+            Appointment appointment = (Appointment) entity;
+            appointments.add(appointment);
+            System.out.println("Appointment added: " + appointment);
+        } else {
+            System.out.println("Invalid entity type. Must be Appointment.");
+        }
+    }
+
+    @Override
+    public void remove(String id) {
+        boolean removed = appointments.removeIf(a -> a.getAppointmentId().equals(id));
+        System.out.println(removed ? "Appointment removed: " + id : " Appointment not found: " + id);
+    }
+
+    @Override
+    public void getAll() {
+        if (appointments.isEmpty()) {
+            System.out.println("No appointments available.");
+        } else {
+            System.out.println("All Appointments:");
+            for (Appointment a : appointments) {
+                a.displaySummary();
+            }
+        }
+    }
+
+    @Override
+    public void search(String keyword) {
+        System.out.println("Searching appointments with keyword: " + keyword);
+        for (Appointment a : appointments) {
+            if (a.getNotes().contains(keyword) || a.getReason().contains(keyword)) {
+                a.displayInfo();
+                System.out.println("----------------");
+            }
+        }
+    }
+
+    @Override
+    public void searchById(String id) {
+        for (Appointment a : appointments) {
+            if (a.getAppointmentId().equals(id)) {
+                a.displayInfo();
+                return;
+            }
+        }
+        System.out.println("Appointment not found: " + id);
+    }
+
 
 }
