@@ -1,9 +1,11 @@
 package Entity;
 
+import Interface.Displayable;
+
 import java.time.LocalDate;
 import java.util.List;
 
-public class Patient extends Person {
+public class Patient extends Person implements Displayable {
 
     private String patientId;
     private String bloodGroup;
@@ -123,6 +125,12 @@ public class Patient extends Person {
         System.out.println("medicalRecords:         " + medicalRecords);
         System.out.println("appointments:         " + appointments);
 
+    }
+
+    @Override
+    public void displaySummary() {
+        System.out.println("Patient: " + getFirstName() + " " + getLastName() +
+                " | ID: " + patientId + " | Blood: " + bloodGroup);
     }
 
     @Override
