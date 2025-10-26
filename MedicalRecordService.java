@@ -1,11 +1,13 @@
 package Service;
 
 import Entity.MedicalRecord;
+import Interface.Manageable;
+import Interface.Searchable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MedicalRecordService {
+public class MedicalRecordService implements Manageable, Searchable {
     private static List<MedicalRecord> medicalRecords = new ArrayList<>();
 
     public static void addMedicalRecord(MedicalRecord medicalRecord) {
@@ -94,16 +96,71 @@ public class MedicalRecordService {
 
     public static void displayPatientHistory(String patientId) {
         List<MedicalRecord> patientRecords = getRecordsByPatientId(patientId);
-        if (patientRecords.isEmpty()) return;
+        if (patientRecords.isEmpty()) {
+            return;
+        }
 
-        System.out.println("Medical History for Patient: " + patientId );
+        System.out.println("Medical History for Patient: " + patientId);
         for (MedicalRecord r : patientRecords) {
             r.displayInfo();
         }
-        System.out.println("===========================");
+        System.out.println("========================");
     }
 
     public List<MedicalRecord> getAllRecords() {
         return medicalRecords;
+    }
+
+    @Override
+    public void add(Object entity) {
+        if (entity instanceof MedicalRecord) {
+            MedicalRecord record = (MedicalRecord) entity;
+            medicalRecords.add(record);
+            System.out.println("Medical record added: " + record.getRecordId());
+        } else {
+            System.out.println("Invalid entity type. Must be MedicalRecord.");
+        }
+    }
+
+    @Override
+    public void remove(String id) {
+        boolean removed = medicalRecords.removeIf(r -> r.getRecordId().equals(id));
+        System.out.println(removed
+                ? "Record removed successfully (ID: " + id + ")"
+                : "Record not found with ID: " + id);
+    }
+
+    @Override
+    public void getAll() {
+        if (medicalRecords.isEmpty()) {
+            System.out.println("No medical records available.");
+            return;
+        }
+        System.out.println("All Medical Records:");
+        for (MedicalRecord r : medicalRecords) {
+            r.displaySummary();
+        }
+        System.out.println("--------------------------------");
+    }
+
+    @Override
+    public void search(String keyword) {
+        System.out.println("Searching medical records for keyword: " + keyword);
+        boolean found = false;
+        for (MedicalRecord r : medicalRecords) {
+            if ((r.getDiagnosis() != null && r.getDiagnosis().toLowerCase().contains(keyword.toLowerCase())) ||
+                    (r.getNotes() != null && r.getNotes().toLowerCase().contains(keyword.toLowerCase()))) {
+                r.displayInfo();
+                found = true;
+            }
+        }
+        if (!found) System.out.println("No records found for: " + keyword);
+    }
+
+    @Override
+    public void searchById(String id) {
+        MedicalRecord record = getMedicalRecordById(id);
+        if (record != null) record.displayInfo();
+        else System.out.println("Record not found with ID: " + id);
     }
 }
