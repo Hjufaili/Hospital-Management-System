@@ -1,9 +1,11 @@
 package Entity;
 
+import Interface.Displayable;
+
 import java.time.LocalDate;
 import java.util.List;
 
-public class Surgeon extends Doctor{
+public class Surgeon extends Doctor implements Displayable {
 
     private static Integer surgeriesPerformed;
     private static List<String> surgeryTypes;
@@ -35,7 +37,8 @@ public class Surgeon extends Doctor{
                    List<String> availableSlots, List<Patient> assignedPatients,
                    Integer surgeriesPerformed, List<String> surgeryTypes,
                    Boolean operationTheatreAccess) {
-        super(doctorId, specialization, qualification, experienceYears, departmentId, consultationFee, availableSlots, assignedPatients);
+        super(doctorId, specialization, qualification, experienceYears, departmentId,
+                consultationFee, availableSlots, assignedPatients);
         this.surgeriesPerformed = surgeriesPerformed;
         this.surgeryTypes = surgeryTypes;
         this.operationTheatreAccess = operationTheatreAccess;
@@ -76,7 +79,7 @@ public class Surgeon extends Doctor{
 
     public void updateSurgeryCount(int newCount){
         if (newCount < 0) {
-            System.out.println("⚠️ Surgery count cannot be negative!");
+            System.out.println("Surgery count cannot be negative!");
             return;
         }
         this.surgeriesPerformed = newCount;
