@@ -2,11 +2,13 @@ package Service;
 
 import Entity.Doctor;
 import Entity.Patient;
+import Interface.Manageable;
+import Interface.Searchable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DoctorService {
+public class DoctorService implements Manageable, Searchable {
     private static List<Doctor> doctors = new ArrayList<>();
 
 
@@ -208,6 +210,60 @@ public class DoctorService {
         }
     }
 
+    @Override
+    public void add(Object entity) {
+        if (entity instanceof Doctor) {
+            Doctor doctor = (Doctor) entity;
+            doctors.add(doctor);
+            System.out.println("Doctor added: " + doctor.getFirstName() + " " + doctor.getLastName());
+        } else {
+            System.out.println("Invalid entity type. Must be Doctor.");
+        }
+    }
+
+    @Override
+    public void remove(String id) {
+        boolean removed = doctors.removeIf(d -> d.getDoctorId().equals(id));
+        System.out.println(removed
+                ? "Doctor removed successfully (ID: " + id + ")"
+                : "Doctor not found with ID: " + id);
+    }
+
+    @Override
+    public void getAll() {
+        if (doctors.isEmpty()) {
+            System.out.println("No doctors available.");
+            return;
+        }
+        System.out.println("All Doctors:");
+        for (Doctor d : doctors) {
+            d.displaySummary();
+        }
+        System.out.println("--------------------------------");
+    }
+
+    @Override
+    public void search(String keyword) {
+        System.out.println("Searching doctors with keyword: " + keyword);
+        boolean found = false;
+        for (Doctor d : doctors) {
+            if ((d.getFirstName() != null && d.getFirstName().toLowerCase().contains(keyword.toLowerCase())) ||
+                    (d.getLastName() != null && d.getLastName().toLowerCase().contains(keyword.toLowerCase())) ||
+                    (d.getSpecialization() != null && d.getSpecialization().toLowerCase().contains(keyword.toLowerCase())) ||
+                    (d.getDepartmentId() != null && d.getDepartmentId().equalsIgnoreCase(keyword))) {
+                d.displayInfo();
+                found = true;
+            }
+        }
+        if (!found) System.out.println("No doctors found for: " + keyword);
+    }
+
+    @Override
+    public void searchById(String id) {
+        Doctor doctor = getDoctorById(id);
+        if (doctor != null) doctor.displayInfo();
+        else System.out.println("Doctor not found with ID: " + id);
+    }
 }
 
 
