@@ -28,7 +28,7 @@ public class HelperUtils {
 
 
     public static boolean isValidString(String str) {
-        return (str != null && !str.trim().isEmpty());
+        return isNotNull(str);
     }
 
     public static boolean isValidString(String str, int minLength) {
@@ -52,7 +52,7 @@ public class HelperUtils {
     }
 
     public static String generateId(String prefix) {
-        int randomNum = new Random().nextInt(90000) + 10000; // 5 digits
+        int randomNum = new Random().nextInt(90000) + 10000;
         return prefix + "-" + randomNum;
     }
 
@@ -62,7 +62,7 @@ public class HelperUtils {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < length; i++) {
-            sb.append(random.nextInt(10)); // add random digit 0–9
+            sb.append(random.nextInt(10));
         }
 
         return prefix + "-" + sb.toString();
@@ -74,8 +74,8 @@ public class HelperUtils {
     }
 
 
-    public static boolean isValidDate(Date date) {
-        return (date != null);
+    public static boolean isValidDate(LocalDate date) {
+        return isNotNull(date);
     }
 
     public static boolean isValidDate(String dateStr) {
@@ -94,29 +94,27 @@ public class HelperUtils {
         return false;
     }
 
-    public static boolean isValidDate(Date date, Date minDate, Date maxDate) {
+    public static boolean isValidDate(LocalDate date, LocalDate minDate, LocalDate maxDate) {
         if (isNull(date) || isNull(minDate) || isNull(maxDate)) return false;
-        return (!date.before(minDate) && !date.after(maxDate));
+        return (!date.isBefore(minDate) && !date.isAfter(maxDate));
     }
 
-    public static boolean isFutureDate(Date date) {
+    public static boolean isFutureDate(LocalDate date) {
         if (isNull(date)) return false;
-        Date now = new Date();
-        return date.after(now);
+        LocalDate today = LocalDate.now();
+        return date.isAfter(today);
     }
 
-    public static boolean isPastDate(Date date) {
+    public static boolean isPastDate(LocalDate date) {
         if (isNull(date)) return false;
-        Date now = new Date();
-        return date.before(now);
+        LocalDate today = LocalDate.now();
+        return date.isBefore(today);
     }
 
-    public static boolean isToday(Date date) {
+    public static boolean isToday(LocalDate date) {
         if (isNull(date)) return false;
-
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-        Date today = new Date();
-        return fmt.format(today).equals(fmt.format(date));
+        LocalDate today = LocalDate.now();
+        return date.isEqual(today);
     }
 
 
@@ -155,6 +153,6 @@ public class HelperUtils {
         if (dateOfBirth.isAfter(today)) return false;
 
         int age = Period.between(dateOfBirth, today).getYears();
-        return (age >= 0 && age <= 120);
+        return isValidAge(age);
     }
 }
