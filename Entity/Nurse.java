@@ -1,9 +1,12 @@
 package Entity;
 
 import Interface.Displayable;
+import Utils.HelperUtils;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Nurse extends Person implements Displayable {
     private String nurseId;
@@ -13,6 +16,9 @@ public class Nurse extends Person implements Displayable {
     private List<Patient> assignedPatients;
 
     public Nurse() {
+        super();
+        this.nurseId = HelperUtils.generateId("NUR");
+        this.assignedPatients = new ArrayList<>();
     }
 
     public Nurse(String id, String firstName, String lastName, LocalDate dateOfBirth,
@@ -20,6 +26,16 @@ public class Nurse extends Person implements Displayable {
                  String nurseId, String departmentId, String shift,
                  String qualification, List<Patient> assignedPatients) {
         super(id, firstName, lastName, dateOfBirth, gender, phoneNumber, address, email);
+        setNurseId(nurseId);
+        setDepartmentId(departmentId);
+        setShift(shift);
+        setQualification(qualification);
+        setAssignedPatients(assignedPatients);
+    }
+
+    public Nurse(String nurseId, String departmentId, String shift,
+                 String qualification, List<Patient> assignedPatients) {
+        super();
         this.nurseId = nurseId;
         this.departmentId = departmentId;
         this.shift = shift;
@@ -27,13 +43,17 @@ public class Nurse extends Person implements Displayable {
         this.assignedPatients = assignedPatients;
     }
 
-    public Nurse(String nurseId, String departmentId, String shift,
-                 String qualification, List<Patient> assignedPatients) {
-        this.nurseId = nurseId;
-        this.departmentId = departmentId;
-        this.shift = shift;
-        this.qualification = qualification;
-        this.assignedPatients = assignedPatients;
+    public Nurse(String firstName, String lastName, LocalDate dateOfBirth,
+                 String gender, String phoneNumber, String address, String email,
+                 String departmentId, String shift, String qualification) {
+
+        super(HelperUtils.generateId("PER"), firstName, lastName, dateOfBirth, gender, phoneNumber, email, address);
+
+        this.nurseId = HelperUtils.generateId("NUR");
+        setDepartmentId(departmentId);
+        setShift(shift);
+        setQualification(qualification);
+        this.assignedPatients = new ArrayList<>();
     }
 
     public String getNurseId() {
@@ -41,7 +61,11 @@ public class Nurse extends Person implements Displayable {
     }
 
     public void setNurseId(String nurseId) {
-        this.nurseId = nurseId;
+        if (HelperUtils.isValidString(nurseId, 5, 20)) { // Example constraints
+            this.nurseId = nurseId;
+        } else {
+            System.err.println("Validation Error: Invalid Nurse ID provided.");
+        }
     }
 
     public String getDepartmentId() {
@@ -49,7 +73,11 @@ public class Nurse extends Person implements Displayable {
     }
 
     public void setDepartmentId(String departmentId) {
-        this.departmentId = departmentId;
+        if (HelperUtils.isValidString(departmentId, 5, 20)) {
+            this.departmentId = departmentId;
+        } else {
+            System.err.println("Validation Error: Invalid department ID value provided.");
+        }
     }
 
     public String getShift() {
@@ -57,7 +85,11 @@ public class Nurse extends Person implements Displayable {
     }
 
     public void setShift(String shift) {
-        this.shift = shift;
+        if (Utils.HelperUtils.isValidString(shift)) { // Check for not null and not empty
+            this.shift = shift;
+        } else {
+            System.err.println("Invalid shift value provided.");
+        }
     }
 
     public String getQualification() {
@@ -65,7 +97,11 @@ public class Nurse extends Person implements Displayable {
     }
 
     public void setQualification(String qualification) {
-        this.qualification = qualification;
+        if (HelperUtils.isValidString(qualification, 3)) {
+            this.qualification = qualification;
+        } else {
+            System.err.println("Validation Error: Invalid qualification provided.");
+        }
     }
 
     public List<Patient> getAssignedPatients() {
@@ -73,14 +109,14 @@ public class Nurse extends Person implements Displayable {
     }
 
     public void setAssignedPatients(List<Patient> assignedPatients) {
-        this.assignedPatients = assignedPatients;
+        this.assignedPatients = (assignedPatients != null) ? assignedPatients : new ArrayList<>();
     }
 
     @Override
     public void displayInfo() {
         super.displayInfo();
         System.out.println("nurseId:           " + nurseId);
-        System.out.println("departmentIdl:           " + departmentId);
+        System.out.println("departmentId:           " + departmentId);
         System.out.println("shift:           " + shift);
         System.out.println("qualification:           " + qualification);
         System.out.println("assignedPatients:           " + assignedPatients);
@@ -102,16 +138,32 @@ public class Nurse extends Person implements Displayable {
     }
 
     public void assignPatient(Patient patient) {
-        if (patient != null && !assignedPatients.contains(patient)) {
+        if (HelperUtils.isNotNull(patient) && !assignedPatients.contains(patient)) {
             assignedPatients.add(patient);
-            System.out.println("Assigned patient " + patient.getFirstName() +
-                    " to Nurse " + getFirstName());
+            System.out.println("Assigned patient " + patient.getFirstName() + " (" + patient.getPatientId() + ") to Nurse " + getFirstName());
+        } else if (assignedPatients.contains(patient)) {
+            System.err.println("Patient " + patient.getPatientId() + " is already assigned to this nurse.");
+        } else {
+            System.err.println("Cannot assign a null patient.");
+        }
+    }
+
+    public void assignPatient(List<Patient> newPatients) {
+        if (HelperUtils.isNotNull(newPatients)) {
+            for (Patient patient : newPatients) {
+                assignPatient(patient);
+            }
+            System.out.println("Attempted to assign " + newPatients.size() + " patients.");
         }
     }
 
     public void removePatient(String patientId) {
-        assignedPatients.removeIf(p -> p.getPatientId().equals(patientId));
-        System.out.println("Removed patient " + patientId + " from Nurse " + getFirstName());
+        boolean removed = assignedPatients.removeIf(p -> HelperUtils.isNotNull(p) && Objects.equals(p.getPatientId(), patientId));
+        if (removed) {
+            System.out.println("Removed patient " + patientId + " from Nurse " + getFirstName());
+        } else {
+            System.err.println("Patient with ID " + patientId + " was not found assigned to Nurse " + getFirstName());
+        }
     }
 
     @Override
@@ -124,5 +176,6 @@ public class Nurse extends Person implements Displayable {
                 ", assignedPatients=" + (assignedPatients != null ? assignedPatients.size() : 0) +
                 '}';
     }
+
 
 }
