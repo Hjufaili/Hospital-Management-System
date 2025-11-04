@@ -1,6 +1,7 @@
 package Entity;
 
 import Interface.Displayable;
+import Utils.HelperUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -9,26 +10,27 @@ import java.util.Objects;
 public class Person implements Displayable {
 
     private String id;
-    private static String firstName;
-    private static String lastName;
+    private String firstName;
+    private String lastName;
     private LocalDate dateOfBirth;
     private String gender;
-    private static String phoneNumber;
+    private String phoneNumber;
     private String email;
     private String address;
 
     public Person(String id, String firstName, String lastName, LocalDate dateOfBirth, String gender, String phoneNumber, String address, String email) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dateOfBirth = dateOfBirth;
-        this.gender = gender;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.email = email;
+        setId(id);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setDateOfBirth(dateOfBirth);
+        setGender(gender);
+        setPhoneNumber(phoneNumber);
+        setEmail(email);
+        setAddress(address);
     }
 
     public Person() {
+        this.id = HelperUtils.generateId("PER");
     }
 
     public String getId() {
@@ -36,7 +38,12 @@ public class Person implements Displayable {
     }
 
     public void setId(String id) {
-        this.id = id;
+        if (HelperUtils.isValidString(id, 3, 50)) {
+            this.id = id;
+        } else {
+            System.err.println("Validation Error: Invalid ID format or length provided.");
+            this.id = HelperUtils.generateId("PER");
+        }
     }
 
     public String getAddress() {
@@ -44,7 +51,11 @@ public class Person implements Displayable {
     }
 
     public void setAddress(String address) {
-        this.address = address;
+        if (HelperUtils.isNotNull(address)) {
+            this.address = address;
+        } else {
+            System.err.println("Validation Error: Address cannot be null or empty.");
+        }
     }
 
     public String getEmail() {
@@ -52,7 +63,11 @@ public class Person implements Displayable {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        if (HelperUtils.isNotNull(email)) {
+            this.email = email;
+        } else {
+            System.err.println("Validation Error: Email cannot be null or empty.");
+        }
     }
 
     public String getPhoneNumber() {
@@ -60,7 +75,11 @@ public class Person implements Displayable {
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        if (HelperUtils.isValidString(phoneNumber, 8, 8)) {
+            this.phoneNumber = phoneNumber;
+        } else {
+            System.err.println("Validation Error: Invalid phone number.");
+        }
     }
 
     public String getGender() {
@@ -68,7 +87,11 @@ public class Person implements Displayable {
     }
 
     public void setGender(String gender) {
-        this.gender = gender;
+        if (HelperUtils.isValidString(gender) && (gender.equalsIgnoreCase("male") || gender.equalsIgnoreCase("female") || gender.equalsIgnoreCase("other"))) {
+            this.gender = gender;
+        } else {
+            System.err.println("Validation Error: Invalid gender.");
+        }
     }
 
     public LocalDate getDateOfBirth() {
@@ -76,23 +99,35 @@ public class Person implements Displayable {
     }
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+        if (HelperUtils.isValidAge(dateOfBirth)) {
+            this.dateOfBirth = dateOfBirth;
+        } else {
+            System.err.println("Validation Error: Invalid or future date of birth provided.");
+        }
     }
 
-    public static String getLastName() {
+    public String getLastName() {
         return lastName;
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        if (HelperUtils.isValidString(lastName, 2, 50)) {
+            this.lastName = lastName;
+        } else {
+            System.err.println("Validation Error: Invalid last name.");
+        }
     }
 
-    public static String getFirstName() {
+    public String getFirstName() {
         return firstName;
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        if (HelperUtils.isValidString(firstName, 2, 50)) {
+            this.firstName = firstName;
+        } else {
+            System.err.println("Validation Error: Invalid first name.");
+        }
     }
 
     public void displayInfo() {
@@ -121,7 +156,7 @@ public class Person implements Displayable {
                 "id='" + id + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", dataOdBirth=" + dateOfBirth +
+                ", dataOfBirth=" + dateOfBirth +
                 ", gender='" + gender + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", email='" + email + '\'' +
@@ -131,9 +166,10 @@ public class Person implements Displayable {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) return true;
+        if (HelperUtils.isNull(o) || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return Objects.equals(id, person.id);
+        return Objects.equals(id, person.id) && HelperUtils.isNotNull(id);
     }
 
     @Override
