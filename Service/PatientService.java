@@ -1,26 +1,57 @@
 package Service;
 
+import Entity.Appointment;
+import Entity.MedicalRecord;
 import Entity.Patient;
 import Interface.Manageable;
 import Interface.Searchable;
+import Utils.HelperUtils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class PatientService implements Manageable, Searchable {
-    private static List<Patient> patients = new ArrayList<>();
+    private static List<Patient> patients;
 
-    public static void addPatient(Patient patient) {
-        if (patient != null) {
-            patients.add(patient);
-            System.out.println("Patient added: ");
-        } else {
-            System.out.println("Cannot null patient.");
+    public PatientService() {
+        this.patients = new ArrayList<>();
+    }
+
+    private List<MedicalRecord> newMedicalRecordList() {
+        return new ArrayList<>();
+    }
+
+    // Helper method to create a new, initialized list of Appointment objects
+    private List<Appointment> newAppointmentList() {
+        return new ArrayList<>();
+    }
+
+
+    public void addPatient(Patient patient) {
+        if (HelperUtils.isNull(patient) || !HelperUtils.isValidString(patient.getPatientId())) {
+            System.err.println("Cannot add patient. Entity is null or ID is invalid.");
+            return;
         }
+
+        for (Patient existingPatient : patients) {
+            if (existingPatient.getPatientId().equals(patient.getPatientId())) {
+                System.err.println("Cannot add patient. ID already exists: " + patient.getPatientId());
+                return;
+            }
+        }
+
+        patients.add(patient);
+        System.out.println("✅ Patient added successfully: " + patient.getFirstName() + " " + patient.getLastName());
     }
 
     public void editPatient(String patientId, Patient updatedPatient) {
+        if (!HelperUtils.isValidString(patientId) || HelperUtils.isNull(updatedPatient)) {
+            System.err.println("Invalid ID or update object provided for editing.");
+            return;
+        }
+
         for (int i = 0; i < patients.size(); i++) {
             if (patients.get(i).getPatientId().equals(patientId)) {
                 patients.set(i, updatedPatient);
@@ -32,6 +63,13 @@ public class PatientService implements Manageable, Searchable {
     }
 
     public static void removePatient(String patientId) {
+
+        if (!HelperUtils.isValidString(patientId)) {
+            System.err.println("Invalid Patient ID provided for removal.");
+            return;
+        }
+
+
         boolean removed = patients.removeIf(p -> p.getPatientId().equals(patientId));
         if (removed)
             System.out.println("Patient removed: " + patientId);
@@ -65,27 +103,29 @@ public class PatientService implements Manageable, Searchable {
         return patients;
     }
 
-    public static void addPatient(String firstName, String lastName, String phone) {
-        Patient patient = new Patient();
-        if (firstName != null && lastName != null && phone != phone) {
-            patient.setFirstName(firstName);
-            patient.setLastName(lastName);
-            patient.setPhoneNumber(phone);
-            patients.add(patient);
+    public void addPatient(String firstName, String lastName, String phone) {
+        if (HelperUtils.isValidString(firstName) && HelperUtils.isValidString(lastName) && HelperUtils.isValidString(phone, 8, 8)) {
+
+            Patient newPatient = new Patient(firstName, lastName, phone, "N/A", "Unknown");
+            addPatient(newPatient);
             System.out.println("Patient added (minimal info): " + firstName + " " + lastName);
+
+        } else {
+            System.err.println("Failed to add patient: Invalid first name, last name, or phone number.");
         }
     }
 
-    public static void addPatient(String firstName, String lastName, String phone,
-                                  String bloodGroup, String email) {
-        Patient patient = new Patient();
-        patient.setFirstName(firstName);
-        patient.setLastName(lastName);
-        patient.setPhoneNumber(phone);
-        patient.setBloodGroup(bloodGroup);
-        patient.setEmail(email);
-        patients.add(patient);
-        System.out.println("Patient added (with blood group): " + firstName + " " + lastName);
+    public void addPatient(String firstName, String lastName, String phone,
+                           String bloodGroup, String email) {
+        if (HelperUtils.isValidString(firstName) && HelperUtils.isValidString(lastName) && HelperUtils.isValidString(phone, 8, 8)) {
+
+            Patient newPatient = new Patient(firstName, lastName, phone, email, bloodGroup);
+
+            addPatient(newPatient);
+            System.out.println("Patient added (with blood group): " + firstName + " " + lastName);
+        } else {
+            System.err.println("Failed to add patient: Validation error in provided details.");
+        }
     }
 
     public static List<Patient> searchPatients(String keyword) {
@@ -148,65 +188,48 @@ public class PatientService implements Manageable, Searchable {
         System.out.println("--------------------");
     }
 
+
+    @Override
     public void add(Object entity) {
 
-        if (entity != null) {
-            Patient patient = (Patient) entity;
-            patients.add(patient);
-            System.out.println("Patient added: ");
+        if (entity instanceof Patient) {
+            addPatient((Patient) entity);
+        } else if (HelperUtils.isNull(entity)) {
+            System.err.println("Entity is null.");
         } else {
-            System.out.println("Cannot null patient.");
+            System.err.println("Entity is not a Patient type.");
         }
     }
 
     @Override
     public void remove(String id) {
-        boolean removed = patients.removeIf(p -> p.getPatientId().equals(id));
-        if (removed)
-            System.out.println("Patient removed: " + id);
-        else
-            System.out.println("Patient not found: " + id);
+        removePatient(id);
     }
 
     @Override
     public void getAll() {
-        for (Patient p : patients) {
-            System.out.println(p);
-        }
+        displayAllPatients();
 
     }
 
     @Override
     public void search(String keyword) {
-        List<Patient> results = new ArrayList<>();
-        keyword = keyword.toLowerCase();
-        for (Patient p : patients) {
-            if (
-                    (p.getPatientId() != null && p.getPatientId().toLowerCase().contains(keyword)) ||
-                            (p.getFirstName() != null && p.getFirstName().toLowerCase().contains(keyword)) ||
-                            (p.getLastName() != null && p.getLastName().toLowerCase().contains(keyword)) ||
-                            (p.getEmail() != null && p.getEmail().toLowerCase().contains(keyword)) ||
-                            (p.getGender() != null && p.getGender().toLowerCase().contains(keyword)) ||
-                            (p.getPhoneNumber() != null && p.getPhoneNumber().toLowerCase().contains(keyword)) ||
-                            (p.getBloodGroup() != null && p.getBloodGroup().toLowerCase().contains(keyword)) ||
-                            (p.getEmergencyContact() != null && p.getEmergencyContact().toLowerCase().contains(keyword))) {
-                results.add(p);
-            }
-        }
+        List<Patient> results = searchPatients(keyword);
         if (results.isEmpty()) {
-            System.out.println("No patient found with : " + keyword);
-        }
-        for (Patient patient:results){
-            System.out.println(patient);
+            System.out.println("No patient found with keyword: " + keyword);
+        } else {
+            System.out.println("--- Search Results for '" + keyword + "' (" + results.size() + ") ---");
+            results.forEach(Patient::displaySummary);
+            System.out.println("------------------------------------");
         }
     }
 
     @Override
     public void searchById(String id) {
-        for (Patient p:patients){
-            if (p.getPatientId().equalsIgnoreCase(id)){
-                System.out.println(p);
-            }
+        Patient patient = getPatientById(id);
+        if (HelperUtils.isNotNull(patient)) {
+            System.out.println("Patient Found by ID: " + id);
+            patient.displayInfo();
         }
 
     }
