@@ -4,38 +4,59 @@ package Service;
 import Entity.Nurse;
 import Interface.Manageable;
 import Interface.Searchable;
+import Utils.HelperUtils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NurseService implements Manageable, Searchable {
-    private static List<Nurse> nurses = new ArrayList<>();
+    private List<Nurse> nurses;
 
-
-    public static void addNurse(Nurse nurse) {
-        if (nurse != null) {
-            nurses.add(nurse);
-            System.out.println("Nurse added");
-        } else {
-            System.out.println("Cannot add null nurse");
-        }
+    public NurseService() {
+        this.nurses = new ArrayList<>();
     }
 
-    public static void editNurse(String nurseId, Nurse updatednurse) {
-        if (!nurses.isEmpty()) {
-            for (int i = 0; i < nurses.size(); i++) {
-                if (nurses.get(i).getId().equals(nurseId)) {
-                    nurses.set(i, updatednurse);
-                    return;
-                }
+
+    public void addNurse(Nurse nurse) {
+        if (HelperUtils.isNull(nurse) || !HelperUtils.isValidString(nurse.getNurseId())) {
+            System.err.println("Cannot add null nurse or nurse with invalid ID.");
+            return;
+        }
+
+        for (Nurse existingNurse : nurses) {
+            if (existingNurse.getNurseId().equals(nurse.getNurseId())) {
+                System.err.println("Cannot add nurse. ID already exists: " + nurse.getNurseId());
+                return;
             }
-            System.out.println("No nurse found: " + nurseId);
         }
-        System.out.println("No nurse");
+
+        nurses.add(nurse);
+        System.out.println("Nurse added successfully: " + nurse.getFirstName() + " " + nurse.getLastName());
+    }
+
+    public void editNurse(String nurseId, Nurse updatednurse) {
+        if (!HelperUtils.isValidString(nurseId) || HelperUtils.isNull(updatednurse)) {
+            System.err.println("Invalid ID or update object provided for editing.");
+            return;
+        }
+        for (int i = 0; i < nurses.size(); i++) {
+            if (nurses.get(i).getId().equals(nurseId)) {
+                nurses.set(i, updatednurse);
+                System.out.println(" updated successfully!");
+                return;
+            }
+        }
+        System.out.println("No nurse found: " + nurseId);
     }
 
 
-    public static void removeNurse(String nurseId) {
+    public void removeNurse(String nurseId) {
+
+        if (!HelperUtils.isValidString(nurseId)) {
+            System.err.println("Invalid nurse Id provided for removal.");
+            return;
+        }
         boolean removed = nurses.removeIf(n -> n.getNurseId().equals(nurseId));
 
         if (removed) {
@@ -45,7 +66,7 @@ public class NurseService implements Manageable, Searchable {
         }
     }
 
-    public static Nurse getNurseById(String nurseId) {
+    public Nurse getNurseById(String nurseId) {
         for (Nurse n : nurses) {
             if (n.getNurseId().equals(nurseId)) {
                 return n;
@@ -55,7 +76,7 @@ public class NurseService implements Manageable, Searchable {
         return null;
     }
 
-    public static void displayAllNurses() {
+    public void displayAllNurses() {
         if (nurses.isEmpty()) {
             System.out.println("No nurses available");
             return;
@@ -67,7 +88,8 @@ public class NurseService implements Manageable, Searchable {
         System.out.println("---------------");
     }
 
-    public static List<Nurse> getNursesByDepartment(String departmentId) {
+    public List<Nurse> getNursesByDepartment(String departmentId) {
+        if (!HelperUtils.isValidString(departmentId)) return new ArrayList<>();
         List<Nurse> results = new ArrayList<>();
 
         for (Nurse n : nurses) {
@@ -84,7 +106,8 @@ public class NurseService implements Manageable, Searchable {
     }
 
 
-    public static List<Nurse> getNursesByShift(String shift) {
+    public List<Nurse> getNursesByShift(String shift) {
+        if (!HelperUtils.isValidString(shift)) return new ArrayList<>();
         List<Nurse> results = new ArrayList<>();
 
         for (Nurse n : nurses) {
@@ -104,6 +127,24 @@ public class NurseService implements Manageable, Searchable {
         return nurses;
     }
 
+    public void addNurse(String firstName, String lastName, String departmentId) {
+        if (HelperUtils.isValidString(firstName) && HelperUtils.isValidString(lastName) && HelperUtils.isValidString(departmentId)) {
+
+            // Create a new Nurse object using a suitable constructor (or setters)
+            Nurse newNurse = new Nurse(
+                    HelperUtils.generateId("PER"), firstName, lastName, (LocalDate) null,
+                    "N/A", "N/A", "N/A", "N/A", // Minimal Person fields
+
+                    HelperUtils.generateId("NUR"), departmentId, "Day", "N/A", 0, 0 // Minimal Nurse fields
+            );
+
+            addNurse(newNurse); // Delegate to the safe core addNurse(Nurse) method
+            System.out.println("Nurse added to department: " + departmentId);
+        } else {
+            System.err.println("Failed to add nurse: Invalid name or department ID.");
+        }
+    }
+
 
     @Override
     public void add(Object entity) {
@@ -111,6 +152,8 @@ public class NurseService implements Manageable, Searchable {
             Nurse nurse = (Nurse) entity;
             nurses.add(nurse);
             System.out.println("Nurse added: " + nurse.getFirstName() + " " + nurse.getLastName());
+        } else if (HelperUtils.isNull(entity)) {
+            System.err.println("Entity is null.");
         } else {
             System.out.println("Invalid entity type. Must be Nurse.");
         }
@@ -118,28 +161,18 @@ public class NurseService implements Manageable, Searchable {
 
     @Override
     public void remove(String id) {
-        boolean removed = nurses.removeIf(n -> n.getNurseId().equals(id));
-        System.out.println(removed
-                ? "Nurse removed successfully (ID: " + id + ")"
-                : "Nurse not found with ID: " + id);
+        removeNurse(id);
     }
 
     @Override
     public void getAll() {
-        if (nurses.isEmpty()) {
-            System.out.println("No nurses available.");
-            return;
-        }
-        System.out.println("All Nurses:");
-        for (Nurse n : nurses) {
-            n.displaySummary();
-        }
-        System.out.println("--------------------------------");
+        displayAllNurses();
     }
 
     @Override
     public void search(String keyword) {
         System.out.println("Searching for nurses containing: " + keyword);
+        if (!HelperUtils.isValidString(keyword)) return;
         boolean found = false;
         for (Nurse n : nurses) {
             if ((n.getFirstName() != null && n.getFirstName().toLowerCase().contains(keyword.toLowerCase())) ||
@@ -155,9 +188,12 @@ public class NurseService implements Manageable, Searchable {
 
     @Override
     public void searchById(String id) {
+
         Nurse nurse = getNurseById(id);
-        if (nurse != null) nurse.displayInfo();
-        else System.out.println("Nurse not found with ID: " + id);
+        if (HelperUtils.isNotNull(nurse)) {
+            System.out.println("Patient Found by ID: " + id);
+            nurse.displayInfo();
+        }
     }
 
 
