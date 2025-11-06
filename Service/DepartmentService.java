@@ -4,23 +4,60 @@ import Entity.Department;
 import Entity.Doctor;
 import Interface.Manageable;
 import Interface.Searchable;
+import Utils.HelperUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DepartmentService implements Manageable, Searchable {
-    private static List<Department> departments = new ArrayList<>();
+    private List<Department> departments;
 
+    private final DoctorService doctorService;
 
-    public static void addDepartment(Department department) {
-        if (department != null) {
-            departments.add(department);
-            System.out.println("department is added: " + department);
-        }
-        System.out.println("Cannot add null department ");
+    public DepartmentService(DoctorService doctorService) {
+        this.departments = new ArrayList<>();
+        this.doctorService = doctorService;
     }
 
-    public static void editDepartment(String departmentId, Department updateddepartment) {
+
+    public void addDepartment(Department department) {
+        if (HelperUtils.isNull(department) || !HelperUtils.isValidString(department.getDepartmentId())) {
+            System.err.println("Cannot add null department or department with invalid ID.");
+            return;
+        }
+
+        for (Department existingDept : departments) {
+            if (existingDept.getDepartmentId().equals(department.getDepartmentId())) {
+                System.err.println("Cannot add department. ID already exists: " + department.getDepartmentId());
+                return;
+            }
+        }
+
+        departments.add(department);
+        System.out.println("Department added: " + department.getDepartmentName());
+    }
+
+    public void addDepartment(String departmentName, String contactPhone) {
+        if (HelperUtils.isValidString(departmentName) && HelperUtils.isValidString(contactPhone, 8, 8)) {
+
+            Department newDept = new Department(
+                    HelperUtils.generateId("DEPT"),
+                    departmentName,
+                    contactPhone
+            );
+
+            addDepartment(newDept);
+        } else {
+            System.err.println("Failed to add department: Invalid name or phone number.");
+        }
+    }
+
+    public void editDepartment(String departmentId, Department updateddepartment) {
+        if (!HelperUtils.isValidString(departmentId) || HelperUtils.isNull(updateddepartment)) {
+            System.err.println("Invalid ID or update object provided for editing.");
+            return;
+        }
+
         for (int i = 0; i < departments.size(); i++) {
             if (departments.get(i).getDepartmentId().equals(departmentId)) {
                 departments.set(i, updateddepartment);
@@ -31,7 +68,12 @@ public class DepartmentService implements Manageable, Searchable {
         System.out.println("departmentId not found: " + departmentId);
     }
 
-    public static void removeDepartment(String departmentId) {
+    public void removeDepartment(String departmentId) {
+        if (!HelperUtils.isValidString(departmentId)) {
+            System.err.println("Invalid Department ID provided for removal.");
+            return;
+        }
+
         boolean removed = departments.removeIf(m -> m.getDepartmentId().equals(departmentId));
 
         if (removed) {
@@ -41,7 +83,7 @@ public class DepartmentService implements Manageable, Searchable {
         }
     }
 
-    public static Department getDepartmentById(String departmentId) {
+    public Department getDepartmentById(String departmentId) {
         for (Department m : departments) {
             if (m.getDepartmentId() != null && m.getDepartmentId().equals(departmentId)) {
                 return m;
@@ -51,7 +93,7 @@ public class DepartmentService implements Manageable, Searchable {
         return null;
     }
 
-    public static void displayAllDepartments() {
+    public void displayAllDepartments() {
         if (departments.isEmpty()) {
             System.out.println("No departments available.");
             return;
@@ -63,8 +105,8 @@ public class DepartmentService implements Manageable, Searchable {
         System.out.println("------------------");
     }
 
-    public static void assignDoctorToDepartment(String doctorId, String departmentId) {
-        Doctor doctor = DoctorService.getDoctorById(doctorId);
+    public void assignDoctorToDepartment(String doctorId, String departmentId) {
+        Doctor doctor = doctorService.getDoctorById(doctorId);
         Department department = getDepartmentById(departmentId);
 
         if (doctor == null) {
@@ -98,27 +140,21 @@ public class DepartmentService implements Manageable, Searchable {
 
     @Override
     public void remove(String id) {
-        boolean removed = departments.removeIf(d -> d.getDepartmentId().equals(id));
-        System.out.println(removed
-                ? "Department removed successfully (ID: " + id + ")"
-                : "Department not found with ID: " + id);
+        removeDepartment(id);
     }
 
     @Override
     public void getAll() {
-        if (departments.isEmpty()) {
-            System.out.println("No departments available.");
-            return;
-        }
-        System.out.println("All Departments:");
-        for (Department d : departments) {
-            d.displaySummary();
-        }
-        System.out.println("--------------------------------");
+        displayAllDepartments();
     }
 
     @Override
     public void search(String keyword) {
+        if (!HelperUtils.isValidString(keyword)) {
+            System.out.println("Invalid search keyword.");
+            return;
+        }
+
         System.out.println("Searching departments with keyword: " + keyword);
         boolean found = false;
         for (Department d : departments) {
