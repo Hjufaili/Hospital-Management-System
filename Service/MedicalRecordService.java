@@ -3,23 +3,58 @@ package Service;
 import Entity.MedicalRecord;
 import Interface.Manageable;
 import Interface.Searchable;
+import Utils.HelperUtils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MedicalRecordService implements Manageable, Searchable {
-    private static List<MedicalRecord> medicalRecords = new ArrayList<>();
+    private List<MedicalRecord> medicalRecords;
 
-    public static void addMedicalRecord(MedicalRecord medicalRecord) {
-        if (medicalRecord != null) {
-            medicalRecords.add(medicalRecord);
-            System.out.println("Medical record is added: " + medicalRecord);
+    public MedicalRecordService (){
+        this.medicalRecords=new ArrayList<>();
+    }
+
+    public  void addMedicalRecord(MedicalRecord medicalRecord) {
+        if (HelperUtils.isNull(medicalRecord) || !HelperUtils.isValidString(medicalRecord.getRecordId())) {
+            System.err.println("Cannot add null medical record or one with an invalid ID.");
+            return;
         }
-        System.out.println("Cannot add null Medical record ");
+
+        for (MedicalRecord existingRecord : medicalRecords) {
+            if (existingRecord.getRecordId().equals(medicalRecord.getRecordId())) {
+                System.err.println("Cannot add medical record. ID already exists: " + medicalRecord.getRecordId());
+                return;
+            }
+        }
+
+        medicalRecords.add(medicalRecord);
+        System.out.println("Medical record added: " + medicalRecord.getRecordId());
 
     }
 
-    public static void editMedicalRecord(String medicalRecordsId, MedicalRecord updatedmedicalRecord) {
+    public void addMedicalRecord(String patientId, String doctorId, String diagnosis) {
+        if (HelperUtils.isValidString(patientId) && HelperUtils.isValidString(doctorId) && HelperUtils.isValidString(diagnosis)) {
+
+            MedicalRecord newRecord = new MedicalRecord(
+                    HelperUtils.generateId("REC"), patientId, doctorId,
+                    LocalDate.now(), diagnosis, "Initial notes");
+
+            addMedicalRecord(newRecord);
+        } else {
+            System.err.println("Failed to add medical record: Patient ID, Doctor ID, or Diagnosis is invalid.");
+        }
+    }
+
+
+    public  void editMedicalRecord(String medicalRecordsId, MedicalRecord updatedmedicalRecord) {
+        if (!HelperUtils.isValidString(medicalRecordsId) || HelperUtils.isNull(updatedmedicalRecord)) {
+            System.err.println("Invalid ID or update object provided for editing.");
+            return;
+        }
+
         for (int i = 0; i < medicalRecords.size(); i++) {
             if (medicalRecords.get(i).getRecordId().equals(medicalRecordsId)) {
                 medicalRecords.set(i, updatedmedicalRecord);
@@ -30,7 +65,12 @@ public class MedicalRecordService implements Manageable, Searchable {
         System.out.println("MedicalRecordId not found: " + medicalRecordsId);
     }
 
-    public static void removeMedicalRecord(String medicalRecordsId) {
+    public  void removeMedicalRecord(String medicalRecordsId) {
+        if (!HelperUtils.isValidString(medicalRecordsId)) {
+            System.err.println("Invalid Medical Record ID provided for removal.");
+            return;
+        }
+
         boolean removed = medicalRecords.removeIf(m -> m.getRecordId().equals(medicalRecordsId));
 
         if (removed) {
@@ -40,7 +80,8 @@ public class MedicalRecordService implements Manageable, Searchable {
         }
     }
 
-    public static MedicalRecord getMedicalRecordById(String medicalRecordsId) {
+    public  MedicalRecord getMedicalRecordById(String medicalRecordsId) {
+
         for (MedicalRecord m : medicalRecords) {
             if (m.getRecordId() != null && m.getRecordId().equals(medicalRecordsId)) {
                 return m;
@@ -50,17 +91,20 @@ public class MedicalRecordService implements Manageable, Searchable {
         return null;
     }
 
-    public static void displayAllMedicalRecords() {
+    public  void displayAllMedicalRecords() {
         if (medicalRecords.isEmpty()) {
             System.out.println("No medical records available");
+            return;
         }
         for (MedicalRecord m : medicalRecords) {
-            System.out.println(m);
+            m.displaySummary();
         }
         System.out.println("---------------");
     }
 
-    public static List<MedicalRecord> getRecordsByPatientId(String patientId) {
+    public  List<MedicalRecord> getRecordsByPatientId(String patientId) {
+        if (!HelperUtils.isValidString(patientId)) return new ArrayList<>();
+
         List<MedicalRecord> results = new ArrayList<>();
 
         for (MedicalRecord m : medicalRecords) {
@@ -77,7 +121,9 @@ public class MedicalRecordService implements Manageable, Searchable {
         return results;
     }
 
-    public static List<MedicalRecord> getRecordsByDoctorId(String doctorId) {
+    public  List<MedicalRecord> getRecordsByDoctorId(String doctorId) {
+        if (!HelperUtils.isValidString(doctorId)) return new ArrayList<>();
+
         List<MedicalRecord> results = new ArrayList<>();
 
         for (MedicalRecord m : medicalRecords) {
@@ -94,7 +140,7 @@ public class MedicalRecordService implements Manageable, Searchable {
         return results;
     }
 
-    public static void displayPatientHistory(String patientId) {
+    public void displayPatientHistory(String patientId) {
         List<MedicalRecord> patientRecords = getRecordsByPatientId(patientId);
         if (patientRecords.isEmpty()) {
             return;
@@ -114,47 +160,47 @@ public class MedicalRecordService implements Manageable, Searchable {
     @Override
     public void add(Object entity) {
         if (entity instanceof MedicalRecord) {
-            MedicalRecord record = (MedicalRecord) entity;
-            medicalRecords.add(record);
-            System.out.println("Medical record added: " + record.getRecordId());
+            addMedicalRecord((MedicalRecord) entity);
         } else {
-            System.out.println("Invalid entity type. Must be MedicalRecord.");
+            System.err.println("Invalid entity type. Must be MedicalRecord.");
         }
     }
 
     @Override
     public void remove(String id) {
-        boolean removed = medicalRecords.removeIf(r -> r.getRecordId().equals(id));
-        System.out.println(removed
-                ? "Record removed successfully (ID: " + id + ")"
-                : "Record not found with ID: " + id);
+        removeMedicalRecord(id);
     }
 
     @Override
     public void getAll() {
-        if (medicalRecords.isEmpty()) {
-            System.out.println("No medical records available.");
-            return;
-        }
-        System.out.println("All Medical Records:");
-        for (MedicalRecord r : medicalRecords) {
-            r.displaySummary();
-        }
-        System.out.println("--------------------------------");
+        displayAllMedicalRecords();
     }
 
     @Override
     public void search(String keyword) {
         System.out.println("Searching medical records for keyword: " + keyword);
-        boolean found = false;
+
+        if (!HelperUtils.isValidString(keyword)) return;
+
+        final String lowerKeyword = keyword.toLowerCase(Locale.ROOT);
+        List<MedicalRecord> results = new ArrayList<>();
+
         for (MedicalRecord r : medicalRecords) {
-            if ((r.getDiagnosis() != null && r.getDiagnosis().toLowerCase().contains(keyword.toLowerCase())) ||
-                    (r.getNotes() != null && r.getNotes().toLowerCase().contains(keyword.toLowerCase()))) {
-                r.displayInfo();
-                found = true;
+            if ((r.getDiagnosis() != null && r.getDiagnosis().toLowerCase().contains(lowerKeyword)) ||
+                    (r.getNotes() != null && r.getNotes().toLowerCase().contains(lowerKeyword))) {
+                results.add(r);
             }
         }
-        if (!found) System.out.println("No records found for: " + keyword);
+
+        if (results.isEmpty()) {
+            System.out.println("No records found for: " + keyword);
+        } else {
+            System.out.println("--- Search Results for '" + keyword + "' (" + results.size() + ") ---");
+            for (MedicalRecord r : results) {
+                r.displaySummary();
+            }
+            System.out.println("--------------------------------");
+        }
     }
 
     @Override
