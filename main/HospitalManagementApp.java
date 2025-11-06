@@ -264,17 +264,24 @@ public class HospitalManagementApp {
 
         switch (getUserChoice()) {
             case 1 -> addDoctor();
-            case 2 -> doctorService.getAll();
-            case 3 -> {
-                System.out.print("Enter specialization or name: ");
+            case 2 -> addSurgeon();
+            case 3 -> addConsultant();
+            case 4 -> addGeneralPractitioner();
+            case 5 -> doctorService.getAll();
+            case 6 -> {
+                System.out.print("Enter specialization or name to search: ");
                 String keyword = scanner.nextLine();
                 doctorService.search(keyword);
             }
-            case 4 -> {
+            case 7 -> doctorService.getAvailableDoctors(); // Assuming this method exists
+            case 8 -> assignPatientToDoctor(); // New method to implement
+            case 9 -> updateDoctorInfo(); // New method to implement
+            case 10 -> {
                 System.out.print("Enter doctor ID to remove: ");
                 String id = scanner.nextLine();
                 doctorService.remove(id);
             }
+            case 11 -> {} // Back
             default -> System.out.println("Invalid option.");
         }
     }
@@ -289,11 +296,94 @@ public class HospitalManagementApp {
         System.out.print("Enter qualification: ");
         String qual = scanner.nextLine();
         System.out.print("Enter years of experience: ");
-        int years = Integer.parseInt(scanner.nextLine());
+        int years = scanner.nextInt();
         scanner.nextLine();
+        System.out.print("Enter department ID: ");
+        String deptId = scanner.nextLine();
 
-        Doctor d = new Doctor(first, last, spec, qual, years, "DPT01");
+        Doctor d = new Doctor(first, last, spec, qual, years, deptId);
         doctorService.add(d);
+        System.out.println("Doctor registered successfully: " + d.getDoctorId());
+    }
+
+    private static void addSurgeon() {
+        System.out.print("Enter first name: ");
+        String first = scanner.nextLine();
+        System.out.print("Enter last name: ");
+        String last = scanner.nextLine();
+        System.out.print("Enter specialization: ");
+        String spec = scanner.nextLine();
+        System.out.print("Enter department ID: ");
+        String deptId = scanner.nextLine();
+
+        Surgeon s = new Surgeon(first, last, spec, deptId);
+        doctorService.add(s);
+        System.out.println("Surgeon registered successfully: " + s.getDoctorId());
+    }
+
+    private static void addConsultant() {
+        System.out.print("Enter first name: ");
+        String first = scanner.nextLine();
+        System.out.print("Enter last name: ");
+        String last = scanner.nextLine();
+        System.out.print("Enter specialization: ");
+        String spec = scanner.nextLine();
+        System.out.print("Enter department ID: ");
+        String deptId = scanner.nextLine();
+
+        Consultant c = new Consultant(first, last, spec, deptId);
+        doctorService.add(c);
+        System.out.println("Consultant registered successfully: " + c.getDoctorId());
+    }
+
+    private static void addGeneralPractitioner() {
+        System.out.print("Enter first name: ");
+        String first = scanner.nextLine();
+        System.out.print("Enter last name: ");
+        String last = scanner.nextLine();
+        System.out.print("Enter specialization: ");
+        String spec = scanner.nextLine();
+        System.out.print("Enter department ID: ");
+        String deptId = scanner.nextLine();
+
+        GeneralPractitioner gp = new GeneralPractitioner(first, last, spec, deptId);
+        doctorService.add(gp);
+        System.out.println("General Practitioner registered successfully: " + gp.getDoctorId());
+    }
+
+    private static void assignPatientToDoctor() {
+        System.out.print("Enter Patient ID: ");
+        String patientId = scanner.nextLine();
+        System.out.print("Enter Doctor ID: ");
+        String doctorId = scanner.nextLine();
+
+        Patient p = patientService.getPatientById(patientId);
+        Doctor d = doctorService.getDoctorById(doctorId);
+
+        if (p != null && d != null) {
+            d.getAssignedPatients().add(p);
+            System.out.println("Patient " + p.getFirstName() + " assigned to Dr. " + d.getLastName());
+        } else {
+            System.out.println("Invalid Patient ID or Doctor ID.");
+        }
+    }
+
+    private static void updateDoctorInfo() {
+        System.out.print("Enter doctor ID to update: ");
+        String id = scanner.nextLine();
+        Doctor d = doctorService.getDoctorById(id);
+
+        if (d != null) {
+            System.out.println("Updating doctor: Dr. " + d.getLastName());
+            System.out.print("Enter new consultation fee (current: " + d.getConsultationFee() + "): ");
+            Double newFee = scanner.nextDouble();
+            if (newFee != null) d.setConsultationFee(newFee);
+
+            doctorService.update(d);
+            System.out.println("Doctor information updated.");
+        } else {
+            System.out.println("Doctor not found.");
+        }
     }
 
 
