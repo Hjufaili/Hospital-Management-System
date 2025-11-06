@@ -6,6 +6,7 @@ import Utils.HelperUtils;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -16,16 +17,17 @@ public class HospitalManagementApp {
 
     private static final DoctorService doctorService = new DoctorService();
     private static final NurseService nurseService = new NurseService();
-    private static final DepartmentService departmentService = new DepartmentService();
     private static final AppointmentService appointmentService = new AppointmentService();
     private static final MedicalRecordService medicalRecordService = new MedicalRecordService();
     private static final PatientService patientService = new PatientService();
-    private static final Patient patient=new Patient();
+    private static final DepartmentService departmentService = new DepartmentService(doctorService);
 
     public static void main(String[] args) {
         System.out.println("===============================================");
         System.out.println("WELCOME TO HOSPITAL MANAGEMENT SYSTEM");
         System.out.println("===============================================");
+
+        addSampleData();
 
         while (running) {
             showMainMenu();
@@ -78,23 +80,30 @@ public class HospitalManagementApp {
         System.out.println("7. Update Patient Information");
         System.out.println("8. Remove Patient");
         System.out.println("9. View Patient Medical History");
-        System.out.println("9. Back");
+        System.out.println("10. Back");
 
 
         System.out.print("Enter choice: ");
 
         switch (getUserChoice()) {
             case 1 -> registerNewPatient();
-            case 2 -> patient.displaySummary();
-            case 3 -> {
-                System.out.print("Enter patient name or ID: ");
+            case 2 -> registerNewInPatient();
+            case 3 -> registerNewOutPatient();
+            case 4 -> registerNewEmergencyPatient();
+            case 5 -> patientService.getAll();
+            case 6 -> {
+                System.out.print("Enter patient name or ID to search: ");
                 String keyword = scanner.nextLine();
                 patientService.search(keyword);
             }
-            case 4 -> {
+            case 7 -> updatePatientInfo();
+            case 8 -> {
                 System.out.print("Enter patient ID to remove: ");
                 String id = scanner.nextLine();
                 patientService.remove(id);
+            }
+            case 9 -> viewPatientMedicalHistory();
+            case 10 -> {
             }
             default -> System.out.println("Invalid option.");
         }
@@ -114,8 +123,126 @@ public class HospitalManagementApp {
         System.out.print("Enter email: ");
         String email = scanner.nextLine();
 
-        PatientService.addPatient(first,last,phone,blood,email);
+        Patient p = new Patient(first, last, gender, phone, blood, email);
+        patientService.add(p);
+        System.out.println("Patient registered successfully: " + p.getPatientId());
+    }
 
+    private static void registerNewInPatient() {
+        System.out.print("Enter first name: ");
+        String first = scanner.nextLine();
+        System.out.print("Enter last name: ");
+        String last = scanner.nextLine();
+        System.out.print("Enter gender: ");
+        String gender = scanner.nextLine();
+        System.out.print("Enter phone number: ");
+        String phone = scanner.nextLine();
+        System.out.print("Enter bloodGroup: ");
+        String blood = scanner.nextLine();
+        System.out.print("Enter Admitting Doctor ID: ");
+        String docId = scanner.nextLine();
+        System.out.print("Enter Room Number: ");
+        String room = scanner.nextLine();
+        System.out.print("Enter Daily Charges: ");
+        Double charges = scanner.nextDouble();
+
+        InPatient p = new InPatient(first, last, gender, phone, blood, docId, room, charges);
+        patientService.add(p);
+        System.out.println("InPatient registered successfully: " + p.getPatientId());
+    }
+
+    private static void registerNewOutPatient() {
+        System.out.print("Enter first name: ");
+        String first = scanner.nextLine();
+        System.out.print("Enter last name: ");
+        String last = scanner.nextLine();
+        System.out.print("Enter gender: ");
+        String gender = scanner.nextLine();
+        System.out.print("Enter phone number: ");
+        String phone = scanner.nextLine();
+        System.out.print("Enter bloodGroup: ");
+        String blood = scanner.nextLine();
+        System.out.print("Enter Preferred Doctor ID: ");
+        String docId = scanner.nextLine();
+
+        OutPatient p = new OutPatient(first, last, gender, phone, blood, docId);
+        patientService.add(p);
+        System.out.println("OutPatient registered successfully: " + p.getPatientId());
+    }
+
+    private static void registerNewEmergencyPatient() {
+        System.out.print("Enter first name: ");
+        String first = scanner.nextLine();
+        System.out.print("Enter last name: ");
+        String last = scanner.nextLine();
+        System.out.print("Enter gender: ");
+        String gender = scanner.nextLine();
+        System.out.print("Enter phone number: ");
+        String phone = scanner.nextLine();
+        System.out.print("Enter bloodGroup: ");
+        String blood = scanner.nextLine();
+        System.out.print("Enter Emergency Type: ");
+        String type = scanner.nextLine();
+        System.out.print("Enter Arrival Mode (e.g., Ambulance, Walk-in): ");
+        String arrival = scanner.nextLine();
+        System.out.print("Enter Triage Level (1-5): ");
+        Integer triage = scanner.nextInt();
+        scanner.nextLine();
+
+        EmergencyPatient p = new EmergencyPatient(first, last, gender, phone, blood, type, arrival, triage);
+        patientService.add(p);
+        System.out.println("Emergency Patient registered successfully: " + p.getPatientId());
+    }
+
+    private static void updatePatientInfo() {
+        System.out.print("Enter patient ID to update: ");
+        String id = scanner.nextLine();
+        Patient p = patientService.getPatientById(id);
+
+        if (p != null) {
+            System.out.println("Updating patient: " + p.getFirstName() + " " + p.getLastName());
+            System.out.print("Enter new phone number (current: " + p.getPhoneNumber() + "): ");
+            String newPhone = scanner.nextLine();
+            if (!newPhone.isBlank()) p.setPhoneNumber(newPhone);
+
+            System.out.print("Enter new email (current: " + p.getEmail() + "): ");
+            String newEmail = scanner.nextLine();
+            if (!newEmail.isBlank()) p.setEmail(newEmail);
+
+            patientService.update(p);
+            System.out.println("Patient information updated.");
+        } else {
+            System.out.println("Patient not found.");
+        }
+    }
+
+    private static void viewPatientMedicalHistory() {
+        System.out.print("Enter patient ID to view medical history: ");
+        String id = scanner.nextLine();
+        Patient patient = patientService.getPatientById(id);
+
+        if (patient != null) {
+            System.out.println("\n--- MEDICAL HISTORY FOR " + patient.getFirstName().toUpperCase() + " " + patient.getLastName().toUpperCase() + " ---");
+
+            // This relies on MedicalRecordService having a search method,
+            // or the Patient object already containing the list of records.
+
+            List<MedicalRecord> records = patient.getMedicalRecords();
+
+            if (records == null || records.isEmpty()) {
+                System.out.println("No medical records found for this patient.");
+                return;
+            }
+
+            for (MedicalRecord record : records) {
+                System.out.println("----------------------------------------");
+                record.displayInfo(); // Assuming MedicalRecord has a displayInfo method
+            }
+            System.out.println("----------------------------------------");
+
+        } else {
+            System.out.println("Patient with ID " + id + " not found.");
+        }
     }
 
 
