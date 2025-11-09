@@ -445,7 +445,21 @@ public class HospitalManagementApp {
 
 
     public static void assignNurseToPatient() {
+        System.out.print("Enter Nurse ID: ");
+        String nurseId = scanner.nextLine();
+        System.out.print("Enter Patient ID: ");
+        String patientId = scanner.nextLine();
 
+
+        Patient p = patientService.getPatientById(patientId);
+        Nurse n = nurseService.getNurseById(nurseId);
+
+        if (p != null && n != null) {
+            n.assignPatient(p);
+            System.out.println("Nurse " + n.getFirstName() + " assigned to Patient. " + p.getLastName());
+        } else {
+            System.out.println("Invalid Nurse ID or Patient ID.");
+        }
     }
 
     public static void updateNurseInfo() {
