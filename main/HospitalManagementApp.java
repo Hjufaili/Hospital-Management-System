@@ -5,6 +5,7 @@ import Service.*;
 import Utils.HelperUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -583,9 +584,9 @@ public class HospitalManagementApp {
                 medicalRecordService.getRecordsByDoctorId(did);
             }
             case 5 -> updateRecordInfo();
-            case 6 ->{
+            case 6 -> {
                 System.out.println("Enter Medical record ID: ");
-                String recordId=scanner.nextLine();
+                String recordId = scanner.nextLine();
                 medicalRecordService.remove(recordId);
             }
             case 7 -> {
@@ -610,9 +611,13 @@ public class HospitalManagementApp {
         record.setPatientId(pid);
         record.setDoctorId(did);
         record.setDiagnosis(diag);
-        record.setVisitDate(new Date());
+        record.setVisitDate(LocalDateTime.now());
 
         medicalRecordService.add(record);
+    }
+
+    private static void updateRecordInfo() {
+
     }
 
 
@@ -625,6 +630,15 @@ public class HospitalManagementApp {
         switch (getUserChoice()) {
             case 1 -> addDepartment();
             case 2 -> departmentService.getAll();
+            case 3 -> {
+
+            }
+            case 4 -> assignDoctorToDepartment();
+            case 5 -> assignNurseToDepartment();
+            case 6 -> updateDepartmentInfo();
+            case 7 -> viewDepartmentStatistics();
+            case 8 -> {
+            }
             default -> System.out.println("Invalid option.");
         }
     }
@@ -632,12 +646,20 @@ public class HospitalManagementApp {
     private static void addDepartment() {
         System.out.print("Enter department name: ");
         String name = scanner.nextLine();
+        System.out.print("Enter contact phone: ");
+        int phone = scanner.nextInt();
+        scanner.nextLine();
 
-        Department d = new Department();
-        d.setDepartmentId(HelperUtils.generateId("DEPT"));
-        d.setDepartmentName(name);
+        departmentService.addDepartment(name, phone);
 
-        departmentService.add(d);
+    }
+
+    private static void assignDoctorToDepartment() {
+
+    }
+
+    private static void assignNurseToDepartment() {
+
     }
 
 
@@ -645,6 +667,11 @@ public class HospitalManagementApp {
         System.out.println("\n--- Reports ---");
         System.out.println("1. Daily Appointments Report");
         System.out.println("2. Doctor Performance Report");
+        System.out.println("3 Department Occupancy Report ");
+        System.out.println("4 Patient Statistics ");
+        System.out.println("5 Emergency Cases Report");
+        System.out.println("6. Back");
+
         System.out.print("Enter choice: ");
 
         switch (getUserChoice()) {
