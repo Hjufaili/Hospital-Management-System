@@ -5,6 +5,7 @@ import Service.*;
 import Utils.HelperUtils;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -281,7 +282,8 @@ public class HospitalManagementApp {
                 String id = scanner.nextLine();
                 doctorService.remove(id);
             }
-            case 11 -> {} // Back
+            case 11 -> {
+            } // Back
             default -> System.out.println("Invalid option.");
         }
     }
@@ -403,6 +405,23 @@ public class HospitalManagementApp {
         switch (getUserChoice()) {
             case 1 -> addNurse();
             case 2 -> nurseService.getAll();
+            case 3 -> {
+                System.out.print("Enter nurse ID: ");
+                String id = scanner.nextLine();
+                nurseService.getNurseById(id);
+            }
+            case 4 -> {
+                System.out.print("Enter nurse shift: ");
+                String shift = scanner.nextLine();
+                nurseService.getNursesByShift(shift);
+            }
+            case 5 -> assignNurseToPatient();
+            case 6 -> updateNurseInfo();
+            case 7 -> {
+                System.out.print("Enter nurse ID to remove: ");
+                String id = scanner.nextLine();
+                nurseService.remove(id);
+            }
             default -> System.out.println("Invalid option.");
         }
     }
@@ -425,6 +444,15 @@ public class HospitalManagementApp {
     }
 
 
+    public static void assignNurseToPatient() {
+
+    }
+
+    public static void updateNurseInfo() {
+
+    }
+
+
     private static void appointmentManagementMenu() {
         System.out.println("\n--- Appointment Management ---");
         System.out.println("1. Schedule New Appointment");
@@ -444,6 +472,36 @@ public class HospitalManagementApp {
         switch (getUserChoice()) {
             case 1 -> scheduleAppointment();
             case 2 -> appointmentService.getAll();
+            case 3 -> {
+                System.out.print("Enter patient ID: ");
+                String pid = scanner.nextLine();
+                appointmentService.getAppointmentsByPatient(pid);
+            }
+            case 4 -> {
+                System.out.print("Enter doctor ID: ");
+                String did = scanner.nextLine();
+                appointmentService.getAppointmentsByDoctor(did);
+            }
+            case 5 -> {
+                System.out.print("Enter a date (yyyy-MM-dd): ");
+                String input = scanner.nextLine();
+
+                // Parse the input string into a LocalDate
+                LocalDate dateStr = LocalDate.parse(input, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                appointmentService.getAppointmentsByDate(dateStr);
+            }
+            case 6 -> rescheduleAppointment();
+            case 7 -> {
+                System.out.print("Enter Appointment ID for canceling: ");
+                String aid = scanner.nextLine();
+                appointmentService.cancelAppointment(aid);
+            }
+            case 8 -> {
+                System.out.print("Enter Appointment ID which completing: ");
+                String aid = scanner.nextLine();
+                appointmentService.completeAppointment(aid);
+            }
+            case 9 -> upcomingAppointments();
             default -> System.out.println("Invalid option.");
         }
     }
@@ -464,6 +522,20 @@ public class HospitalManagementApp {
         ap.setStatus("Scheduled");
 
         appointmentService.add(ap);
+    }
+    private static void rescheduleAppointment(){
+        System.out.print("Enter appointment ID: ");
+        String aid = scanner.nextLine();
+
+        System.out.print("Enter a new Date (yyyy-MM-dd): ");
+        String input = scanner.nextLine();
+        // Parse the input string into a LocalDate
+        LocalDate newDate = LocalDate.parse(input, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        System.out.print("Enter new Time: ");
+        String newTime = scanner.nextLine();
+
+        appointmentService.rescheduleAppointment(aid,newDate,newTime);
     }
 
 
