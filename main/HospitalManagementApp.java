@@ -516,6 +516,8 @@ public class HospitalManagementApp {
                 appointmentService.completeAppointment(aid);
             }
             case 9 -> upcomingAppointments();
+            case 10 -> {
+            }
             default -> System.out.println("Invalid option.");
         }
     }
@@ -537,7 +539,8 @@ public class HospitalManagementApp {
 
         appointmentService.add(ap);
     }
-    private static void rescheduleAppointment(){
+
+    private static void rescheduleAppointment() {
         System.out.print("Enter appointment ID: ");
         String aid = scanner.nextLine();
 
@@ -549,19 +552,47 @@ public class HospitalManagementApp {
         System.out.print("Enter new Time: ");
         String newTime = scanner.nextLine();
 
-        appointmentService.rescheduleAppointment(aid,newDate,newTime);
+        appointmentService.rescheduleAppointment(aid, newDate, newTime);
     }
 
 
     private static void medicalRecordManagementMenu() {
         System.out.println("\n--- Medical Records ---");
-        System.out.println("1. Create Record");
+        System.out.println("1. Create Medical Record");
         System.out.println("2. View All Records");
+        System.out.println("3. View Records by Patient");
+        System.out.println("4. View Records by Doctor");
+        System.out.println("5. Update Medical Record");
+        System.out.println("6. Delete Medical Record");
+        System.out.println("7. Generate Patient History Report");
+        System.out.println("8. Back");
+
         System.out.print("Enter choice: ");
 
         switch (getUserChoice()) {
             case 1 -> createMedicalRecord();
             case 2 -> medicalRecordService.getAll();
+            case 3 -> {
+                System.out.print("Enter patient ID: ");
+                String pid = scanner.nextLine();
+                medicalRecordService.getRecordsByPatientId(pid);
+            }
+            case 4 -> {
+                System.out.print("Enter doctor ID: ");
+                String did = scanner.nextLine();
+                medicalRecordService.getRecordsByDoctorId(did);
+            }
+            case 5 -> updateRecordInfo();
+            case 6 ->{
+                System.out.println("Enter Medical record ID: ");
+                String recordId=scanner.nextLine();
+                medicalRecordService.remove(recordId);
+            }
+            case 7 -> {
+                System.out.print("Enter patient ID: ");
+                String pid = scanner.nextLine();
+                medicalRecordService.displayPatientHistory(pid);
+            }
             default -> System.out.println("Invalid option.");
         }
     }
