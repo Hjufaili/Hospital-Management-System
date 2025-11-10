@@ -29,8 +29,6 @@ public class HospitalManagementApp {
         System.out.println("WELCOME TO HOSPITAL MANAGEMENT SYSTEM");
         System.out.println("===============================================");
 
-        addSampleData();
-
         while (running) {
             showMainMenu();
             int choice = getUserChoice();
@@ -125,9 +123,8 @@ public class HospitalManagementApp {
         System.out.print("Enter email: ");
         String email = scanner.nextLine();
 
-        Patient p = new Patient(first, last, gender, phone, blood, email);
-        patientService.add(p);
-        System.out.println("Patient registered successfully: " + p.getPatientId());
+        patientService.addPatient(first,last,phone,blood,email);
+        System.out.println("Patient registered successfully: ");
     }
 
     private static void registerNewInPatient() {
@@ -625,6 +622,13 @@ public class HospitalManagementApp {
         System.out.println("\n--- Department Management ---");
         System.out.println("1. Add Department");
         System.out.println("2. View All Departments");
+        System.out.println("3. View Department Details");
+        System.out.println("4. Assign Doctor to Department");
+        System.out.println("5. Assign Nurse to Department");
+        System.out.println("6. Update Department Information");
+        System.out.println("7. View Department Statistics");
+        System.out.println("8. Back");
+
         System.out.print("Enter choice: ");
 
         switch (getUserChoice()) {
