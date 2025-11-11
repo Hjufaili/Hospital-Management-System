@@ -2,9 +2,11 @@ package Entity;
 
 import Interface.Billable;
 import Interface.Displayable;
+import Utils.HelperUtils;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InPatient extends Patient implements Displayable,Billable {
@@ -16,12 +18,29 @@ public class InPatient extends Patient implements Displayable,Billable {
     private String admittingDoctorId;
     private Double dailyCharges;
 
-    public InPatient(LocalDate admissionDate, LocalDate dischargeDate, String roomNumber, String bedNumber,
-                     String admittingDoctorId, Double dailyCharges) {
-        this.admissionDate = admissionDate;
-        this.dischargeDate = dischargeDate;
+    public InPatient(String firstName, String lastName, String gender, String phoneNumber,
+                     String bloodGroup, String admittingDoctorId, String roomNumber, Double dailyCharges) {
+
+        super(
+                HelperUtils.generateId("PER"), firstName, lastName, (LocalDate) null,
+                gender, phoneNumber,
+                "N/A",
+                "N/A",
+
+
+                HelperUtils.generateId("PAT"), bloodGroup,
+                new ArrayList<String>(),
+                "N/A",
+                LocalDate.now(),
+                "N/A",
+                new ArrayList<MedicalRecord>(),
+                new ArrayList<Appointment>()
+        );
+
+        this.admissionDate = LocalDate.now();
+        this.dischargeDate = null;
         this.roomNumber = roomNumber;
-        this.bedNumber = bedNumber;
+        this.bedNumber = "1";
         this.admittingDoctorId = admittingDoctorId;
         this.dailyCharges = dailyCharges;
     }
@@ -32,24 +51,8 @@ public class InPatient extends Patient implements Displayable,Billable {
                      LocalDate registrationDate, String insuranceId, List<MedicalRecord> medicalRecords,
                      List<Appointment> appointments, LocalDate admissionDate, LocalDate dischargeDate,
                      String roomNumber, String bedNumber, String admittingDoctorId, Double dailyCharges) {
-        super(id, firstName, lastName, dateOfBirth, gender, phoneNumber, address, email,
-                patientId, bloodGroup, allergies, emergencyContact, registrationDate, insuranceId,
-                medicalRecords, appointments);
-        this.admissionDate = admissionDate;
-        this.dischargeDate = dischargeDate;
-        this.roomNumber = roomNumber;
-        this.bedNumber = bedNumber;
-        this.admittingDoctorId = admittingDoctorId;
-        this.dailyCharges = dailyCharges;
-    }
-
-    public InPatient(String patientId, String bloodGroup, List<String> allergies,
-                     String emergencyContact, LocalDate registrationDate, String insuranceId,
-                     List<MedicalRecord> medicalRecords, List<Appointment> appointments,
-                     LocalDate admissionDate, LocalDate dischargeDate, String roomNumber,
-                     String bedNumber, String admittingDoctorId, Double dailyCharges) {
-        super(patientId, bloodGroup, allergies, emergencyContact, registrationDate,
-                insuranceId, medicalRecords, appointments);
+        super(id, firstName, lastName, dateOfBirth, gender, phoneNumber, email,address,
+                patientId, bloodGroup, allergies, emergencyContact, registrationDate, insuranceId, medicalRecords, appointments);
         this.admissionDate = admissionDate;
         this.dischargeDate = dischargeDate;
         this.roomNumber = roomNumber;
@@ -108,10 +111,13 @@ public class InPatient extends Patient implements Displayable,Billable {
 
     public long calculateStayDuration() {
         if (dischargeDate == null) {
-            System.out.println("Patient has not been discharged yet");
-            return 0;
+            long days = ChronoUnit.DAYS.between(admissionDate, LocalDate.now());
+            System.out.println("Patient still admitted. Stay duration so far: " + days + " days.");
+            return days;
         }
-        return ChronoUnit.DAYS.between(admissionDate, dischargeDate);
+        long days = ChronoUnit.DAYS.between(admissionDate, dischargeDate);
+        if (days < 0) return 0;
+        return days;
     }
 
     public double calculateTotalCharges() {
@@ -143,7 +149,10 @@ public class InPatient extends Patient implements Displayable,Billable {
 
     @Override
     public double calculateCharges() {
-        long stayDays = ChronoUnit.DAYS.between(admissionDate, dischargeDate);
+        LocalDate endPoint = (dischargeDate != null) ? dischargeDate : LocalDate.now();
+        long stayDays = ChronoUnit.DAYS.between(admissionDate, endPoint);
+        if (stayDays < 1) stayDays = 1;
+
         return stayDays * dailyCharges;
     }
 

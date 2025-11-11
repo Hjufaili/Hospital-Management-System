@@ -1,8 +1,10 @@
 package Entity;
 
 import Interface.Displayable;
+import Utils.HelperUtils;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OutPatient extends Patient implements Displayable {
@@ -30,16 +32,32 @@ public class OutPatient extends Patient implements Displayable {
         this.preferredDoctorId = preferredDoctorId;
     }
 
-    public OutPatient(String patientId, String bloodGroup, List<String> allergies,
-                      String emergencyContact, LocalDate registrationDate, String insuranceId,
-                      List<MedicalRecord> medicalRecords, List<Appointment> appointments,
-                      Integer visitCount, LocalDate lastVisitDate, String preferredDoctorId) {
-        super(patientId, bloodGroup, allergies, emergencyContact, registrationDate,
-                insuranceId, medicalRecords, appointments);
-        this.visitCount = visitCount;
-        this.lastVisitDate = lastVisitDate;
+    public OutPatient(String firstName, String lastName, String gender, String phoneNumber,
+                      String bloodGroup, String preferredDoctorId) {
+
+
+        super(
+                HelperUtils.generateId("PER"), firstName, lastName, (LocalDate) null,
+                gender, phoneNumber,
+                "N/A",
+                "N/A",
+
+                HelperUtils.generateId("PAT"), bloodGroup,
+                new ArrayList<String>(),
+                "N/A",
+                LocalDate.now(),
+                "N/A",
+                new ArrayList<MedicalRecord>(),
+                new ArrayList<Appointment>()
+        );
+
+        this.visitCount = 1;
+        this.lastVisitDate = LocalDate.now();
         this.preferredDoctorId = preferredDoctorId;
     }
+
+
+
 
     public Integer getVisitCount() {
         return visitCount;

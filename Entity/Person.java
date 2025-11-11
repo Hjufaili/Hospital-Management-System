@@ -33,6 +33,14 @@ public class Person implements Displayable {
         this.id = HelperUtils.generateId("PER");
     }
 
+    public Person(String first, String last, String gender, String phone, String email) {
+        setFirstName(first);
+        setLastName(last);
+        setGender(gender);
+        setPhoneNumber(phone);
+        setEmail(email);
+    }
+
     public String getId() {
         return id;
     }

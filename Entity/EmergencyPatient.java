@@ -11,15 +11,28 @@ public class EmergencyPatient extends InPatient implements Displayable {
     private Integer triageLevel;
     private Boolean admittedViaER;
 
-    public EmergencyPatient(LocalDate admissionDate, LocalDate dischargeDate, String roomNumber,
-                            String bedNumber, String admittingDoctorId, Double dailyCharges,
-                            String emergencyType, String arrivalMode, Integer triageLevel,
-                            Boolean admittedViaER) {
-        super(admissionDate, dischargeDate, roomNumber, bedNumber, admittingDoctorId, dailyCharges);
+    // Default values
+    private static final Double DEFAULT_DAILY_CHARGE = 500.0;
+    private static final String DEFAULT_ROOM = "ER_BAY";
+    private static final String DEFAULT_ADMIT_DOC = "DOC999"; // ER Doctor
+
+
+    public EmergencyPatient(String firstName, String lastName, String gender, String phoneNumber,
+                            String bloodGroup, String emergencyType, String arrivalMode,
+                            Integer triageLevel) {
+
+        super(
+                firstName, lastName, gender, phoneNumber,
+                bloodGroup, DEFAULT_ADMIT_DOC, DEFAULT_ROOM, DEFAULT_DAILY_CHARGE
+        );
+
         this.emergencyType = emergencyType;
         this.arrivalMode = arrivalMode;
         this.triageLevel = triageLevel;
-        this.admittedViaER = admittedViaER;
+        this.admittedViaER = true;
+
+        setAdmissionDate(LocalDate.now());
+        setBedNumber(DEFAULT_ROOM + "-T" + triageLevel);
     }
 
     public EmergencyPatient(String id, String firstName, String lastName, LocalDate dateOfBirth,
@@ -33,21 +46,6 @@ public class EmergencyPatient extends InPatient implements Displayable {
                             Boolean admittedViaER) {
         super(id, firstName, lastName, dateOfBirth, gender, phoneNumber, address, email,
                 patientId, bloodGroup, allergies, emergencyContact, registrationDate, insuranceId,
-                medicalRecords, appointments, admissionDate, dischargeDate, roomNumber,
-                bedNumber, admittingDoctorId, dailyCharges);
-        this.emergencyType = emergencyType;
-        this.arrivalMode = arrivalMode;
-        this.triageLevel = triageLevel;
-        this.admittedViaER = admittedViaER;
-    }
-
-    public EmergencyPatient(String patientId, String bloodGroup, List<String> allergies,
-                            String emergencyContact, LocalDate registrationDate, String insuranceId,
-                            List<MedicalRecord> medicalRecords, List<Appointment> appointments,
-                            LocalDate admissionDate, LocalDate dischargeDate, String roomNumber,
-                            String bedNumber, String admittingDoctorId, Double dailyCharges,
-                            String emergencyType, String arrivalMode, Integer triageLevel, Boolean admittedViaER) {
-        super(patientId, bloodGroup, allergies, emergencyContact, registrationDate, insuranceId,
                 medicalRecords, appointments, admissionDate, dischargeDate, roomNumber,
                 bedNumber, admittingDoctorId, dailyCharges);
         this.emergencyType = emergencyType;

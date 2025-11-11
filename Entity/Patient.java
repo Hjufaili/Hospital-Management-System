@@ -61,6 +61,7 @@ public class Patient extends Person implements Displayable {
         this.appointments = new ArrayList<>();
     }
 
+
     public Patient(String bloodGroup, List<String> allergies, String emergencyContact,
                    LocalDate registrationDate, String insuranceId,
                    List<MedicalRecord> medicalRecords, List<Appointment> appointments) {
@@ -74,6 +75,29 @@ public class Patient extends Person implements Displayable {
         this.medicalRecords = (medicalRecords != null) ? medicalRecords : new ArrayList<>();
         this.appointments = (appointments != null) ? appointments : new ArrayList<>();
 
+    }
+
+    public Patient(String id, String firstName, String lastName, LocalDate dateOfBirth, String gender,
+                   String phoneNumber, String email, String address, // Assumed Person fields order
+                   String patientId, String bloodGroup, List<String> allergies, String emergencyContact,
+                   LocalDate registrationDate, String insuranceId, List<MedicalRecord> medicalRecords,
+                   List<Appointment> appointments) {
+
+        super(id, firstName, lastName, dateOfBirth, gender, phoneNumber, email, address);
+
+        this.patientId = patientId;
+        this.bloodGroup = bloodGroup;
+        this.allergies = allergies;
+        this.emergencyContact = emergencyContact;
+        this.registrationDate = registrationDate;
+        this.insuranceId = insuranceId;
+        this.medicalRecords = medicalRecords;
+        this.appointments = appointments;
+    }
+
+    public Patient(String first, String last, String gender, String phone, String blood, String email) {
+        super(first,last,gender,phone,email);
+        this.bloodGroup=blood;
     }
 
     public String getPatientId() {
@@ -239,7 +263,7 @@ public class Patient extends Person implements Displayable {
         setEmail(email);
         setAddress(address);
         System.out.println("Updated for patient " + getFirstName() + "new phone" + phone +
-                "new email: " + email + "new address: " + address);
+                        "new email: " + email + "new address: " + address);
     }
 
 

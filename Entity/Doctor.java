@@ -47,6 +47,7 @@ public class Doctor extends Person implements Displayable {
     public Doctor(String doctorId, String specialization, String qualification,
                   Integer experienceYears, String departmentId, Double consultationFee,
                   List<String> availableSlots, List<Patient> assignedPatients) {
+
         this.doctorId = HelperUtils.generateId("DOC");
         this.specialization = specialization;
         this.qualification = qualification;
@@ -76,6 +77,17 @@ public class Doctor extends Person implements Displayable {
         this.availableSlots = new ArrayList<>();
         this.assignedPatients = new ArrayList<>();
     }
+
+    public Doctor(String first, String last, String spec, String qual, int years, String depId) {
+        setFirstName(first);
+        setLastName(last);
+        setSpecialization(spec);
+        setQualification(qual);
+        setExperienceYears(years);
+        setDepartmentId(depId);
+    }
+
+
 
     @Override
     public void displayInfo() {
