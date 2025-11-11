@@ -152,6 +152,28 @@ public class DoctorService implements Manageable, Searchable {
         }
     }
 
+    public void update(Doctor updatedDoctor) {
+        if (updatedDoctor == null) {
+            System.out.println("Error: Cannot update a null Doctor object.");
+            return;
+        }
+
+        // Iterate through the list to find the doctor by ID
+        for (int i = 0; i < doctors.size(); i++) {
+            Doctor d = doctors.get(i);
+
+            if (d.getDoctorId() != null && d.getDoctorId().equals(updatedDoctor.getDoctorId())) {
+                // Use the set method to replace the old Doctor object at the found index
+                doctors.set(i, updatedDoctor);
+                System.out.println("Doctor " + updatedDoctor.getDoctorId() + " updated successfully.");
+                return; // Exit the method once the doctor is updated
+            }
+        }
+
+        // If the loop finishes without returning, the doctor was not found
+        System.out.println("Error: Doctor with ID " + updatedDoctor.getDoctorId() + " not found for update.");
+    }
+
     public void assignPatient(String doctorId, String patientId) {
         Doctor doctor = getDoctorById(doctorId);
         if (doctor == null) {

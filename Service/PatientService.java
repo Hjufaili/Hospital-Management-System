@@ -8,12 +8,10 @@ import Interface.Searchable;
 import Utils.HelperUtils;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class PatientService implements Manageable, Searchable {
-    private static List<Patient> patients;
+    private List<Patient> patients;
 
     public PatientService() {
         this.patients = new ArrayList<>();
@@ -43,7 +41,7 @@ public class PatientService implements Manageable, Searchable {
         }
 
         patients.add(patient);
-        System.out.println("✅ Patient added successfully: " + patient.getFirstName() + " " + patient.getLastName());
+        System.out.println("Patient added successfully: " + patient.getFirstName() + " " + patient.getLastName());
     }
 
     public void editPatient(String patientId, Patient updatedPatient) {
@@ -62,13 +60,12 @@ public class PatientService implements Manageable, Searchable {
         System.out.println("Patient not found: " + patientId);
     }
 
-    public static void removePatient(String patientId) {
+    public void removePatient(String patientId) {
 
         if (!HelperUtils.isValidString(patientId)) {
             System.err.println("Invalid Patient ID provided for removal.");
             return;
         }
-
 
         boolean removed = patients.removeIf(p -> p.getPatientId().equals(patientId));
         if (removed)
@@ -77,7 +74,21 @@ public class PatientService implements Manageable, Searchable {
             System.out.println("Patient not found: " + patientId);
     }
 
-    public static Patient getPatientById(String patientId) {
+
+    public void update(Patient updatedPatient) {
+        if (updatedPatient == null) return;
+
+        for (int i = 0; i < patients.size(); i++) {
+            if (patients.get(i).getPatientId().equals(updatedPatient.getPatientId())) {
+                patients.set(i, updatedPatient);
+                System.out.println("Patient " + updatedPatient.getPatientId() + " updated successfully.");
+                return;
+            }
+        }
+        System.out.println("Error: Patient not found for update.");
+    }
+
+    public Patient getPatientById(String patientId) {
         for (Patient p : patients) {
             if (p.getPatientId().equals(patientId)) {
                 return p;
@@ -87,7 +98,7 @@ public class PatientService implements Manageable, Searchable {
         return null;
     }
 
-    public static void displayAllPatients() {
+    public void displayAllPatients() {
         if (patients.isEmpty()) {
             System.out.println("No patients available.");
             return;
@@ -128,7 +139,7 @@ public class PatientService implements Manageable, Searchable {
         }
     }
 
-    public static List<Patient> searchPatients(String keyword) {
+    public List<Patient> searchPatients(String keyword) {
         List<Patient> results = new ArrayList<>();
         keyword = keyword.toLowerCase();
         for (Patient p : patients) {
@@ -150,7 +161,7 @@ public class PatientService implements Manageable, Searchable {
         return results;
     }
 
-    public static Patient searchPatients(String firstName, String lastName) {
+    public Patient searchPatients(String firstName, String lastName) {
         for (Patient p : patients) {
             if (p.getFirstName().equalsIgnoreCase(firstName)
                     && p.getLastName().equalsIgnoreCase(lastName)) {
@@ -162,7 +173,7 @@ public class PatientService implements Manageable, Searchable {
         return null;
     }
 
-    public static void displayPatients(String filter) {
+    public void displayPatients(String filter) {
         List<Patient> filtered = searchPatients(filter);
         if (filtered.isEmpty()) {
             System.out.println("No patients match the filter: " + filter);
@@ -175,7 +186,7 @@ public class PatientService implements Manageable, Searchable {
         System.out.println("--------------------");
     }
 
-    public static void displayPatients(int limit) {
+    public void displayPatients(int limit) {
         if (patients.isEmpty()) {
             System.out.println("No patients available.");
             return;
