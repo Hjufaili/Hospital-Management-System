@@ -2,6 +2,11 @@ package Entity;
 
 import Interface.Displayable;
 import Utils.HelperUtils;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,55 +14,55 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
-
+@Getter
+@Setter
+@SuperBuilder
+@NoArgsConstructor
+@ToString(callSuper = true)
 public class Appointment implements Displayable {
-    private String appointmentId;
+    private String appointmentId = Utils.HelperUtils.generateId("APP") ;
     private String patientId;
     private String doctorId;
     private LocalDate appointmentDate;
     private LocalTime appointmentTime;
-    private String status;
+    private String status = "SCHEDULED";
     private String reason;
-    private String notes;
+    private String notes = "";
     private static final List<String> VALID_STATUSES = Arrays.asList("SCHEDULED", "RESCHEDULED", "CANCELLED", "COMPLETED", "PENDING");
 
 
-    public Appointment(String patientId, String doctorId, LocalDate appointmentDate,
-                       LocalTime appointmentTime, String reason) { // Simplified parameters
+//    public Appointment(String patientId, String doctorId, LocalDate appointmentDate,
+//                       LocalTime appointmentTime, String reason) { // Simplified parameters
+//
+//        this.appointmentId = Utils.HelperUtils.generateId("APP");
+//
+//        setPatientId(patientId);
+//        setDoctorId(doctorId);
+//        setAppointmentDate(appointmentDate);
+//        setAppointmentTime(appointmentTime);
+//        setReason(reason);
+//
+//        this.status = "Scheduled";
+//        this.notes = "";
+//    }
+//
+//
+//    public Appointment(String appointmentId, String patientId, String doctorId,
+//                       LocalDate appointmentDate, LocalTime appointmentTime,
+//                       String status, String reason, String notes) {
+//        setAppointmentId(appointmentId);
+//        setPatientId(patientId);
+//        setDoctorId(doctorId);
+//        setAppointmentDate(appointmentDate);
+//        setAppointmentTime(appointmentTime);
+//        setStatus(status);
+//        setReason(reason);
+//        setNotes(notes);
+//    }
+//
+//    public Appointment() {
+//    }
 
-        this.appointmentId = Utils.HelperUtils.generateId("APP");
-
-        setPatientId(patientId);
-        setDoctorId(doctorId);
-        setAppointmentDate(appointmentDate);
-        setAppointmentTime(appointmentTime);
-        setReason(reason);
-
-        this.status = "Scheduled";
-        this.notes = "";
-    }
-
-
-    public Appointment(String appointmentId, String patientId, String doctorId,
-                       LocalDate appointmentDate, LocalTime appointmentTime,
-                       String status, String reason, String notes) {
-        setAppointmentId(appointmentId);
-        setPatientId(patientId);
-        setDoctorId(doctorId);
-        setAppointmentDate(appointmentDate);
-        setAppointmentTime(appointmentTime);
-        setStatus(status);
-        setReason(reason);
-        setNotes(notes);
-    }
-
-    public Appointment() {
-    }
-
-
-    public String getAppointmentId() {
-        return appointmentId;
-    }
 
     public void setAppointmentId(String appointmentId) {
         if (HelperUtils.isValidString(appointmentId, 5, 20)) {
@@ -65,10 +70,6 @@ public class Appointment implements Displayable {
         } else {
             System.err.println("Validation Error: Invalid Appointment ID.");
         }
-    }
-
-    public String getPatientId() {
-        return patientId;
     }
 
     public void setPatientId(String patientId) {
@@ -79,20 +80,12 @@ public class Appointment implements Displayable {
         }
     }
 
-    public String getDoctorId() {
-        return doctorId;
-    }
-
     public void setDoctorId(String doctorId) {
         if (HelperUtils.isValidString(doctorId, 5, 20)) {
             this.doctorId = doctorId;
         } else {
             System.err.println("Validation Error: Invalid Doctor ID for appointment.");
         }
-    }
-
-    public LocalDate getAppointmentDate() {
-        return appointmentDate;
     }
 
     public void setAppointmentDate(LocalDate appointmentDate) {
@@ -103,20 +96,12 @@ public class Appointment implements Displayable {
         }
     }
 
-    public LocalTime getAppointmentTime() {
-        return appointmentTime;
-    }
-
     public void setAppointmentTime(LocalTime appointmentTime) {
         if (HelperUtils.isNotNull(appointmentTime)) {
             this.appointmentTime = appointmentTime;
         } else {
             System.err.println("Validation Error: Appointment time cannot be null.");
         }
-    }
-
-    public String getStatus() {
-        return status;
     }
 
     public void setStatus(String status) {
@@ -127,16 +112,8 @@ public class Appointment implements Displayable {
         }
     }
 
-    public String getReason() {
-        return reason;
-    }
-
     public void setReason(String reason) {
         this.reason = reason;
-    }
-
-    public String getNotes() {
-        return notes;
     }
 
     public void setNotes(String notes) {
@@ -161,19 +138,19 @@ public class Appointment implements Displayable {
     }
 
 
-    @Override
-    public String toString() {
-        return "Appointment{" +
-                "appointmentId='" + appointmentId + '\'' +
-                ", patientId='" + patientId + '\'' +
-                ", doctorId='" + doctorId + '\'' +
-                ", appointmentDate=" + appointmentDate +
-                ", appointmentTime='" + appointmentTime + '\'' +
-                ", status='" + status + '\'' +
-                ", reason='" + reason + '\'' +
-                ", notes='" + notes + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Appointment{" +
+//                "appointmentId='" + appointmentId + '\'' +
+//                ", patientId='" + patientId + '\'' +
+//                ", doctorId='" + doctorId + '\'' +
+//                ", appointmentDate=" + appointmentDate +
+//                ", appointmentTime='" + appointmentTime + '\'' +
+//                ", status='" + status + '\'' +
+//                ", reason='" + reason + '\'' +
+//                ", notes='" + notes + '\'' +
+//                '}';
+//    }
 
     public void reschedule(LocalDate newDate, LocalTime newTime) {
         if (HelperUtils.isNotNull(newDate) && HelperUtils.isNotNull(newTime) && newDate.isAfter(LocalDate.now().minusDays(1))) {
@@ -187,7 +164,7 @@ public class Appointment implements Displayable {
     }
 
     public void cancel() {
-        setStatus("CANCELLED");;
+        setStatus("CANCELLED");
         System.out.println("Appointment " + appointmentId + " has been cancelled.");
     }
 
@@ -219,7 +196,8 @@ public class Appointment implements Displayable {
     public void addNotes(String notes, String addedBy, LocalDateTime timestamp) {
         if (HelperUtils.isValidString(notes, 5) && HelperUtils.isNotNull(timestamp)) {
             String author = HelperUtils.isValidString(addedBy) ? addedBy : "Unknown";
-            this.notes = notes + " (Added by: " + author + " at " + timestamp.toLocalTime() + " on " + timestamp.toLocalDate() + ")";
+            this.notes = notes + " (Added by: " + author + " at " + timestamp.toLocalTime() +
+                    " on " + timestamp.toLocalDate() + ")";
             System.out.println("Notes added by " + author + " with timestamp.");
         } else {
             System.err.println("Notes, author, or timestamp is invalid.");
