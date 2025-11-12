@@ -2,15 +2,10 @@ package main;
 
 import Entity.*;
 import Service.*;
-import Utils.HelperUtils;
 
-import javax.print.Doc;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
 import java.util.Scanner;
 
 
@@ -705,11 +700,39 @@ public class HospitalManagementApp {
     }
 
     private static void assignDoctorToDepartment() {
+        System.out.print("Enter doctor ID: ");
+        String doctorId = scanner.nextLine();
+        System.out.print("Enter department ID: ");
+        String depId = scanner.nextLine();
 
+
+        Doctor d = doctorService.getDoctorById(doctorId);
+        Department p=departmentService.getDepartmentById(depId);
+
+        if (p != null && d != null) {
+            p.assignDoctor(d);
+            System.out.println("Doctor " + d.getFirstName() + " assigned to department. " + p.getDepartmentName());
+        } else {
+            System.out.println("Invalid department ID or doctor ID.");
+        }
     }
 
     private static void assignNurseToDepartment() {
+        System.out.print("Enter nurse ID: ");
+        String nurseId = scanner.nextLine();
+        System.out.print("Enter department ID: ");
+        String depId = scanner.nextLine();
 
+
+        Nurse n = nurseService.getNurseById(nurseId);
+        Department p=departmentService.getDepartmentById(depId);
+
+        if (p != null && n != null) {
+            p.assignNurse(n);
+            System.out.println("Nurse " + n.getFirstName() + " assigned to department. " + p.getDepartmentName());
+        } else {
+            System.out.println("Invalid department ID or doctor ID.");
+        }
     }
 
     public static void updateDepartmentInfo() {
