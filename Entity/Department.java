@@ -2,64 +2,70 @@ package Entity;
 
 import Interface.Displayable;
 import Utils.HelperUtils;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
+@Getter
+@SuperBuilder
+@NoArgsConstructor
+@ToString(callSuper = true, exclude = {"doctors","nurses"})
 public class Department implements Displayable {
-    private String departmentId;
+    private String departmentId=HelperUtils.generateId("DPT");
     private String departmentName;
     private String headDoctorId;
-    private List<Doctor> doctors;
-    private List<Nurse> nurses;
-    private Integer bedCapacity;
-    private Integer availableBeds;
+    private List<Doctor> doctors = new ArrayList<>();
+    private List<Nurse> nurses = new ArrayList<>();
+    private Integer bedCapacity = 0;
+    private Integer availableBeds = 0;
 
-    public Department(String departmentId, String departmentName, String headDoctorId,
-                      List<Doctor> doctors, List<Nurse> nurses, Integer bedCapacity,
-                      Integer availableBeds) {
-        setDepartmentId(departmentId);
-        setDepartmentName(departmentName);
-        setHeadDoctorId(headDoctorId);
-        setBedCapacity(bedCapacity);
-        setAvailableBeds(availableBeds);
-        setDoctors(doctors);
-        setNurses(nurses);
-    }
+//    public Department(String departmentId, String departmentName, String headDoctorId,
+//                      List<Doctor> doctors, List<Nurse> nurses, Integer bedCapacity,
+//                      Integer availableBeds) {
+//        setDepartmentId(departmentId);
+//        setDepartmentName(departmentName);
+//        setHeadDoctorId(headDoctorId);
+//        setBedCapacity(bedCapacity);
+//        setAvailableBeds(availableBeds);
+//        setDoctors(doctors);
+//        setNurses(nurses);
+//    }
+//
+//    public Department(String departmentName, String headDoctorId, int bedCapacity) {
+//        this.departmentId = HelperUtils.generateId("DPT");
+//        setDepartmentName(departmentName);
+//        setHeadDoctorId(headDoctorId);
+//        setBedCapacity(bedCapacity); // Also sets availableBeds initially
+//
+//        this.doctors = new ArrayList<>();
+//        this.nurses = new ArrayList<>();
+//    }
+//
+//    public Department(String departmentId, String departmentName,
+//                      String headDoctorId, int bedCapacity) {
+//        this.departmentId = departmentId;
+//        this.departmentName = departmentName;
+//        this.headDoctorId = headDoctorId;
+//        this.bedCapacity = bedCapacity;
+//        this.availableBeds = bedCapacity; // initially all beds available
+//        this.doctors = new ArrayList<>();
+//        this.nurses = new ArrayList<>();
+//    }
+//
+//    public Department() {
+//        this.departmentId = HelperUtils.generateId("DPT");
+//        this.doctors = new ArrayList<>();
+//        this.nurses = new ArrayList<>();
+//        this.bedCapacity = 0;
+//        this.availableBeds = 0;
+//    }
 
-    public Department(String departmentName, String headDoctorId, int bedCapacity) {
-        this.departmentId = HelperUtils.generateId("DPT");
-        setDepartmentName(departmentName);
-        setHeadDoctorId(headDoctorId);
-        setBedCapacity(bedCapacity); // Also sets availableBeds initially
-
-        this.doctors = new ArrayList<>();
-        this.nurses = new ArrayList<>();
-    }
-
-    public Department(String departmentId, String departmentName,
-                      String headDoctorId, int bedCapacity) {
-        this.departmentId = departmentId;
-        this.departmentName = departmentName;
-        this.headDoctorId = headDoctorId;
-        this.bedCapacity = bedCapacity;
-        this.availableBeds = bedCapacity; // initially all beds available
-        this.doctors = new ArrayList<>();
-        this.nurses = new ArrayList<>();
-    }
-
-    public Department() {
-        this.departmentId = HelperUtils.generateId("DPT");
-        this.doctors = new ArrayList<>();
-        this.nurses = new ArrayList<>();
-        this.bedCapacity = 0;
-        this.availableBeds = 0;
-    }
-
-
-    public String getDepartmentId() {
-        return departmentId;
-    }
 
     public void setDepartmentId(String departmentId) {
         if (HelperUtils.isValidString(departmentId, 3, 20)) {
@@ -67,10 +73,6 @@ public class Department implements Displayable {
         } else {
             System.err.println("Validation Error: Invalid Department ID.");
         }
-    }
-
-    public String getDepartmentName() {
-        return departmentName;
     }
 
     public void setDepartmentName(String departmentName) {
@@ -81,10 +83,6 @@ public class Department implements Displayable {
         }
     }
 
-    public String getHeadDoctorId() {
-        return headDoctorId;
-    }
-
     public void setHeadDoctorId(String headDoctorId) {
         if (HelperUtils.isValidString(headDoctorId, 5, 20)) {
             this.headDoctorId = headDoctorId;
@@ -93,24 +91,12 @@ public class Department implements Displayable {
         }
     }
 
-    public List<Doctor> getDoctors() {
-        return doctors;
-    }
-
     public void setDoctors(List<Doctor> doctors) {
         this.doctors = (doctors != null) ? doctors : new ArrayList<>();
     }
 
-    public List<Nurse> getNurses() {
-        return nurses;
-    }
-
     public void setNurses(List<Nurse> nurses) {
         this.nurses = (nurses != null) ? nurses : new ArrayList<>();
-    }
-
-    public Integer getBedCapacity() {
-        return bedCapacity;
     }
 
     public void setBedCapacity(Integer bedCapacity) {
@@ -122,10 +108,6 @@ public class Department implements Displayable {
         } else {
             System.err.println("Validation Error: Bed capacity must be a positive integer.");
         }
-    }
-
-    public Integer getAvailableBeds() {
-        return availableBeds;
     }
 
     public void setAvailableBeds(Integer availableBeds) {
@@ -155,18 +137,18 @@ public class Department implements Displayable {
 
     }
 
-    @Override
-    public String toString() {
-        return "Department{" +
-                "departmentId='" + departmentId + '\'' +
-                ", departmentName='" + departmentName + '\'' +
-                ", headDoctorId='" + headDoctorId + '\'' +
-                ", doctors=" + doctors +
-                ", nurses=" + nurses +
-                ", bedCapacity=" + bedCapacity +
-                ", availableBeds=" + availableBeds +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Department{" +
+//                "departmentId='" + departmentId + '\'' +
+//                ", departmentName='" + departmentName + '\'' +
+//                ", headDoctorId='" + headDoctorId + '\'' +
+//                ", doctors=" + doctors +
+//                ", nurses=" + nurses +
+//                ", bedCapacity=" + bedCapacity +
+//                ", availableBeds=" + availableBeds +
+//                '}';
+//    }
 
     public void assignDoctor(Doctor doctor) {
         if (HelperUtils.isNotNull(doctor) && !doctors.contains(doctor)) {
