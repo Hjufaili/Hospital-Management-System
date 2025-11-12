@@ -10,8 +10,9 @@ import Utils.HelperUtils;
 import java.time.LocalDate;
 import java.util.*;
 
+
 public class PatientService implements Manageable, Searchable {
-    private List<Patient> patients;
+    private final List<Patient> patients;
 
     public PatientService() {
         this.patients = new ArrayList<>();
@@ -21,7 +22,6 @@ public class PatientService implements Manageable, Searchable {
         return new ArrayList<>();
     }
 
-    // Helper method to create a new, initialized list of Appointment objects
     private List<Appointment> newAppointmentList() {
         return new ArrayList<>();
     }
@@ -44,6 +44,31 @@ public class PatientService implements Manageable, Searchable {
         System.out.println("Patient added successfully: " + patient.getFirstName() + " " + patient.getLastName());
     }
 
+    public Patient createPatient(String firstName, String lastName, String phone, String bloodGroup, String email) {
+        if (!HelperUtils.isValidString(firstName) || !HelperUtils.isValidString(lastName) || !HelperUtils.isValidString(phone, 8, 8)) {
+            System.err.println("Failed to add patient: Validation error in provided details.");
+            return null;
+        }
+
+        // Use the Lombok SuperBuilder pattern
+        Patient newPatient = Patient.builder()
+                // Person fields
+                .firstName(firstName)
+                .lastName(lastName)
+                .phoneNumber(phone)
+                .email(email)
+                .dateOfBirth(LocalDate.of(2000, 1, 1)) // Set default date
+
+                // Patient fields
+                .bloodGroup(bloodGroup)
+                // patientId, medicalRecords, appointments are handled by entity defaults
+                .build();
+
+        addPatient(newPatient);
+        System.out.println("Patient added: " + firstName + " " + lastName);
+        return newPatient;
+    }
+
     public void editPatient(String patientId, Patient updatedPatient) {
         if (!HelperUtils.isValidString(patientId) || HelperUtils.isNull(updatedPatient)) {
             System.err.println("Invalid ID or update object provided for editing.");
@@ -51,9 +76,10 @@ public class PatientService implements Manageable, Searchable {
         }
 
         for (int i = 0; i < patients.size(); i++) {
-            if (patients.get(i).getPatientId().equals(patientId)) {
+            if (Objects.equals(patients.get(i).getPatientId(), patientId)) {
+                updatedPatient.setPatientId(patientId);
                 patients.set(i, updatedPatient);
-                System.out.println(" updated successfully!");
+                System.out.println("Patient " + patientId + " updated successfully!");
                 return;
             }
         }
@@ -75,18 +101,18 @@ public class PatientService implements Manageable, Searchable {
     }
 
 
-    public void update(Patient updatedPatient) {
-        if (updatedPatient == null) return;
-
-        for (int i = 0; i < patients.size(); i++) {
-            if (patients.get(i).getPatientId().equals(updatedPatient.getPatientId())) {
-                patients.set(i, updatedPatient);
-                System.out.println("Patient " + updatedPatient.getPatientId() + " updated successfully.");
-                return;
-            }
-        }
-        System.out.println("Error: Patient not found for update.");
-    }
+//    public void update(Patient updatedPatient) {
+//        if (updatedPatient == null) return;
+//
+//        for (int i = 0; i < patients.size(); i++) {
+//            if (patients.get(i).getPatientId().equals(updatedPatient.getPatientId())) {
+//                patients.set(i, updatedPatient);
+//                System.out.println("Patient " + updatedPatient.getPatientId() + " updated successfully.");
+//                return;
+//            }
+//        }
+//        System.out.println("Error: Patient not found for update.");
+//    }
 
     public Patient getPatientById(String patientId) {
         for (Patient p : patients) {
@@ -114,30 +140,30 @@ public class PatientService implements Manageable, Searchable {
         return patients;
     }
 
-    public void addPatient(String firstName, String lastName, String phone) {
-        if (HelperUtils.isValidString(firstName) && HelperUtils.isValidString(lastName) && HelperUtils.isValidString(phone, 8, 8)) {
-
-            Patient newPatient = new Patient(firstName, lastName, phone, "N/A", "Unknown");
-            addPatient(newPatient);
-            System.out.println("Patient added (minimal info): " + firstName + " " + lastName);
-
-        } else {
-            System.err.println("Failed to add patient: Invalid first name, last name, or phone number.");
-        }
-    }
-
-    public void addPatient(String firstName, String lastName, String phone,
-                           String bloodGroup, String email) {
-        if (HelperUtils.isValidString(firstName) && HelperUtils.isValidString(lastName) && HelperUtils.isValidString(phone, 8, 8)) {
-
-            Patient newPatient = new Patient(firstName, lastName, phone, email, bloodGroup);
-
-            addPatient(newPatient);
-            System.out.println("Patient added (with blood group): " + firstName + " " + lastName);
-        } else {
-            System.err.println("Failed to add patient: Validation error in provided details.");
-        }
-    }
+//    public void addPatient(String firstName, String lastName, String phone) {
+//        if (HelperUtils.isValidString(firstName) && HelperUtils.isValidString(lastName) && HelperUtils.isValidString(phone, 8, 8)) {
+//
+//            Patient newPatient = new Patient(firstName, lastName, phone, "N/A", "Unknown");
+//            addPatient(newPatient);
+//            System.out.println("Patient added (minimal info): " + firstName + " " + lastName);
+//
+//        } else {
+//            System.err.println("Failed to add patient: Invalid first name, last name, or phone number.");
+//        }
+//    }
+//
+//    public void addPatient(String firstName, String lastName, String phone,
+//                           String bloodGroup, String email) {
+//        if (HelperUtils.isValidString(firstName) && HelperUtils.isValidString(lastName) && HelperUtils.isValidString(phone, 8, 8)) {
+//
+//            Patient newPatient = new Patient(firstName, lastName, phone, email, bloodGroup);
+//
+//            addPatient(newPatient);
+//            System.out.println("Patient added (with blood group): " + firstName + " " + lastName);
+//        } else {
+//            System.err.println("Failed to add patient: Validation error in provided details.");
+//        }
+//    }
 
     public List<Patient> searchPatients(String keyword) {
         List<Patient> results = new ArrayList<>();
