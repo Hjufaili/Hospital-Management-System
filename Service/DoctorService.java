@@ -9,9 +9,11 @@ import Utils.HelperUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class DoctorService implements Manageable, Searchable {
-    private  List<Doctor> doctors ;
+    private final List<Doctor> doctors ;
 
     public DoctorService(){
         this.doctors=new ArrayList<>();
@@ -39,15 +41,38 @@ public class DoctorService implements Manageable, Searchable {
         }
     }
 
+    public Doctor createDoctor(String firstName, String lastName, String specialization, String phone, Double consultationFee) {
+        if (!HelperUtils.isValidString(firstName) || !HelperUtils.isValidString(specialization) || !HelperUtils.isValidString(phone, 8)) {
+            System.err.println("Failed to create doctor: Invalid name, specialization, or phone.");
+            return null;
+        }
+
+        // Use the Lombok SuperBuilder pattern
+        Doctor newDoctor = Doctor.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .phoneNumber(phone)
+                .dateOfBirth(LocalDate.of(1980, 1, 1))
+
+                .specialization(specialization)
+                .experienceYears(0) // Default experience
+                .consultationFee(consultationFee != null ? consultationFee : 0.0)
+                .build();
+
+        addDoctor(newDoctor);
+        return newDoctor;
+    }
+
     public  void editDoctor(String doctorId, Doctor updatedDoctor) {
         if (!HelperUtils.isValidString(doctorId) || HelperUtils.isNull(updatedDoctor)) {
             System.err.println("Invalid ID or update object provided for editing.");
             return;
         }
         for (int i = 0; i < doctors.size(); i++) {
-            if (doctors.get(i).getDoctorId().equals(doctorId)) {
-                doctors.add(i, updatedDoctor);
-                System.out.println("updated successfully!");
+            if (Objects.equals(doctors.get(i).getDoctorId(), doctorId)) {
+                updatedDoctor.setDoctorId(doctorId);
+                doctors.set(i, updatedDoctor);
+                System.out.println("Doctor " + doctorId + " updated successfully!");
                 return;
             }
         }
@@ -123,22 +148,6 @@ public class DoctorService implements Manageable, Searchable {
         return doctors;
     }
 
-    public  void addDoctor(String name, String specialization, String phone) {
-        if (HelperUtils.isValidString(name) && HelperUtils.isValidString(specialization) && HelperUtils.isValidString(phone,8)) {
-            Doctor newDoctor = new Doctor(
-                    HelperUtils.generateId("PER"), name, "N/A", (LocalDate) null,
-                    "N/A", phone, "N/A", "N/A",
-
-                    HelperUtils.generateId("DOC"), specialization, "N/A", 0,"N/A", 0.0,
-                    new ArrayList<>(), new ArrayList<>()
-            );
-            addDoctor(newDoctor);
-        } else {
-            System.err.println("Failed to add doctor: Invalid name, specialization, or phone.");
-        }
-    }
-
-
 
     public  void addDoctor(String name, String specialization, String phone, double consultationFee) {
         Doctor doctor = new Doctor();
@@ -152,59 +161,85 @@ public class DoctorService implements Manageable, Searchable {
         }
     }
 
-    public void update(Doctor updatedDoctor) {
-        if (updatedDoctor == null) {
-            System.out.println("Error: Cannot update a null Doctor object.");
-            return;
-        }
+//    public void update(Doctor updatedDoctor) {
+//        if (updatedDoctor == null) {
+//            System.out.println("Error: Cannot update a null Doctor object.");
+//            return;
+//        }
+//
+//        // Iterate through the list to find the doctor by ID
+//        for (int i = 0; i < doctors.size(); i++) {
+//            Doctor d = doctors.get(i);
+//
+//            if (d.getDoctorId() != null && d.getDoctorId().equals(updatedDoctor.getDoctorId())) {
+//                // Use the set method to replace the old Doctor object at the found index
+//                doctors.set(i, updatedDoctor);
+//                System.out.println("Doctor " + updatedDoctor.getDoctorId() + " updated successfully.");
+//                return; // Exit the method once the doctor is updated
+//            }
+//        }
+//
+//        // If the loop finishes without returning, the doctor was not found
+//        System.out.println("Error: Doctor with ID " + updatedDoctor.getDoctorId() + " not found for update.");
+//    }
 
-        // Iterate through the list to find the doctor by ID
-        for (int i = 0; i < doctors.size(); i++) {
-            Doctor d = doctors.get(i);
-
-            if (d.getDoctorId() != null && d.getDoctorId().equals(updatedDoctor.getDoctorId())) {
-                // Use the set method to replace the old Doctor object at the found index
-                doctors.set(i, updatedDoctor);
-                System.out.println("Doctor " + updatedDoctor.getDoctorId() + " updated successfully.");
-                return; // Exit the method once the doctor is updated
-            }
-        }
-
-        // If the loop finishes without returning, the doctor was not found
-        System.out.println("Error: Doctor with ID " + updatedDoctor.getDoctorId() + " not found for update.");
-    }
 
     public void assignPatient(String doctorId, String patientId) {
         Doctor doctor = getDoctorById(doctorId);
-        if (doctor == null) {
+        if (doctor == null){
             System.out.println("Doctor not found: " + doctorId);
             return;
         }
-        List<Patient> assignedPatients = doctor.getAssignedPatients();
-        if (assignedPatients == null) {
-            assignedPatients = new ArrayList<>();
-            doctor.setAssignedPatients(assignedPatients);
-        }
 
-        Patient patient = new Patient();
-        patient.setPatientId(patientId);
-        assignedPatients.add(patient);
+        Patient dummyPatient = Patient.builder().patientId(patientId).build();
+
+        doctor.assignPatient(dummyPatient);
         System.out.println("Assigned patient " + patientId + " to doctor " + doctorId);
+
     }
 
-    public  void assignPatient(Doctor doctor, Patient patient) {
-        if (doctor == null || patient == null) {
+
+//    public void assignPatient(String doctorId, String patientId) {
+//        Doctor doctor = getDoctorById(doctorId);
+//        if (doctor == null) {
+//            System.out.println("Doctor not found: " + doctorId);
+//            return;
+//        }
+//        List<Patient> assignedPatients = doctor.getAssignedPatients();
+//        if (assignedPatients == null) {
+//            assignedPatients = new ArrayList<>();
+//            doctor.setAssignedPatients(assignedPatients);
+//        }
+//
+//        Patient patient = new Patient();
+//        patient.setPatientId(patientId);
+//        assignedPatients.add(patient);
+//        System.out.println("Assigned patient " + patientId + " to doctor " + doctorId);
+//    }
+
+    public void assignPatient(Doctor doctor, Patient patient) {
+        if (HelperUtils.isNull(doctor) || HelperUtils.isNull(patient)) {
             System.out.println("Doctor or Patient is null.");
             return;
         }
-        List<Patient> assignedPatients = doctor.getAssignedPatients();
-        if (assignedPatients == null) {
-            assignedPatients = new ArrayList<>();
-            doctor.setAssignedPatients(assignedPatients);
-        }
-        assignedPatients.add(patient);
+        doctor.assignPatient(patient);
         System.out.println("Assigned " + patient.getPatientId() + " to Dr. " + doctor.getFirstName());
     }
+
+//    public  void assignPatient(Doctor doctor, Patient patient) {
+//        if (doctor == null || patient == null) {
+//            System.out.println("Doctor or Patient is null.");
+//            return;
+//        }
+//        List<Patient> assignedPatients = doctor.getAssignedPatients();
+//        if (assignedPatients == null) {
+//            assignedPatients = new ArrayList<>();
+//            doctor.setAssignedPatients(assignedPatients);
+//        }
+//        assignedPatients.add(patient);
+//        System.out.println("Assigned " + patient.getPatientId() + " to Dr. " + doctor.getFirstName());
+//    }
+
 
     public void assignPatient(String doctorId, List<String> patientIds) {
         Doctor doctor = getDoctorById(doctorId);
@@ -212,25 +247,48 @@ public class DoctorService implements Manageable, Searchable {
             System.out.println("Doctor not found: " + doctorId);
             return;
         }
-        if (patientIds == null || patientIds.isEmpty()) {
+
+        if (HelperUtils.isNull(patientIds) || patientIds.isEmpty()) {
             System.out.println("No patient IDs provided for assignment.");
             return;
         }
 
-        List<Patient> assignedPatients = doctor.getAssignedPatients();
-        if (assignedPatients == null) {
-            assignedPatients = new ArrayList<>();
-            doctor.setAssignedPatients(assignedPatients);
-        }
+        List<Patient> newPatients = new ArrayList<>();
 
-        for (String p : patientIds) {
-            Patient patient = new Patient();
-            patient.setPatientId(p);
-            assignedPatients.add(patient);
+        for (String id : patientIds) {
+            Patient patient = Patient.builder()
+                    .patientId(id)
+                    .build();
+            newPatients.add(patient);
         }
-
-        System.out.println("Bulk assigned " + patientIds.size() + " patients to Dr. " + doctorId);
+        doctor.assignPatient(newPatients);
     }
+
+//    public void assignPatient(String doctorId, List<String> patientIds) {
+//        Doctor doctor = getDoctorById(doctorId);
+//        if (doctor == null) {
+//            System.out.println("Doctor not found: " + doctorId);
+//            return;
+//        }
+//        if (patientIds == null || patientIds.isEmpty()) {
+//            System.out.println("No patient IDs provided for assignment.");
+//            return;
+//        }
+//
+//        List<Patient> assignedPatients = doctor.getAssignedPatients();
+//        if (assignedPatients == null) {
+//            assignedPatients = new ArrayList<>();
+//            doctor.setAssignedPatients(assignedPatients);
+//        }
+//
+//        for (String p : patientIds) {
+//            Patient patient = new Patient();
+//            patient.setPatientId(p);
+//            assignedPatients.add(patient);
+//        }
+//
+//        System.out.println("Bulk assigned " + patientIds.size() + " patients to Dr. " + doctorId);
+//    }
 
     public void displayDoctors(String specialization) {
         boolean found = false;
@@ -303,5 +361,4 @@ public class DoctorService implements Manageable, Searchable {
         else System.out.println("Doctor not found with ID: " + id);
     }
 }
-
 
