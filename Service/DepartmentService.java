@@ -8,9 +8,10 @@ import Utils.HelperUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DepartmentService implements Manageable, Searchable {
-    private List<Department> departments;
+    private final List<Department> departments;
 
     private final DoctorService doctorService;
 
@@ -37,30 +38,36 @@ public class DepartmentService implements Manageable, Searchable {
         System.out.println("Department added: " + department.getDepartmentName());
     }
 
-    public void addDepartment(String departmentName, String contactPhone) {
-        if (HelperUtils.isValidString(departmentName) && HelperUtils.isValidString(contactPhone, 8, 8)) {
-
-            Department newDept = new Department(
-                    HelperUtils.generateId("DEPT"),
-                    departmentName,
-                    contactPhone
-            );
-
-            addDepartment(newDept);
-        } else {
-            System.err.println("Failed to add department: Invalid name or phone number.");
+    public Department createDepartment(String departmentName, String headDoctorId, Integer bedCapacity) {
+        if (!HelperUtils.isValidString(departmentName) || !HelperUtils.isValidString(headDoctorId)) {
+            System.err.println("Failed to create department: Invalid name or head doctor ID.");
+            return null;
         }
+
+        // Use Lombok Builder pattern to create a new instance.
+        // ID, collections, and bed defaults are set in the Entity.
+        Department newDept = Department.builder()
+                .departmentName(departmentName)
+                .headDoctorId(headDoctorId)
+                .bedCapacity(bedCapacity)
+                .availableBeds(bedCapacity) // Initialize available beds to capacity
+                .build();
+
+        addDepartment(newDept);
+        return newDept;
     }
 
-    public void editDepartment(String departmentId, Department updateddepartment) {
-        if (!HelperUtils.isValidString(departmentId) || HelperUtils.isNull(updateddepartment)) {
+
+    public void editDepartment(String departmentId, Department updatedDepartment) {
+        if (!HelperUtils.isValidString(departmentId) || HelperUtils.isNull(updatedDepartment)) {
             System.err.println("Invalid ID or update object provided for editing.");
             return;
         }
 
         for (int i = 0; i < departments.size(); i++) {
-            if (departments.get(i).getDepartmentId().equals(departmentId)) {
-                departments.set(i, updateddepartment);
+            if (Objects.equals(departments.get(i).getDepartmentId(), departmentId)) {
+                updatedDepartment.setDepartmentId(departmentId);
+                departments.set(i, updatedDepartment);
                 System.out.println("Department is updated: " + departmentId);
                 return;
             }
@@ -119,6 +126,7 @@ public class DepartmentService implements Manageable, Searchable {
         }
 
         doctor.setDepartmentId(departmentId);
+        department.assignDoctor(doctor);
         System.out.println("Assigned Dr. " + doctor.getFirstName() +
                 " to Department " + department.getDepartmentName());
     }
@@ -130,11 +138,9 @@ public class DepartmentService implements Manageable, Searchable {
     @Override
     public void add(Object entity) {
         if (entity instanceof Department) {
-            Department dept = (Department) entity;
-            departments.add(dept);
-            System.out.println("Department added: " + dept.getDepartmentName());
+            addDepartment((Department) entity);
         } else {
-            System.out.println("Invalid entity type. Must be Department.");
+            System.err.println("Invalid entity type. Must be Department.");
         }
     }
 
