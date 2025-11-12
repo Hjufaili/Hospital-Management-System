@@ -9,9 +9,10 @@ import Utils.HelperUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class NurseService implements Manageable, Searchable {
-    private List<Nurse> nurses;
+    private final List<Nurse> nurses;
 
     public NurseService() {
         this.nurses = new ArrayList<>();
@@ -35,15 +36,37 @@ public class NurseService implements Manageable, Searchable {
         System.out.println("Nurse added successfully: " + nurse.getFirstName() + " " + nurse.getLastName());
     }
 
-    public void editNurse(String nurseId, Nurse updatednurse) {
-        if (!HelperUtils.isValidString(nurseId) || HelperUtils.isNull(updatednurse)) {
+    public Nurse createNurse(String firstName, String lastName, String departmentId, String shift) {
+        if (!HelperUtils.isValidString(firstName) || !HelperUtils.isValidString(lastName) || !HelperUtils.isValidString(departmentId)) {
+            System.err.println("Failed to add nurse: Invalid name or department ID.");
+            return null;
+        }
+
+        // Use the Lombok SuperBuilder pattern, relying on entity defaults for ID and other fields
+        Nurse newNurse = Nurse.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .dateOfBirth(LocalDate.of(1980, 1, 1))
+
+                .departmentId(departmentId)
+                .shift(shift)
+                .build();
+
+        addNurse(newNurse);
+        System.out.println("Nurse created and added to department: " + departmentId);
+        return newNurse;
+    }
+
+    public void editNurse(String nurseId, Nurse updatedNurse) {
+        if (!HelperUtils.isValidString(nurseId) || HelperUtils.isNull(updatedNurse)) {
             System.err.println("Invalid ID or update object provided for editing.");
             return;
         }
         for (int i = 0; i < nurses.size(); i++) {
-            if (nurses.get(i).getId().equals(nurseId)) {
-                nurses.set(i, updatednurse);
-                System.out.println(" updated successfully!");
+            if (Objects.equals(nurses.get(i).getNurseId(), nurseId)) {
+                updatedNurse.setNurseId(nurseId); // Ensure ID consistency
+                nurses.set(i, updatedNurse);
+                System.out.println("Nurse " + nurseId + " updated successfully!");
                 return;
             }
         }
@@ -127,31 +150,29 @@ public class NurseService implements Manageable, Searchable {
         return nurses;
     }
 
-    public void addNurse(String firstName, String lastName, String departmentId) {
-        if (HelperUtils.isValidString(firstName) && HelperUtils.isValidString(lastName) && HelperUtils.isValidString(departmentId)) {
-
-            // Create a new Nurse object using a suitable constructor (or setters)
-            Nurse newNurse = new Nurse(
-                    HelperUtils.generateId("PER"), firstName, lastName, (LocalDate) null,
-                    "N/A", "N/A", "N/A", "N/A", // Minimal Person fields
-
-                    HelperUtils.generateId("NUR"), departmentId, "Day", "N/A", 0, 0 // Minimal Nurse fields
-            );
-
-            addNurse(newNurse); // Delegate to the safe core addNurse(Nurse) method
-            System.out.println("Nurse added to department: " + departmentId);
-        } else {
-            System.err.println("Failed to add nurse: Invalid name or department ID.");
-        }
-    }
+//    public void addNurse(String firstName, String lastName, String departmentId) {
+//        if (HelperUtils.isValidString(firstName) && HelperUtils.isValidString(lastName) && HelperUtils.isValidString(departmentId)) {
+//
+//            // Create a new Nurse object using a suitable constructor (or setters)
+//            Nurse newNurse = new Nurse(
+//                    HelperUtils.generateId("PER"), firstName, lastName, (LocalDate) null,
+//                    "N/A", "N/A", "N/A", "N/A", // Minimal Person fields
+//
+//                    HelperUtils.generateId("NUR"), departmentId, "Day", "N/A", 0, 0 // Minimal Nurse fields
+//            );
+//
+//            addNurse(newNurse); // Delegate to the safe core addNurse(Nurse) method
+//            System.out.println("Nurse added to department: " + departmentId);
+//        } else {
+//            System.err.println("Failed to add nurse: Invalid name or department ID.");
+//        }
+//    }
 
 
     @Override
     public void add(Object entity) {
         if (entity instanceof Nurse) {
-            Nurse nurse = (Nurse) entity;
-            nurses.add(nurse);
-            System.out.println("Nurse added: " + nurse.getFirstName() + " " + nurse.getLastName());
+            addNurse((Nurse) entity);
         } else if (HelperUtils.isNull(entity)) {
             System.err.println("Entity is null.");
         } else {
