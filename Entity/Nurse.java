@@ -2,12 +2,21 @@ package Entity;
 
 import Interface.Displayable;
 import Utils.HelperUtils;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Getter
+@ToString(callSuper = true, exclude = {"assignedPatients"})
+@NoArgsConstructor
+@SuperBuilder
 public class Nurse extends Person implements Displayable {
     private String nurseId;
     private String departmentId;
@@ -15,50 +24,21 @@ public class Nurse extends Person implements Displayable {
     private String qualification;
     private List<Patient> assignedPatients;
 
-    public Nurse() {
-        super();
-        this.nurseId = HelperUtils.generateId("NUR");
-        this.assignedPatients = new ArrayList<>();
-    }
+//    public Nurse() {
+//        super();
+//        this.nurseId = HelperUtils.generateId("NUR");
+//        this.assignedPatients = new ArrayList<>();
+//    }
 
-    public Nurse(String id, String firstName, String lastName, LocalDate dateOfBirth,
-                 String gender, String phoneNumber, String address, String email,
-                 String nurseId, String departmentId, String shift,
-                 String qualification, List<Patient> assignedPatients) {
-        super(id, firstName, lastName, dateOfBirth, gender, phoneNumber, address, email);
-        setNurseId(nurseId);
-        setDepartmentId(departmentId);
-        setShift(shift);
-        setQualification(qualification);
-        setAssignedPatients(assignedPatients);
-    }
-
-    public Nurse(String nurseId, String departmentId, String shift,
-                 String qualification, List<Patient> assignedPatients) {
-        super();
-        this.nurseId = nurseId;
-        this.departmentId = departmentId;
-        this.shift = shift;
-        this.qualification = qualification;
-        this.assignedPatients = assignedPatients;
-    }
-
-    public Nurse(String firstName, String lastName, LocalDate dateOfBirth,
-                 String gender, String phoneNumber, String address, String email,
-                 String departmentId, String shift, String qualification) {
-
-        super(HelperUtils.generateId("PER"), firstName, lastName, dateOfBirth, gender, phoneNumber, email, address);
-
-        this.nurseId = HelperUtils.generateId("NUR");
-        setDepartmentId(departmentId);
-        setShift(shift);
-        setQualification(qualification);
-        this.assignedPatients = new ArrayList<>();
-    }
-
-    public String getNurseId() {
-        return nurseId;
-    }
+//    public Nurse(String nurseId, String departmentId, String shift,
+//                 String qualification, List<Patient> assignedPatients) {
+//        super();
+//        this.nurseId = nurseId;
+//        this.departmentId = departmentId;
+//        this.shift = shift;
+//        this.qualification = qualification;
+//        this.assignedPatients = assignedPatients;
+//    }
 
     public void setNurseId(String nurseId) {
         if (HelperUtils.isValidString(nurseId, 5, 20)) { // Example constraints
@@ -66,10 +46,6 @@ public class Nurse extends Person implements Displayable {
         } else {
             System.err.println("Validation Error: Invalid Nurse ID provided.");
         }
-    }
-
-    public String getDepartmentId() {
-        return departmentId;
     }
 
     public void setDepartmentId(String departmentId) {
@@ -80,10 +56,6 @@ public class Nurse extends Person implements Displayable {
         }
     }
 
-    public String getShift() {
-        return shift;
-    }
-
     public void setShift(String shift) {
         if (Utils.HelperUtils.isValidString(shift)) { // Check for not null and not empty
             this.shift = shift;
@@ -92,20 +64,12 @@ public class Nurse extends Person implements Displayable {
         }
     }
 
-    public String getQualification() {
-        return qualification;
-    }
-
     public void setQualification(String qualification) {
         if (HelperUtils.isValidString(qualification, 3)) {
             this.qualification = qualification;
         } else {
             System.err.println("Validation Error: Invalid qualification provided.");
         }
-    }
-
-    public List<Patient> getAssignedPatients() {
-        return assignedPatients;
     }
 
     public void setAssignedPatients(List<Patient> assignedPatients) {
@@ -166,16 +130,16 @@ public class Nurse extends Person implements Displayable {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Nurse{" +
-                "nurseId='" + nurseId + '\'' +
-                ", departmentId='" + departmentId + '\'' +
-                ", shift='" + shift + '\'' +
-                ", qualification='" + qualification + '\'' +
-                ", assignedPatients=" + (assignedPatients != null ? assignedPatients.size() : 0) +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Nurse{" +
+//                "nurseId='" + nurseId + '\'' +
+//                ", departmentId='" + departmentId + '\'' +
+//                ", shift='" + shift + '\'' +
+//                ", qualification='" + qualification + '\'' +
+//                ", assignedPatients=" + (assignedPatients != null ? assignedPatients.size() : 0) +
+//                '}';
+//    }
 
 
 }
