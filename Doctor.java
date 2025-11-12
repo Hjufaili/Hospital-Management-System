@@ -1,52 +1,96 @@
 package Entity;
 
 import Interface.Displayable;
+import Utils.HelperUtils;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
+@Getter
+@SuperBuilder(toBuilder = true)
+@NoArgsConstructor
+@ToString(callSuper = true, exclude = {"availableSlots", "assignedPatients"})
 public class Doctor extends Person implements Displayable {
-    private String doctorId;
+
+    private String doctorId = HelperUtils.generateId("DOC");
     private String specialization;
     private String qualification;
     private Integer experienceYears;
     private String departmentId;
     private Double consultationFee;
-    private static List<String> availableSlots;
-    private static List<Patient> assignedPatients;
+    private List<String> availableSlots = new ArrayList<>();
+    private List<Patient> assignedPatients = new ArrayList<>();
 
-    public Doctor() {
-    }
 
-    public Doctor(String id, String firstName, String lastName, LocalDate dateOfBirth,
-                  String gender, String phoneNumber, String address, String email,
-                  String doctorId, String specialization, String qualification,
-                  Integer experienceYears, String departmentId, Double consultationFee,
-                  List<String> availableSlots, List<Patient> assignedPatients) {
-        super(id, firstName, lastName, dateOfBirth, gender, phoneNumber, address, email);
-        this.doctorId = doctorId;
-        this.specialization = specialization;
-        this.qualification = qualification;
-        this.experienceYears = experienceYears;
-        this.departmentId = departmentId;
-        this.consultationFee = consultationFee;
-        this.availableSlots = availableSlots;
-        this.assignedPatients = assignedPatients;
-    }
+//    public Doctor(String id, String firstName, String lastName, LocalDate dateOfBirth,
+//                  String gender, String phoneNumber, String email, String address,
+//                  String doctorId, String specialization, String qualification,
+//                  Integer experienceYears, String departmentId, Double consultationFee,
+//                  List<String> availableSlots, List<Patient> assignedPatients) {
+//        super(id, firstName, lastName, dateOfBirth, gender, phoneNumber, email, address);
+//
+//        setDoctorId(doctorId);
+//        setSpecialization(specialization);
+//        setQualification(qualification);
+//        setExperienceYears(experienceYears);
+//        setDepartmentId(departmentId);
+//        setConsultationFee(consultationFee);
+//
+//        setAvailableSlots(availableSlots);
+//        setAssignedPatients(assignedPatients);
+//    }
+//
+//    public Doctor(String doctorId, String specialization, String qualification,
+//                  Integer experienceYears, String departmentId, Double consultationFee,
+//                  List<String> availableSlots, List<Patient> assignedPatients) {
+//
+//        this.doctorId = HelperUtils.generateId("DOC");
+//        this.specialization = specialization;
+//        this.qualification = qualification;
+//        this.experienceYears = experienceYears;
+//        this.departmentId = departmentId;
+//        this.consultationFee = consultationFee;
+//        this.availableSlots = availableSlots;
+//        this.assignedPatients = assignedPatients;
+//    }
+//
+//    public Doctor(String firstName, String lastName, LocalDate dateOfBirth,
+//                  String gender, String phoneNumber, String email, String address,
+//                  String specialization, String qualification,
+//                  Integer experienceYears, String departmentId, Double consultationFee) {
+//
+//        super(HelperUtils.generateId("PER"), firstName, lastName, dateOfBirth, gender, phoneNumber, email, address);
+//
+//        this.doctorId = HelperUtils.generateId("DOC");
+//
+//        // Use setters for validation
+//        setSpecialization(specialization);
+//        setQualification(qualification);
+//        setExperienceYears(experienceYears);
+//        setDepartmentId(departmentId);
+//        setConsultationFee(consultationFee);
+//
+//        this.availableSlots = new ArrayList<>();
+//        this.assignedPatients = new ArrayList<>();
+//    }
+//
+//    public Doctor(String first, String last, String spec, String qual, int years, String depId) {
+//        setFirstName(first);
+//        setLastName(last);
+//        setSpecialization(spec);
+//        setQualification(qual);
+//        setExperienceYears(years);
+//        setDepartmentId(depId);
+//    }
 
-    public Doctor(String doctorId, String specialization, String qualification,
-                  Integer experienceYears, String departmentId, Double consultationFee,
-                  List<String> availableSlots, List<Patient> assignedPatients) {
-        this.doctorId = doctorId;
-        this.specialization = specialization;
-        this.qualification = qualification;
-        this.experienceYears = experienceYears;
-        this.departmentId = departmentId;
-        this.consultationFee = consultationFee;
-        this.availableSlots = availableSlots;
-        this.assignedPatients = assignedPatients;
-    }
 
     @Override
     public void displayInfo() {
@@ -68,100 +112,95 @@ public class Doctor extends Person implements Displayable {
                 " | " + specialization + " | " + experienceYears + " yrs");
     }
 
-    @Override
-    public String toString() {
-        return "Doctor{" +
-                "doctorId='" + doctorId + '\'' +
-                ", specialization='" + specialization + '\'' +
-                ", qualification='" + qualification + '\'' +
-                ", experienceYears=" + experienceYears +
-                ", departmentId='" + departmentId + '\'' +
-                ", consultationFee=" + consultationFee +
-                '}';
-    }
 
-    public static void assignPatient(Patient patient) {
-        if (patient != null && !assignedPatients.contains(patient)) {
+    public void assignPatient(Patient patient) {
+        if (HelperUtils.isNotNull(patient) && !assignedPatients.contains(patient)) {
             assignedPatients.add(patient);
-            System.out.println("add");
+            System.out.println("Assigned patient " + patient.getFirstName() + " to Dr. " + getFirstName());
+        } else if (HelperUtils.isNotNull(patient)) {
+            System.err.println("Patient " + patient.getPatientId() + " is already assigned to this doctor.");
+        } else {
+            System.err.println("Cannot assign a null patient.");
         }
-
     }
 
-    public static void removePatient(String patientId) {
-        if (assignedPatients == null || assignedPatients.isEmpty()) return;
-        assignedPatients.removeIf(p -> p.getPatientId().equals(patientId));
-        System.out.println(" removed");
+
+    public void assignPatient(List<Patient> newPatients) {
+        if (HelperUtils.isNotNull(newPatients)) {
+            for (Patient patient : newPatients) {
+                assignPatient(patient);
+            }
+        }
+    }
+
+    public void removePatient(String patientId) {
+        if (assignedPatients == null) return;
+        boolean removed = assignedPatients.removeIf(p -> Objects.equals(p.getPatientId(), patientId));
+
+        if (removed) {
+            System.out.println("Removed patient " + patientId + " from Dr. " + getFirstName());
+        } else {
+            System.err.println("Patient with ID " + patientId + " not found for Dr. " + getFirstName());
+        }
     }
 
     public void updateAvailability(List<String> newSlots) {
-        this.availableSlots = newSlots;
+        setAvailableSlots(newSlots);
         System.out.println("Updated available slots for Dr. " + getFirstName());
 
     }
 
-    public String getDoctorId() {
-        return doctorId;
-    }
-
     public void setDoctorId(String doctorId) {
-        this.doctorId = doctorId;
-    }
-
-    public String getSpecialization() {
-        return specialization;
+        if (HelperUtils.isValidString(doctorId, 5, 20)) {
+            this.doctorId = doctorId;
+        } else {
+            System.err.println("Validation Error: Invalid Doctor ID.");
+        }
     }
 
     public void setSpecialization(String specialization) {
-        this.specialization = specialization;
-    }
-
-    public String getQualification() {
-        return qualification;
+        if (HelperUtils.isValidString(specialization, 3, 50))
+            this.specialization = specialization.trim();
+        else
+            System.out.println("Invalid specialization.");
     }
 
     public void setQualification(String qualification) {
-        this.qualification = qualification;
-    }
-
-    public Integer getExperienceYears() {
-        return experienceYears;
+        if (HelperUtils.isValidString(qualification, 2))
+            this.qualification = qualification.trim();
+        else
+            System.out.println("Invalid qualification.");
     }
 
     public void setExperienceYears(Integer experienceYears) {
-        this.experienceYears = experienceYears;
-    }
-
-    public String getDepartmentId() {
-        return departmentId;
+        if (HelperUtils.isValidNumber(experienceYears, 0, 60))
+            this.experienceYears = experienceYears;
+        else
+            System.out.println("Invalid years of experience.");
     }
 
     public void setDepartmentId(String departmentId) {
-        this.departmentId = departmentId;
-    }
-
-    public Double getConsultationFee() {
-        return consultationFee;
+        if (HelperUtils.isValidString(departmentId, 5, 20)) {
+            this.departmentId = departmentId.trim();
+        } else {
+            System.err.println("Validation Error: Invalid department ID.");
+        }
     }
 
     public void setConsultationFee(Double consultationFee) {
-        this.consultationFee = consultationFee;
+        if (consultationFee != null && HelperUtils.isPositive(consultationFee)) {
+            this.consultationFee = consultationFee;
+        } else {
+            System.err.println("Validation Error: Consultation fee must be a positive amount.");
+        }
     }
 
-    public static List<String> getAvailableSlots() {
-        return availableSlots;
+    public void setAvailableSlots(List<String> availableSlots) {
+        this.availableSlots = (availableSlots != null) ? availableSlots : new ArrayList<>();
     }
 
-    public static void setAvailableSlots(List<String> availableSlots) {
-        Doctor.availableSlots = availableSlots;
-    }
-
-    public static List<Patient> getAssignedPatients() {
-        return assignedPatients;
-    }
-
-    public static void setAssignedPatients(List<Patient> assignedPatients) {
-        Doctor.assignedPatients = assignedPatients;
+    public void setAssignedPatients(List<Patient> assignedPatients) {
+        this.assignedPatients = (assignedPatients != null) ? assignedPatients : new ArrayList<>();
     }
 
     public void updateFee(double fee) {
@@ -176,18 +215,18 @@ public class Doctor extends Person implements Displayable {
     }
 
     public void addAvailability(String slot) {
-        if (availableSlots != null && !availableSlots.contains(slot)) {
+        if (HelperUtils.isValidString(slot) && !availableSlots.contains(slot)) {
             availableSlots.add(slot);
-            System.out.println("Added availability slot '" + slot );
-        }else {
+            System.out.println("Added availability slot '" + slot);
+        } else {
             System.out.println("cannot add slot: " + slot);
         }
     }
 
     public void addAvailability(List<String> slots) {
-        if (availableSlots != null) {
+        if (HelperUtils.isNotNull(slots)) {
             for (String slot : slots) {
-                if (!availableSlots.contains(slot)) {
+                if (HelperUtils.isValidString(slot) && !availableSlots.contains(slot)) {
                     availableSlots.add(slot);
                 }
             }
@@ -196,4 +235,4 @@ public class Doctor extends Person implements Displayable {
     }
 
 
-    }
+}
