@@ -9,9 +9,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class MedicalRecordService implements Manageable, Searchable {
-    private List<MedicalRecord> medicalRecords;
+    private final List<MedicalRecord> medicalRecords;
 
     public MedicalRecordService (){
         this.medicalRecords=new ArrayList<>();
@@ -35,18 +36,36 @@ public class MedicalRecordService implements Manageable, Searchable {
 
     }
 
-    public void addMedicalRecord(String patientId, String doctorId, String diagnosis) {
-        if (HelperUtils.isValidString(patientId) && HelperUtils.isValidString(doctorId) && HelperUtils.isValidString(diagnosis)) {
-
-            MedicalRecord newRecord = new MedicalRecord(
-                    HelperUtils.generateId("REC"), patientId, doctorId,
-                    LocalDate.now(), diagnosis, "Initial notes");
-
-            addMedicalRecord(newRecord);
-        } else {
+    public MedicalRecord createMedicalRecord(String patientId, String doctorId, String diagnosis) {
+        if (!HelperUtils.isValidString(patientId) || !HelperUtils.isValidString(doctorId) || !HelperUtils.isValidString(diagnosis)) {
             System.err.println("Failed to add medical record: Patient ID, Doctor ID, or Diagnosis is invalid.");
+            return null;
         }
+
+        // Use the Lombok Builder pattern. ID and recordDate are handled by entity defaults.
+        MedicalRecord newRecord = MedicalRecord.builder()
+                .patientId(patientId)
+                .doctorId(doctorId)
+                .diagnosis(diagnosis)
+                .notes("Initial notes") // Default note
+                .build();
+
+        addMedicalRecord(newRecord); // Delegate to core add method
+        return newRecord;
     }
+
+//    public void addMedicalRecord(String patientId, String doctorId, String diagnosis) {
+//        if (HelperUtils.isValidString(patientId) && HelperUtils.isValidString(doctorId) && HelperUtils.isValidString(diagnosis)) {
+//
+//            MedicalRecord newRecord = new MedicalRecord(
+//                    HelperUtils.generateId("REC"), patientId, doctorId,
+//                    LocalDate.now(), diagnosis, "Initial notes");
+//
+//            addMedicalRecord(newRecord);
+//        } else {
+//            System.err.println("Failed to add medical record: Patient ID, Doctor ID, or Diagnosis is invalid.");
+//        }
+//    }
 
 
     public  void editMedicalRecord(String medicalRecordsId, MedicalRecord updatedmedicalRecord) {
@@ -56,7 +75,8 @@ public class MedicalRecordService implements Manageable, Searchable {
         }
 
         for (int i = 0; i < medicalRecords.size(); i++) {
-            if (medicalRecords.get(i).getRecordId().equals(medicalRecordsId)) {
+            if (Objects.equals(medicalRecords.get(i).getRecordId(), medicalRecordsId)) {
+                updatedmedicalRecord.setRecordId(medicalRecordsId);
                 medicalRecords.set(i, updatedmedicalRecord);
                 System.out.println("MedicalRecord is updated: " + medicalRecordsId);
                 return;
