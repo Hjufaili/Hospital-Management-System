@@ -2,52 +2,58 @@ package Entity;
 
 import Interface.Displayable;
 import Utils.HelperUtils;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+
+@Getter
+@SuperBuilder
+@NoArgsConstructor
+@ToString
 public class MedicalRecord implements Displayable {
-    private String recordId;
+    private String recordId = HelperUtils.generateId("MR");
     private String patientId;
     private String doctorId;
-    private LocalDateTime visitDate;
+    private LocalDateTime visitDate = LocalDateTime.now();
     private String diagnosis;
     private String prescription;
-    private String testResults;
+    private String testResults = "Pending";
     private String notes;
 
-    public MedicalRecord() {
-        this.recordId = HelperUtils.generateId("MR");
-        this.visitDate = LocalDateTime.now();
-    }
+//    public MedicalRecord() {
+//        this.recordId = HelperUtils.generateId("MR");
+//        this.visitDate = LocalDateTime.now();
+//    }
 
-    public MedicalRecord(String recordId, String patientId, String doctorId, LocalDateTime visitDate,
-                         String diagnosis, String prescription, String testResults, String notes) {
-        setRecordId(recordId);
-        setPatientId(patientId);
-        setDoctorId(doctorId);
-        setVisitDate(visitDate);
-        setDiagnosis(diagnosis);
-        setPrescription(prescription);
-        setTestResults(testResults);
-        setNotes(notes);
-    }
+//    public MedicalRecord(String recordId, String patientId, String doctorId, LocalDateTime visitDate,
+//                         String diagnosis, String prescription, String testResults, String notes) {
+//        setRecordId(recordId);
+//        setPatientId(patientId);
+//        setDoctorId(doctorId);
+//        setVisitDate(visitDate);
+//        setDiagnosis(diagnosis);
+//        setPrescription(prescription);
+//        setTestResults(testResults);
+//        setNotes(notes);
+//    }
+//
+//    public MedicalRecord(String patientId, String doctorId, String diagnosis, String prescription, String notes) {
+//        this(); // Calls default constructor to auto-generate ID and set visitDate to now
+//        setPatientId(patientId);
+//        setDoctorId(doctorId);
+//        setDiagnosis(diagnosis);
+//        setPrescription(prescription);
+//        setNotes(notes);
+//        this.testResults = "Pending"; // Default status
+//    }
 
-    public MedicalRecord(String patientId, String doctorId, String diagnosis, String prescription, String notes) {
-        this(); // Calls default constructor to auto-generate ID and set visitDate to now
-        setPatientId(patientId);
-        setDoctorId(doctorId);
-        setDiagnosis(diagnosis);
-        setPrescription(prescription);
-        setNotes(notes);
-        this.testResults = "Pending"; // Default status
-    }
-
-
-    public String getRecordId() {
-        return recordId;
-    }
 
     public void setRecordId(String recordId) {
         if (HelperUtils.isValidString(recordId, 5, 20)) {
@@ -55,10 +61,6 @@ public class MedicalRecord implements Displayable {
         } else {
             System.err.println("Validation Error: Invalid Record ID.");
         }
-    }
-
-    public String getPatientId() {
-        return patientId;
     }
 
     public void setPatientId(String patientId) {
@@ -69,20 +71,12 @@ public class MedicalRecord implements Displayable {
         }
     }
 
-    public String getDoctorId() {
-        return doctorId;
-    }
-
     public void setDoctorId(String doctorId) {
         if (HelperUtils.isValidString(doctorId, 5, 20)) {
             this.doctorId = doctorId;
         } else {
             System.err.println("Validation Error: Invalid Doctor ID for record.");
         }
-    }
-
-    public LocalDateTime getVisitDate() {
-        return visitDate;
     }
 
     public void setVisitDate(LocalDateTime visitDate) {
@@ -93,10 +87,6 @@ public class MedicalRecord implements Displayable {
         }
     }
 
-    public String getDiagnosis() {
-        return diagnosis;
-    }
-
     public void setDiagnosis(String diagnosis) {
         if (HelperUtils.isValidString(diagnosis, 5)) { // Min 5 chars for meaningful diagnosis
             this.diagnosis = diagnosis;
@@ -105,24 +95,12 @@ public class MedicalRecord implements Displayable {
         }
     }
 
-    public String getPrescription() {
-        return prescription;
-    }
-
     public void setPrescription(String prescription) {
         this.prescription = prescription;
     }
 
-    public String getTestResults() {
-        return testResults;
-    }
-
     public void setTestResults(String testResults) {
         this.testResults = testResults;
-    }
-
-    public String getNotes() {
-        return notes;
     }
 
     public void setNotes(String notes) {
@@ -147,29 +125,29 @@ public class MedicalRecord implements Displayable {
                 " | Doctor: " + doctorId + " | Date: " + visitDate);
     }
 
-    @Override
-    public String toString() {
-        return "MedicalRecord{" +
-                "recordId='" + recordId + '\'' +
-                ", patientId='" + patientId + '\'' +
-                ", doctorId='" + doctorId + '\'' +
-                ", visitDate=" + visitDate +
-                ", diagnosis='" + diagnosis + '\'' +
-                ", prescription='" + prescription + '\'' +
-                ", testResults='" + testResults + '\'' +
-                ", notes='" + notes + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "MedicalRecord{" +
+//                "recordId='" + recordId + '\'' +
+//                ", patientId='" + patientId + '\'' +
+//                ", doctorId='" + doctorId + '\'' +
+//                ", visitDate=" + visitDate +
+//                ", diagnosis='" + diagnosis + '\'' +
+//                ", prescription='" + prescription + '\'' +
+//                ", testResults='" + testResults + '\'' +
+//                ", notes='" + notes + '\'' +
+//                '}';
+//    }
 
     public void updateDiagnosis(String newDiagnosis) {
         setDiagnosis(newDiagnosis); // Use validated setter
-        System.out.println("✅ Diagnosis updated for Record " + recordId);
+        System.out.println("Diagnosis updated for Record " + recordId);
     }
 
 
     public void updateTestResults(String newResults) {
         setTestResults(newResults);
-        System.out.println("✅ Test results updated for Record " + recordId);
+        System.out.println("Test results updated for Record " + recordId);
     }
 
     public void updateTestResults(String newResults, String additionalNote) {
@@ -177,6 +155,6 @@ public class MedicalRecord implements Displayable {
         if (HelperUtils.isValidString(additionalNote)) {
             this.notes = (this.notes != null ? this.notes + "\n--- Update Note: " : "Update Note: ") + additionalNote;
         }
-        System.out.println("✅ Test results and note updated for Record " + recordId);
+        System.out.println("Test results and note updated for Record " + recordId);
     }
 }
