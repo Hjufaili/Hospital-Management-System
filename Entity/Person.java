@@ -2,14 +2,23 @@ package Entity;
 
 import Interface.Displayable;
 import Utils.HelperUtils;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+@Getter
+@SuperBuilder
+@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
 public class Person implements Displayable {
 
-    private String id;
+    @EqualsAndHashCode.Include
+    private String id = HelperUtils.generateId("PER");
+
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;
@@ -29,20 +38,12 @@ public class Person implements Displayable {
         setAddress(address);
     }
 
-    public Person() {
-        this.id = HelperUtils.generateId("PER");
-    }
-
     public Person(String first, String last, String gender, String phone, String email) {
         setFirstName(first);
         setLastName(last);
         setGender(gender);
         setPhoneNumber(phone);
         setEmail(email);
-    }
-
-    public String getId() {
-        return id;
     }
 
     public void setId(String id) {
@@ -54,20 +55,12 @@ public class Person implements Displayable {
         }
     }
 
-    public String getAddress() {
-        return address;
-    }
-
     public void setAddress(String address) {
         if (HelperUtils.isNotNull(address)) {
             this.address = address;
         } else {
             System.err.println("Validation Error: Address cannot be null or empty.");
         }
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public void setEmail(String email) {
@@ -78,20 +71,12 @@ public class Person implements Displayable {
         }
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
     public void setPhoneNumber(String phoneNumber) {
         if (HelperUtils.isValidString(phoneNumber, 8, 8)) {
             this.phoneNumber = phoneNumber;
         } else {
             System.err.println("Validation Error: Invalid phone number.");
         }
-    }
-
-    public String getGender() {
-        return gender;
     }
 
     public void setGender(String gender) {
@@ -102,10 +87,6 @@ public class Person implements Displayable {
         }
     }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
     public void setDateOfBirth(LocalDate dateOfBirth) {
         if (HelperUtils.isValidAge(dateOfBirth)) {
             this.dateOfBirth = dateOfBirth;
@@ -114,20 +95,12 @@ public class Person implements Displayable {
         }
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
     public void setLastName(String lastName) {
         if (HelperUtils.isValidString(lastName, 2, 50)) {
             this.lastName = lastName;
         } else {
             System.err.println("Validation Error: Invalid last name.");
         }
-    }
-
-    public String getFirstName() {
-        return firstName;
     }
 
     public void setFirstName(String firstName) {
@@ -158,30 +131,5 @@ public class Person implements Displayable {
         System.out.println(" " + firstName + " " + lastName + " | " + gender + " | " + phoneNumber);
     }
 
-    @Override
-    public String toString() {
-        return "Entity.Person{" +
-                "id='" + id + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", dataOfBirth=" + dateOfBirth +
-                ", gender='" + gender + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", email='" + email + '\'' +
-                ", address='" + address + '\'' +
-                '}';
-    }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (HelperUtils.isNull(o) || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return Objects.equals(id, person.id) && HelperUtils.isNotNull(id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
 }
