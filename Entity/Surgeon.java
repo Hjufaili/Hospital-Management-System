@@ -2,11 +2,21 @@ package Entity;
 
 import Interface.Displayable;
 import Utils.HelperUtils;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Setter
+@Getter
+@SuperBuilder // Replaces all complex constructors
+@NoArgsConstructor // Replaces the constructor that relies on field defaults
+@ToString(callSuper = true)
 public class Surgeon extends Doctor implements Displayable {
 
     private  Integer surgeriesPerformed;
@@ -16,78 +26,7 @@ public class Surgeon extends Doctor implements Displayable {
     private static final Double DEFAULT_CONSULTATION_FEE = 250.0;
     private static final Boolean DEFAULT_OT_ACCESS = true;
 
-    public Surgeon(Integer surgeriesPerformed, List<String> surgeryTypes,
-                   Boolean operationTheatreAccess) {
-        this.surgeriesPerformed = surgeriesPerformed;
-        this.surgeryTypes = surgeryTypes;
-        this.operationTheatreAccess = operationTheatreAccess;
-    }
 
-    public Surgeon(String id, String firstName, String lastName, LocalDate dateOfBirth,
-                   String gender, String phoneNumber, String address, String email,
-                   String doctorId, String specialization, String qualification,
-                   Integer experienceYears, String departmentId, Double consultationFee,
-                   List<String> availableSlots, List<Patient> assignedPatients,
-                   Integer surgeriesPerformed, List<String> surgeryTypes, Boolean operationTheatreAccess) {
-        super(id, firstName, lastName, dateOfBirth, gender, phoneNumber, address, email, doctorId,
-                specialization, qualification, experienceYears, departmentId, consultationFee,
-                availableSlots, assignedPatients);
-        this.surgeriesPerformed = surgeriesPerformed;
-        this.surgeryTypes = surgeryTypes;
-        this.operationTheatreAccess = operationTheatreAccess;
-    }
-
-    public Surgeon(String firstName, String lastName, String specialization, String departmentId) {
-
-
-        super(
-                HelperUtils.generateId("PER"), firstName, lastName, (LocalDate) null,
-                "N/A", "N/A", "N/A", "N/A",
-
-                HelperUtils.generateId("DOC"), specialization, "N/A", 0, departmentId,
-                DEFAULT_CONSULTATION_FEE, new ArrayList<String>(), new ArrayList<Patient>()
-        );
-
-        this.surgeriesPerformed = 0;
-        this.surgeryTypes = new ArrayList<>();
-        this.operationTheatreAccess = DEFAULT_OT_ACCESS;
-    }
-
-    public Surgeon(String doctorId, String specialization, String qualification,
-                   Integer experienceYears, String departmentId, Double consultationFee,
-                   List<String> availableSlots, List<Patient> assignedPatients,
-                   Integer surgeriesPerformed, List<String> surgeryTypes,
-                   Boolean operationTheatreAccess) {
-        super(doctorId, specialization, qualification, experienceYears, departmentId,
-                consultationFee, availableSlots, assignedPatients);
-        this.surgeriesPerformed = surgeriesPerformed;
-        this.surgeryTypes = surgeryTypes;
-        this.operationTheatreAccess = operationTheatreAccess;
-    }
-
-    public Integer getSurgeriesPerformed() {
-        return surgeriesPerformed;
-    }
-
-    public void setSurgeriesPerformed(Integer surgeriesPerformed) {
-        this.surgeriesPerformed = surgeriesPerformed;
-    }
-
-    public List<String> getSurgeryTypes() {
-        return surgeryTypes;
-    }
-
-    public void setSurgeryTypes(List<String> surgeryTypes) {
-        this.surgeryTypes = surgeryTypes;
-    }
-
-    public Boolean getOperationTheatreAccess() {
-        return operationTheatreAccess;
-    }
-
-    public void setOperationTheatreAccess(Boolean operationTheatreAccess) {
-        this.operationTheatreAccess = operationTheatreAccess;
-    }
 
     public  void performSurgery(String surgeryType){
         if (!operationTheatreAccess) {
@@ -96,8 +35,8 @@ public class Surgeon extends Doctor implements Displayable {
         }
 
         // Safety check for null initialization
-        if (this.surgeriesPerformed == null) this.surgeriesPerformed = 0;
-        if (this.surgeryTypes == null) this.surgeryTypes = new ArrayList<>();
+        // if (this.surgeriesPerformed == null) this.surgeriesPerformed = 0;
+        // if (this.surgeryTypes == null) this.surgeryTypes = new ArrayList<>();
 
         this.surgeriesPerformed++;
         if (!this.surgeryTypes.contains(surgeryType)) {
