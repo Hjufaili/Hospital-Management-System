@@ -2,27 +2,35 @@ package Entity;
 
 import Interface.Displayable;
 import Utils.HelperUtils;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
+@Getter
+@NoArgsConstructor
+@ToString
+@Builder(toBuilder = true)
 public class Billing implements Displayable {
 
-    private String billingId;
+    private String billingId = HelperUtils.generateId("BIL");
     private String patientId;
     private String doctorId;
     private String appointmentId;
-    private LocalDate billingDate;
-    private List<BillingItem> items;
-    private Double totalAmount;
-    private Double insuranceCoverage;
-    private Double patientDue;
-    private String status;
+    private LocalDate billingDate = LocalDate.now();
+    private List<BillingItem> items = new ArrayList<>();
+    private Double totalAmount = 0.0;
+    private Double insuranceCoverage = 0.0;
+    private Double patientDue = 0.0;
+    private String status = "UNPAID";
 
     private static final List<String> VALID_STATUSES = List.of("UNPAID", "PENDING_INSURANCE", "PAID", "OVERDUE", "SETTLED");
 
+    @Value
     public static class BillingItem {
         private String description;
         private double fee;
@@ -40,21 +48,20 @@ public class Billing implements Displayable {
 
         @Override
         public String toString() {
-            return String.format( description + " (" + quantity + "): "+ getSubtotal());
+            return String.format(description + " (" + quantity + "): " + getSubtotal());
         }
     }
 
 
-
-    public Billing() {
-        this.billingId = HelperUtils.generateId("BIL");
-        this.billingDate = LocalDate.now();
-        this.items = new ArrayList<>();
-        this.totalAmount = 0.0;
-        this.insuranceCoverage = 0.0;
-        this.patientDue = 0.0;
-        this.status = "UNPAID";
-    }
+//    public Billing() {
+//        this.billingId = HelperUtils.generateId("BIL");
+//        this.billingDate = LocalDate.now();
+//        this.items = new ArrayList<>();
+//        this.totalAmount = 0.0;
+//        this.insuranceCoverage = 0.0;
+//        this.patientDue = 0.0;
+//        this.status = "UNPAID";
+//    }
 
     public Billing(String billingId, String patientId, String doctorId, String appointmentId,
                    LocalDate billingDate, List<BillingItem> items, Double totalAmount,
@@ -271,10 +278,10 @@ public class Billing implements Displayable {
         System.out.println("=====================================");
         System.out.println("            BILLING STATEMENT        ");
         System.out.println("=====================================");
-        System.out.printf("Billing ID: "+ billingId);
-        System.out.printf("Patient ID: "+patientId);
-        System.out.printf("Billing Date: "+ billingDate);
-        System.out.printf("Status: "+ status);
+        System.out.printf("Billing ID: " + billingId);
+        System.out.printf("Patient ID: " + patientId);
+        System.out.printf("Billing Date: " + billingDate);
+        System.out.printf("Status: " + status);
 
         System.out.println("\n--- Line Items ---");
         if (items.isEmpty()) {
@@ -285,9 +292,9 @@ public class Billing implements Displayable {
         }
 
         System.out.println("\n--- Summary ---");
-        System.out.printf("Total Charges: "+ totalAmount);
-        System.out.printf("Insurance Coverage: "+insuranceCoverage);
-        System.out.printf("Patient Due: " +patientDue);
+        System.out.printf("Total Charges: " + totalAmount);
+        System.out.printf("Insurance Coverage: " + insuranceCoverage);
+        System.out.printf("Patient Due: " + patientDue);
         System.out.println("-------------------------------------");
     }
 
@@ -300,14 +307,14 @@ public class Billing implements Displayable {
 
     // --- Standard Java Methods ---
 
-    @Override
-    public String toString() {
-        return "Billing{" +
-                "billingId='" + billingId + '\'' +
-                ", patientId='" + patientId + '\'' +
-                ", totalAmount=" + totalAmount +
-                ", patientDue=" + patientDue +
-                ", status='" + status + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Billing{" +
+//                "billingId='" + billingId + '\'' +
+//                ", patientId='" + patientId + '\'' +
+//                ", totalAmount=" + totalAmount +
+//                ", patientDue=" + patientDue +
+//                ", status='" + status + '\'' +
+//                '}';
+//    }
 }
