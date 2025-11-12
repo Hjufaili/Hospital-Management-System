@@ -4,8 +4,10 @@ import Entity.*;
 import Service.*;
 import Utils.HelperUtils;
 
+import javax.print.Doc;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +25,7 @@ public class HospitalManagementApp {
     private static final MedicalRecordService medicalRecordService = new MedicalRecordService();
     private static final PatientService patientService = new PatientService();
     private static final DepartmentService departmentService = new DepartmentService(doctorService);
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public static void main(String[] args) {
         System.out.println("===============================================");
@@ -104,6 +107,7 @@ public class HospitalManagementApp {
             }
             case 9 -> viewPatientMedicalHistory();
             case 10 -> {
+                ;
             }
             default -> System.out.println("Invalid option.");
         }
@@ -123,8 +127,11 @@ public class HospitalManagementApp {
         System.out.print("Enter email: ");
         String email = scanner.nextLine();
 
-        patientService.addPatient(first,last,phone,blood,email);
-        System.out.println("Patient registered successfully: ");
+
+        Patient p = patientService.createPatient(first, last, phone, blood, email);
+        if (p != null) {
+            System.out.println("Patient registered successfully: " + p.getPatientId());
+        }
     }
 
     private static void registerNewInPatient() {
@@ -145,7 +152,11 @@ public class HospitalManagementApp {
         System.out.print("Enter Daily Charges: ");
         Double charges = scanner.nextDouble();
 
-        InPatient p = new InPatient(first, last, gender, phone, blood, docId, room, charges);
+        InPatient p = InPatient.builder()
+                .firstName(first).lastName(last).gender(gender).phoneNumber(phone).bloodGroup(blood)
+                .admittingDoctorId(docId).roomNumber(room).dailyCharges(charges)
+                .build();
+
         patientService.add(p);
         System.out.println("InPatient registered successfully: " + p.getPatientId());
     }
@@ -164,7 +175,10 @@ public class HospitalManagementApp {
         System.out.print("Enter Preferred Doctor ID: ");
         String docId = scanner.nextLine();
 
-        OutPatient p = new OutPatient(first, last, gender, phone, blood, docId);
+        OutPatient p = OutPatient.builder()
+                .firstName(first).lastName(last).gender(gender).phoneNumber(phone)
+                .bloodGroup(blood).preferredDoctorId(docId).build();
+
         patientService.add(p);
         System.out.println("OutPatient registered successfully: " + p.getPatientId());
     }
@@ -188,7 +202,11 @@ public class HospitalManagementApp {
         Integer triage = scanner.nextInt();
         scanner.nextLine();
 
-        EmergencyPatient p = new EmergencyPatient(first, last, gender, phone, blood, type, arrival, triage);
+        EmergencyPatient p = EmergencyPatient.builder()
+                .firstName(first).lastName(last).gender(gender)
+                .phoneNumber(phone).bloodGroup(blood).emergencyType(type)
+                .arrivalMode(arrival).triageLevel(triage).build();
+
         patientService.add(p);
         System.out.println("Emergency Patient registered successfully: " + p.getPatientId());
     }
@@ -208,7 +226,7 @@ public class HospitalManagementApp {
             String newEmail = scanner.nextLine();
             if (!newEmail.isBlank()) p.setEmail(newEmail);
 
-            patientService.update(p);
+            patientService.editPatient(id, p);
             System.out.println("Patient information updated.");
         } else {
             System.out.println("Patient not found.");
@@ -223,21 +241,7 @@ public class HospitalManagementApp {
         if (patient != null) {
             System.out.println("\n--- MEDICAL HISTORY FOR " + patient.getFirstName().toUpperCase() + " " + patient.getLastName().toUpperCase() + " ---");
 
-            // This relies on MedicalRecordService having a search method,
-            // or the Patient object already containing the list of records.
-
-            List<MedicalRecord> records = patient.getMedicalRecords();
-
-            if (records == null || records.isEmpty()) {
-                System.out.println("No medical records found for this patient.");
-                return;
-            }
-
-            for (MedicalRecord record : records) {
-                System.out.println("----------------------------------------");
-                record.displayInfo(); // Assuming MedicalRecord has a displayInfo method
-            }
-            System.out.println("----------------------------------------");
+            medicalRecordService.displayPatientHistory(id);
 
         } else {
             System.out.println("Patient with ID " + id + " not found.");
@@ -272,9 +276,9 @@ public class HospitalManagementApp {
                 String keyword = scanner.nextLine();
                 doctorService.search(keyword);
             }
-            case 7 -> doctorService.getAvailableDoctors(); // Assuming this method exists
-            case 8 -> assignPatientToDoctor(); // New method to implement
-            case 9 -> updateDoctorInfo(); // New method to implement
+            case 7 -> doctorService.getAvailableDoctors();
+            case 8 -> assignPatientToDoctor();
+            case 9 -> updateDoctorInfo();
             case 10 -> {
                 System.out.print("Enter doctor ID to remove: ");
                 String id = scanner.nextLine();
@@ -301,7 +305,10 @@ public class HospitalManagementApp {
         System.out.print("Enter department ID: ");
         String deptId = scanner.nextLine();
 
-        Doctor d = new Doctor(first, last, spec, qual, years, deptId);
+
+        Doctor d = Doctor.builder().firstName(first).lastName(last).specialization(spec)
+                .qualification(qual).experienceYears(years).departmentId(deptId).build();
+
         doctorService.add(d);
         System.out.println("Doctor registered successfully: " + d.getDoctorId());
     }
@@ -316,9 +323,12 @@ public class HospitalManagementApp {
         System.out.print("Enter department ID: ");
         String deptId = scanner.nextLine();
 
-        Surgeon s = new Surgeon(first, last, spec, deptId);
+
+        Surgeon s = Surgeon.builder().firstName(first).lastName(last)
+                .specialization(spec).departmentId(deptId).build();
+
         doctorService.add(s);
-        System.out.println("Surgeon registered successfully: " + s.getDoctorId());
+        System.out.println("Surgeon registered successfully: ");
     }
 
     private static void addConsultant() {
@@ -331,7 +341,9 @@ public class HospitalManagementApp {
         System.out.print("Enter department ID: ");
         String deptId = scanner.nextLine();
 
-        Consultant c = new Consultant(first, last, spec, deptId);
+        Consultant c = Consultant.builder().firstName(first).lastName(last).specialization(spec)
+                .departmentId(deptId).build();
+
         doctorService.add(c);
         System.out.println("Consultant registered successfully: " + c.getDoctorId());
     }
@@ -346,7 +358,8 @@ public class HospitalManagementApp {
         System.out.print("Enter department ID: ");
         String deptId = scanner.nextLine();
 
-        GeneralPractitioner gp = new GeneralPractitioner(first, last, spec, deptId);
+        GeneralPractitioner gp = GeneralPractitioner.builder().firstName(first).lastName(last)
+                .specialization(spec).departmentId(deptId).build();
         doctorService.add(gp);
         System.out.println("General Practitioner registered successfully: " + gp.getDoctorId());
     }
@@ -357,15 +370,7 @@ public class HospitalManagementApp {
         System.out.print("Enter Doctor ID: ");
         String doctorId = scanner.nextLine();
 
-        Patient p = patientService.getPatientById(patientId);
-        Doctor d = doctorService.getDoctorById(doctorId);
-
-        if (p != null && d != null) {
-            d.getAssignedPatients().add(p);
-            System.out.println("Patient " + p.getFirstName() + " assigned to Dr. " + d.getLastName());
-        } else {
-            System.out.println("Invalid Patient ID or Doctor ID.");
-        }
+        doctorService.assignPatient(doctorId, patientId);
     }
 
     private static void updateDoctorInfo() {
@@ -379,7 +384,7 @@ public class HospitalManagementApp {
             Double newFee = scanner.nextDouble();
             if (newFee != null) d.setConsultationFee(newFee);
 
-            doctorService.update(d);
+            doctorService.editDoctor(id, d);
             System.out.println("Doctor information updated.");
         } else {
             System.out.println("Doctor not found.");
@@ -429,16 +434,14 @@ public class HospitalManagementApp {
         String name = scanner.nextLine();
         System.out.print("Enter department ID: ");
         String dept = scanner.nextLine();
-        System.out.print("Enter shift (Morning/Evening): ");
+        System.out.print("Enter shift (Morning/Evening/Night): ");
         String shift = scanner.nextLine();
 
-        Nurse n = new Nurse();
-        n.setNurseId(HelperUtils.generateId("NUR"));
-        n.setFirstName(name);
-        n.setDepartmentId(dept);
-        n.setShift(shift);
+        Nurse n = Nurse.builder().firstName(name).departmentId(dept)
+                .shift(shift).build();
 
         nurseService.add(n);
+        System.out.println("Nurse added successfully");
     }
 
 
@@ -461,7 +464,26 @@ public class HospitalManagementApp {
     }
 
     public static void updateNurseInfo() {
+        System.out.print("Enter nurse ID to update: ");
+        String id = scanner.nextLine();
+        Nurse d = nurseService.getNurseById(id);
 
+        if (d != null) {
+            System.out.println("Updating nurse: Dr. " + d.getLastName());
+            System.out.print("Enter new shift (current: " + d.getShift() + "): ");
+            String newShift = scanner.nextLine();
+            if (!newShift.isBlank()) d.setShift(newShift);
+
+            System.out.print("Enter new department ID (current: " + d.getDepartmentId() + "): ");
+            String newDeptId = scanner.nextLine();
+            if (!newDeptId.isBlank()) d.setDepartmentId(newDeptId);
+
+
+            nurseService.editNurse(id, d);
+            System.out.println("Nurse information updated.");
+        } else {
+            System.out.println("Nurse not found.");
+        }
     }
 
 
@@ -513,7 +535,7 @@ public class HospitalManagementApp {
                 String aid = scanner.nextLine();
                 appointmentService.completeAppointment(aid);
             }
-            case 9 -> upcomingAppointments();
+            case 9 -> appointmentService.getUpcomingAppointments();
             case 10 -> {
             }
             default -> System.out.println("Invalid option.");
@@ -527,13 +549,15 @@ public class HospitalManagementApp {
         String did = scanner.nextLine();
         System.out.print("Enter appointment date (yyyy-MM-dd): ");
         String dateStr = scanner.nextLine();
+        System.out.print("Enter appointment time (HH:mm): ");
+        String timeStr = scanner.nextLine();
 
-        Appointment ap = new Appointment();
-        ap.setAppointmentId(HelperUtils.generateId("APT"));
-        ap.setPatientId(pid);
-        ap.setDoctorId(did);
-        ap.setAppointmentDate(LocalDate.parse(dateStr));
-        ap.setStatus("Scheduled");
+        Appointment ap = Appointment.builder()
+                .patientId(pid)
+                .doctorId(did)
+                .appointmentDate(LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .appointmentTime(LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("HH:mm")))
+                .build();
 
         appointmentService.add(ap);
     }
@@ -543,12 +567,13 @@ public class HospitalManagementApp {
         String aid = scanner.nextLine();
 
         System.out.print("Enter a new Date (yyyy-MM-dd): ");
-        String input = scanner.nextLine();
+        String inputDate = scanner.nextLine();
         // Parse the input string into a LocalDate
-        LocalDate newDate = LocalDate.parse(input, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate newDate = LocalDate.parse(inputDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         System.out.print("Enter new Time: ");
-        String newTime = scanner.nextLine();
+        String inputTime = scanner.nextLine();
+        LocalTime newTime = LocalTime.parse(inputTime, DateTimeFormatter.ofPattern("HH:mm"));
 
         appointmentService.rescheduleAppointment(aid, newDate, newTime);
     }
@@ -603,18 +628,34 @@ public class HospitalManagementApp {
         System.out.print("Enter diagnosis: ");
         String diag = scanner.nextLine();
 
-        MedicalRecord record = new MedicalRecord();
-        record.setRecordId(HelperUtils.generateId("REC"));
-        record.setPatientId(pid);
-        record.setDoctorId(did);
-        record.setDiagnosis(diag);
-        record.setVisitDate(LocalDateTime.now());
 
-        medicalRecordService.add(record);
+        medicalRecordService.createMedicalRecord(pid,did,diag);
+        System.out.println("Medical record added successfully");
     }
 
     private static void updateRecordInfo() {
+        System.out.print("Enter Medical record ID to update: ");
+        String id = scanner.nextLine();
+        MedicalRecord d = medicalRecordService.getMedicalRecordById(id);
 
+        if (d != null) {
+            System.out.println("Updating medical record:");
+            System.out.print("Enter new diagnosis (current: " + d.getDiagnosis() + "): ");
+            String newDig = scanner.nextLine();
+            System.out.print("Enter new prescription (current: " + d.getPrescription() + "): ");
+            String newPres = scanner.nextLine();
+            System.out.print("Enter new notes (current: " + d.getNotes() + "): ");
+            String newNotes = scanner.nextLine();
+            if (newDig != null) d.setDiagnosis(newDig);
+            if (newPres != null) d.setPrescription(newPres);
+            if (newNotes != null) d.setNotes(newNotes);
+
+
+            medicalRecordService.editMedicalRecord(id, d);
+            System.out.println("Medical record information updated.");
+        } else {
+            System.out.println("Medical record not found.");
+        }
     }
 
 
@@ -649,12 +690,17 @@ public class HospitalManagementApp {
 
     private static void addDepartment() {
         System.out.print("Enter department name: ");
-        String name = scanner.nextLine();
+        String departmentName = scanner.nextLine();
         System.out.print("Enter contact phone: ");
-        int phone = scanner.nextInt();
+        String phone = scanner.nextLine();
+        System.out.print("Enter contact phone: ");
+        String headDoctorId = scanner.nextLine();
+        System.out.print("Enter contact phone: ");
+        int bedCapacity = scanner.nextInt();
         scanner.nextLine();
 
-        departmentService.addDepartment(name, phone);
+        departmentService.createDepartment(departmentName,phone,headDoctorId,bedCapacity);
+        System.out.println("Department added successfully");
 
     }
 
@@ -664,6 +710,46 @@ public class HospitalManagementApp {
 
     private static void assignNurseToDepartment() {
 
+    }
+
+    public static void updateDepartmentInfo() {
+        System.out.println("\n--- Update Department Data ---");
+        System.out.print("Enter Department ID to update: ");
+        String departmentId = scanner.nextLine();
+
+        Department existingDept = departmentService.getDepartmentById(departmentId);
+
+        if (existingDept == null) {
+            System.out.println("Cannot update. Department with ID " + departmentId + " not found.");
+            return;
+        }
+
+        System.out.println("Found Department: " + existingDept.getDepartmentName());
+        System.out.println("Enter new details (leave blank to keep current value):");
+
+        System.out.print("New Department Name [" + existingDept.getDepartmentName() + "]: ");
+        String newName = scanner.nextLine();
+        if (!newName.isEmpty()) {
+            existingDept.setDepartmentName(newName);
+        }
+
+        System.out.print("New Head Doctor ID [" + existingDept.getHeadDoctorId() + "]: ");
+        String newHeadDoctorId = scanner.nextLine();
+        if (!newHeadDoctorId.isEmpty()) {
+            existingDept.setHeadDoctorId(newHeadDoctorId);
+        }
+
+        System.out.print("New Bed Capacity [" + existingDept.getBedCapacity() + "]: ");
+        int newCapacityStr = scanner.nextInt();
+        scanner.nextLine();
+
+
+        Department updatedDept = Department.builder().departmentName(newName)
+                .headDoctorId(newHeadDoctorId).bedCapacity(newCapacityStr)
+                        .build();
+
+        departmentService.editDepartment(departmentId, updatedDept);
+        System.out.println("Department update process complete.");
     }
 
 
@@ -679,8 +765,19 @@ public class HospitalManagementApp {
         System.out.print("Enter choice: ");
 
         switch (getUserChoice()) {
-            case 1 -> System.out.println("(Demo) Total appointments today: 12");
-            case 2 -> System.out.println("(Demo) Top-performing doctor: Dr. Ahmed");
+            case 1 -> {
+
+            }
+            case 2 -> {
+            }
+            case 3 -> {
+            }
+            case 4 -> {
+            }
+            case 5 -> {
+            }
+            case 6 -> {
+            }
             default -> System.out.println("Invalid option.");
         }
     }
