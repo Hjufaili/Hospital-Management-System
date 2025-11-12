@@ -2,6 +2,11 @@ package Entity;
 
 import Interface.Displayable;
 import Utils.HelperUtils;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -9,84 +14,82 @@ import java.util.List;
 import java.util.Objects;
 
 
+@Getter
+@SuperBuilder(toBuilder = true)
+@NoArgsConstructor
+@ToString(callSuper = true, exclude = {"availableSlots", "assignedPatients"})
 public class Doctor extends Person implements Displayable {
-    private String doctorId;
+
+    private String doctorId = HelperUtils.generateId("DOC");
     private String specialization;
     private String qualification;
     private Integer experienceYears;
     private String departmentId;
     private Double consultationFee;
-    private List<String> availableSlots;
-    private List<Patient> assignedPatients;
+    private List<String> availableSlots = new ArrayList<>();
+    private List<Patient> assignedPatients = new ArrayList<>();
 
-    public Doctor() {
-        super();
-        this.doctorId = HelperUtils.generateId("DOC");
-        this.availableSlots = new ArrayList<>();
-        this.assignedPatients = new ArrayList<>();
-    }
 
-    public Doctor(String id, String firstName, String lastName, LocalDate dateOfBirth,
-                  String gender, String phoneNumber, String email, String address,
-                  String doctorId, String specialization, String qualification,
-                  Integer experienceYears, String departmentId, Double consultationFee,
-                  List<String> availableSlots, List<Patient> assignedPatients) {
-        super(id, firstName, lastName, dateOfBirth, gender, phoneNumber, email, address);
-
-        setDoctorId(doctorId);
-        setSpecialization(specialization);
-        setQualification(qualification);
-        setExperienceYears(experienceYears);
-        setDepartmentId(departmentId);
-        setConsultationFee(consultationFee);
-
-        setAvailableSlots(availableSlots);
-        setAssignedPatients(assignedPatients);
-    }
-
-    public Doctor(String doctorId, String specialization, String qualification,
-                  Integer experienceYears, String departmentId, Double consultationFee,
-                  List<String> availableSlots, List<Patient> assignedPatients) {
-
-        this.doctorId = HelperUtils.generateId("DOC");
-        this.specialization = specialization;
-        this.qualification = qualification;
-        this.experienceYears = experienceYears;
-        this.departmentId = departmentId;
-        this.consultationFee = consultationFee;
-        this.availableSlots = availableSlots;
-        this.assignedPatients = assignedPatients;
-    }
-
-    public Doctor(String firstName, String lastName, LocalDate dateOfBirth,
-                  String gender, String phoneNumber, String email, String address,
-                  String specialization, String qualification,
-                  Integer experienceYears, String departmentId, Double consultationFee) {
-
-        super(HelperUtils.generateId("PER"), firstName, lastName, dateOfBirth, gender, phoneNumber, email, address);
-
-        this.doctorId = HelperUtils.generateId("DOC");
-
-        // Use setters for validation
-        setSpecialization(specialization);
-        setQualification(qualification);
-        setExperienceYears(experienceYears);
-        setDepartmentId(departmentId);
-        setConsultationFee(consultationFee);
-
-        this.availableSlots = new ArrayList<>();
-        this.assignedPatients = new ArrayList<>();
-    }
-
-    public Doctor(String first, String last, String spec, String qual, int years, String depId) {
-        setFirstName(first);
-        setLastName(last);
-        setSpecialization(spec);
-        setQualification(qual);
-        setExperienceYears(years);
-        setDepartmentId(depId);
-    }
-
+//    public Doctor(String id, String firstName, String lastName, LocalDate dateOfBirth,
+//                  String gender, String phoneNumber, String email, String address,
+//                  String doctorId, String specialization, String qualification,
+//                  Integer experienceYears, String departmentId, Double consultationFee,
+//                  List<String> availableSlots, List<Patient> assignedPatients) {
+//        super(id, firstName, lastName, dateOfBirth, gender, phoneNumber, email, address);
+//
+//        setDoctorId(doctorId);
+//        setSpecialization(specialization);
+//        setQualification(qualification);
+//        setExperienceYears(experienceYears);
+//        setDepartmentId(departmentId);
+//        setConsultationFee(consultationFee);
+//
+//        setAvailableSlots(availableSlots);
+//        setAssignedPatients(assignedPatients);
+//    }
+//
+//    public Doctor(String doctorId, String specialization, String qualification,
+//                  Integer experienceYears, String departmentId, Double consultationFee,
+//                  List<String> availableSlots, List<Patient> assignedPatients) {
+//
+//        this.doctorId = HelperUtils.generateId("DOC");
+//        this.specialization = specialization;
+//        this.qualification = qualification;
+//        this.experienceYears = experienceYears;
+//        this.departmentId = departmentId;
+//        this.consultationFee = consultationFee;
+//        this.availableSlots = availableSlots;
+//        this.assignedPatients = assignedPatients;
+//    }
+//
+//    public Doctor(String firstName, String lastName, LocalDate dateOfBirth,
+//                  String gender, String phoneNumber, String email, String address,
+//                  String specialization, String qualification,
+//                  Integer experienceYears, String departmentId, Double consultationFee) {
+//
+//        super(HelperUtils.generateId("PER"), firstName, lastName, dateOfBirth, gender, phoneNumber, email, address);
+//
+//        this.doctorId = HelperUtils.generateId("DOC");
+//
+//        // Use setters for validation
+//        setSpecialization(specialization);
+//        setQualification(qualification);
+//        setExperienceYears(experienceYears);
+//        setDepartmentId(departmentId);
+//        setConsultationFee(consultationFee);
+//
+//        this.availableSlots = new ArrayList<>();
+//        this.assignedPatients = new ArrayList<>();
+//    }
+//
+//    public Doctor(String first, String last, String spec, String qual, int years, String depId) {
+//        setFirstName(first);
+//        setLastName(last);
+//        setSpecialization(spec);
+//        setQualification(qual);
+//        setExperienceYears(years);
+//        setDepartmentId(depId);
+//    }
 
 
     @Override
@@ -109,17 +112,6 @@ public class Doctor extends Person implements Displayable {
                 " | " + specialization + " | " + experienceYears + " yrs");
     }
 
-    @Override
-    public String toString() {
-        return "Doctor{" +
-                "doctorId='" + doctorId + '\'' +
-                ", specialization='" + specialization + '\'' +
-                ", qualification='" + qualification + '\'' +
-                ", experienceYears=" + experienceYears +
-                ", departmentId='" + departmentId + '\'' +
-                ", consultationFee=" + consultationFee +
-                '}';
-    }
 
     public void assignPatient(Patient patient) {
         if (HelperUtils.isNotNull(patient) && !assignedPatients.contains(patient)) {
@@ -158,20 +150,12 @@ public class Doctor extends Person implements Displayable {
 
     }
 
-    public String getDoctorId() {
-        return doctorId;
-    }
-
     public void setDoctorId(String doctorId) {
         if (HelperUtils.isValidString(doctorId, 5, 20)) {
             this.doctorId = doctorId;
         } else {
             System.err.println("Validation Error: Invalid Doctor ID.");
         }
-    }
-
-    public String getSpecialization() {
-        return specialization;
     }
 
     public void setSpecialization(String specialization) {
@@ -181,10 +165,6 @@ public class Doctor extends Person implements Displayable {
             System.out.println("Invalid specialization.");
     }
 
-    public String getQualification() {
-        return qualification;
-    }
-
     public void setQualification(String qualification) {
         if (HelperUtils.isValidString(qualification, 2))
             this.qualification = qualification.trim();
@@ -192,19 +172,11 @@ public class Doctor extends Person implements Displayable {
             System.out.println("Invalid qualification.");
     }
 
-    public Integer getExperienceYears() {
-        return experienceYears;
-    }
-
     public void setExperienceYears(Integer experienceYears) {
         if (HelperUtils.isValidNumber(experienceYears, 0, 60))
             this.experienceYears = experienceYears;
         else
             System.out.println("Invalid years of experience.");
-    }
-
-    public String getDepartmentId() {
-        return departmentId;
     }
 
     public void setDepartmentId(String departmentId) {
@@ -215,10 +187,6 @@ public class Doctor extends Person implements Displayable {
         }
     }
 
-    public Double getConsultationFee() {
-        return consultationFee;
-    }
-
     public void setConsultationFee(Double consultationFee) {
         if (consultationFee != null && HelperUtils.isPositive(consultationFee)) {
             this.consultationFee = consultationFee;
@@ -227,16 +195,8 @@ public class Doctor extends Person implements Displayable {
         }
     }
 
-    public List<String> getAvailableSlots() {
-        return availableSlots;
-    }
-
     public void setAvailableSlots(List<String> availableSlots) {
         this.availableSlots = (availableSlots != null) ? availableSlots : new ArrayList<>();
-    }
-
-    public List<Patient> getAssignedPatients() {
-        return assignedPatients;
     }
 
     public void setAssignedPatients(List<Patient> assignedPatients) {
