@@ -2,29 +2,33 @@ package Entity;
 
 import Interface.Displayable;
 import Utils.HelperUtils;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
+@Getter
+@NoArgsConstructor
+@SuperBuilder
+@ToString(callSuper = true, exclude = {"medicalRecords", "appointments"})
 public class Patient extends Person implements Displayable {
 
-    private String patientId;
+    @ToString.Exclude
+    private String patientId = HelperUtils.generateId("PAT");
     private String bloodGroup;
-    private List<String> allergies;
+    private List<String> allergies = new ArrayList<>();
     private String emergencyContact;
-    private LocalDate registrationDate;
+    private LocalDate registrationDate = LocalDate.now();
     private String insuranceId;
-    private List<MedicalRecord> medicalRecords;
-    private List<Appointment> appointments;
+    @ToString.Exclude
+    private List<MedicalRecord> medicalRecords = new ArrayList<>();
+    @ToString.Exclude
+    private List<Appointment> appointments = new ArrayList<>();
 
-    public Patient() {
-        super();
-        this.patientId = HelperUtils.generateId("PAT");
-        this.medicalRecords = new ArrayList<>();
-        this.appointments = new ArrayList<>();
-    }
 
     public Patient(String id, String firstName, String lastName, LocalDate dateOfBirth,
                    String gender, String phoneNumber, String email, String address,
@@ -100,9 +104,6 @@ public class Patient extends Person implements Displayable {
         this.bloodGroup=blood;
     }
 
-    public String getPatientId() {
-        return patientId;
-    }
 
     public void setPatientId(String patientId) {
         if (HelperUtils.isValidString(patientId, 5, 20)) {
@@ -110,10 +111,6 @@ public class Patient extends Person implements Displayable {
         } else {
             System.err.println("Validation Error: Invalid patient ID format.");
         }
-    }
-
-    public String getBloodGroup() {
-        return bloodGroup;
     }
 
     public void setBloodGroup(String bloodGroup) {
@@ -125,16 +122,8 @@ public class Patient extends Person implements Displayable {
         }
     }
 
-    public List<String> getAllergies() {
-        return allergies;
-    }
-
     public void setAllergies(List<String> allergies) {
         this.allergies = (allergies != null) ? allergies : new ArrayList<>();
-    }
-
-    public String getEmergencyContact() {
-        return emergencyContact;
     }
 
     public void setEmergencyContact(String emergencyContact) {
@@ -145,20 +134,12 @@ public class Patient extends Person implements Displayable {
         }
     }
 
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
-    }
-
     public void setRegistrationDate(LocalDate registrationDate) {
         if (HelperUtils.isValidDate(registrationDate) && !HelperUtils.isFutureDate(registrationDate)) {
             this.registrationDate = registrationDate;
         } else {
             System.err.println("Validation Error: Registration date cannot be a future date.");
         }
-    }
-
-    public String getInsuranceId() {
-        return insuranceId;
     }
 
     public void setInsuranceId(String insuranceId) {
@@ -169,16 +150,8 @@ public class Patient extends Person implements Displayable {
         }
     }
 
-    public List<MedicalRecord> getMedicalRecords() {
-        return medicalRecords;
-    }
-
     public void setMedicalRecords(List<MedicalRecord> medicalRecords) {
         this.medicalRecords = (medicalRecords != null) ? medicalRecords : new ArrayList<>();    }
-
-    public List<Appointment> getAppointments() {
-        return appointments;
-    }
 
     public void setAppointments(List<Appointment> appointments) {
         this.appointments = (appointments != null) ? appointments : new ArrayList<>();    }
@@ -203,19 +176,6 @@ public class Patient extends Person implements Displayable {
                 " | ID: " + patientId + " | Blood: " + bloodGroup);
     }
 
-    @Override
-    public String toString() {
-        return "Patient{" +
-                "patientId='" + patientId + '\'' +
-                ", bloodGroup='" + bloodGroup + '\'' +
-                ", allergies=" + (allergies != null ? allergies.size() : 0) +
-                ", emergencyContact='" + emergencyContact + '\'' +
-                ", registrationDate=" + registrationDate +
-                ", insuranceId='" + insuranceId + '\'' +
-                ", medicalRecords=" + medicalRecords.size() +
-                ", appointments=" + appointments.size() +
-                '}';
-    }
 
     public void addMedicalRecord(MedicalRecord record) {
         if (HelperUtils.isNotNull(record)) {
@@ -263,7 +223,7 @@ public class Patient extends Person implements Displayable {
         setEmail(email);
         setAddress(address);
         System.out.println("Updated for patient " + getFirstName() + "new phone" + phone +
-                        "new email: " + email + "new address: " + address);
+                "new email: " + email + "new address: " + address);
     }
 
 
