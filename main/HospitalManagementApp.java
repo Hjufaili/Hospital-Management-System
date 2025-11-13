@@ -213,11 +213,13 @@ public class HospitalManagementApp {
 
         if (p != null) {
             System.out.println("Updating patient: " + p.getFirstName() + " " + p.getLastName());
+            System.out.println("press enter to keep it");
+
             System.out.print("Enter new phone number (current: " + p.getPhoneNumber() + "): ");
             String newPhone = scanner.nextLine();
             if (!newPhone.isBlank()) p.setPhoneNumber(newPhone);
-
             System.out.print("Enter new email (current: " + p.getEmail() + "): ");
+            System.out.println("press enter to keep it");
             String newEmail = scanner.nextLine();
             if (!newEmail.isBlank()) p.setEmail(newEmail);
 
@@ -377,7 +379,7 @@ public class HospitalManagementApp {
             System.out.println("Updating doctor: Dr. " + d.getLastName());
             System.out.print("Enter new consultation fee (current: " + d.getConsultationFee() + "): ");
             Double newFee = scanner.nextDouble();
-            if (newFee != null) d.setConsultationFee(newFee);
+            d.setConsultationFee(newFee);
 
             doctorService.editDoctor(id, d);
             System.out.println("Doctor information updated.");
@@ -676,7 +678,7 @@ public class HospitalManagementApp {
             case 4 -> assignDoctorToDepartment();
             case 5 -> assignNurseToDepartment();
             case 6 -> updateDepartmentInfo();
-            case 7 -> viewDepartmentStatistics();
+           case 7 -> viewDepartmentStatistics();
             case 8 -> {
             }
             default -> System.out.println("Invalid option.");
