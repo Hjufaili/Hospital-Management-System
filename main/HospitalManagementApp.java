@@ -6,6 +6,8 @@ import Service.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -626,7 +628,7 @@ public class HospitalManagementApp {
         String diag = scanner.nextLine();
 
 
-        medicalRecordService.createMedicalRecord(pid,did,diag);
+        medicalRecordService.createMedicalRecord(pid, did, diag);
         System.out.println("Medical record added successfully");
     }
 
@@ -678,7 +680,7 @@ public class HospitalManagementApp {
             case 4 -> assignDoctorToDepartment();
             case 5 -> assignNurseToDepartment();
             case 6 -> updateDepartmentInfo();
-           case 7 -> viewDepartmentStatistics();
+            case 7 -> viewDepartmentStatistics();
             case 8 -> {
             }
             default -> System.out.println("Invalid option.");
@@ -696,7 +698,7 @@ public class HospitalManagementApp {
         int bedCapacity = scanner.nextInt();
         scanner.nextLine();
 
-        departmentService.createDepartment(departmentName,phone,headDoctorId,bedCapacity);
+        departmentService.createDepartment(departmentName, phone, headDoctorId, bedCapacity);
         System.out.println("Department added successfully");
 
     }
@@ -709,7 +711,7 @@ public class HospitalManagementApp {
 
 
         Doctor d = doctorService.getDoctorById(doctorId);
-        Department p=departmentService.getDepartmentById(depId);
+        Department p = departmentService.getDepartmentById(depId);
 
         if (p != null && d != null) {
             p.assignDoctor(d);
@@ -727,7 +729,7 @@ public class HospitalManagementApp {
 
 
         Nurse n = nurseService.getNurseById(nurseId);
-        Department p=departmentService.getDepartmentById(depId);
+        Department p = departmentService.getDepartmentById(depId);
 
         if (p != null && n != null) {
             p.assignNurse(n);
@@ -771,10 +773,29 @@ public class HospitalManagementApp {
 
         Department updatedDept = Department.builder().departmentName(newName)
                 .headDoctorId(newHeadDoctorId).bedCapacity(newCapacityStr)
-                        .build();
+                .build();
 
         departmentService.editDepartment(departmentId, updatedDept);
         System.out.println("Department update process complete.");
+    }
+
+    private static void viewDepartmentStatistics() {
+        System.out.print("Enter Department ID: ");
+        String deptId = scanner.nextLine();
+        Department d = departmentService.getDepartmentById(deptId);
+
+        if (d != null) {
+            System.out.println("\n--- Statistics for " + d.getDepartmentName() + " ---");
+            System.out.println("Head Doctor: " + d.getHeadDoctorId());
+            System.out.println("Total Staff: " + (d.getDoctors().size() + d.getNurses().size()));
+            System.out.println("Total Doctors: " + d.getDoctors().size());
+            System.out.println("Total Nurses: " + d.getNurses().size());
+            System.out.println("Bed Capacity: " + d.getBedCapacity());
+            System.out.println("Available Beds: " + d.getAvailableBeds());
+            System.out.println("Occupancy Rate: " + String.format("%.2f%%", d.getOccupancyRate() * 100));
+        } else {
+            System.out.println("Department not found.");
+        }
     }
 
 
@@ -790,21 +811,87 @@ public class HospitalManagementApp {
         System.out.print("Enter choice: ");
 
         switch (getUserChoice()) {
-            case 1 -> {
-
-            }
-            case 2 -> {
-            }
-            case 3 -> {
-            }
-            case 4 -> {
-            }
-            case 5 -> {
-            }
+            case 1 -> dailyAppointmentsReport();
+            case 2 -> doctorPerformanceReport();
+            case 3 -> departmentOccupancyReport();
+            case 4 -> patientStatistics();
+            case 5 -> emergencyCasesReport();
             case 6 -> {
             }
             default -> System.out.println("Invalid option.");
         }
+    }
+
+    private static void dailyAppointmentsReport() {
+        System.out.print("Enter Date for Appointment Report (yyyy-MM-dd): ");
+        String dateStr = scanner.nextLine();
+        LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        List<Appointment> appointments = appointmentService.getAppointmentsByDate(date);
+
+        System.out.println("\n--- Daily Appointments Report for " + dateStr + " ---");
+        if (appointments.isEmpty()) {
+            System.out.println("No appointments scheduled for this date.");
+            return;
+        }
+
+        for (Appointment a : appointments) {
+
+            System.out.println("ID: " + a.getAppointmentId() +
+                    " | Time: " + a.getAppointmentDate() +
+                    " | Doctor: " + a.getDoctorId() +
+                    " | Patient: " + a.getPatientId() +
+                    " | Status: " + a.getStatus());
+        }
+    }
+
+    private static void doctorPerformanceReport() {
+        System.out.println("\n--- Doctor Performance Summary ---");
+
+        doctorService.getAllDoctor().forEach(d -> {
+            System.out.println("Dr. " + d.getLastName() + " (" + d.getSpecialization() + "):");
+            System.out.println("  - Assigned Patients: " + (d.getAssignedPatients() != null ? d.getAssignedPatients().size() : 0));
+
+        });
+    }
+
+    private static void departmentOccupancyReport() {
+        System.out.println("\n--- Department Bed Occupancy Report ---");
+
+        departmentService.getAllDepartments().forEach(d -> {
+            System.out.println("Department: " + d.getDepartmentName() + " (" + d.getDepartmentId() + ")");
+            System.out.println("  Capacity: " + d.getBedCapacity());
+            System.out.println("  Available: " + d.getAvailableBeds());
+            System.out.println("  Occupancy Rate: " + String.format("%.2f%%", d.getOccupancyRate() * 100));
+        });
+    }
+
+    private static void patientStatistics() {
+        long total = patientService.getAllPatients().size();
+        long inPatients = patientService.getAllPatients().stream().filter(p -> p instanceof InPatient).count();
+        long emergencyPatients = patientService.getAllPatients().stream().filter(p -> p instanceof EmergencyPatient).count();
+
+        System.out.println("\n--- Patient Statistics ---");
+        System.out.println("Total Registered Patients: " + total);
+        System.out.println("Total In-Patients: " + inPatients);
+        System.out.println("Total Out-Patients: " + (total - inPatients - emergencyPatients));
+        System.out.println("Total Emergency Patients: " + emergencyPatients);
+
+    }
+
+    private static void emergencyCasesReport() {
+        System.out.println("\n--- Emergency Cases Report ---");
+
+        patientService.getAllPatients().stream()
+                .filter(p -> p instanceof EmergencyPatient)
+                .map(p -> (EmergencyPatient) p)
+                .sorted(Comparator.comparing(EmergencyPatient::getTriageLevel).reversed())
+                .forEach(ep -> {
+                    System.out.println("ID: " + ep.getPatientId() +
+                            " | Name: " + ep.getFirstName() + " " + ep.getLastName() +
+                            " | Triage: " + ep.getTriageLevel() +
+                            " | Type: " + ep.getEmergencyType());
+                });
     }
 
 
