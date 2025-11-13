@@ -20,6 +20,7 @@ public class Department implements Displayable {
     private String departmentId=HelperUtils.generateId("DPT");
     private String departmentName;
     private String headDoctorId;
+    private String contactPhone;
     private List<Doctor> doctors = new ArrayList<>();
     private List<Nurse> nurses = new ArrayList<>();
     private Integer bedCapacity = 0;
@@ -72,6 +73,14 @@ public class Department implements Displayable {
             this.departmentId = departmentId;
         } else {
             System.err.println("Validation Error: Invalid Department ID.");
+        }
+    }
+
+    public void setContactPhone(String contactPhone){
+        if (HelperUtils.isValidString(contactPhone, 8, 8)) {
+            this.contactPhone = contactPhone;
+        } else {
+            System.err.println("Validation Error: Invalid phone number.");
         }
     }
 
@@ -198,5 +207,19 @@ public class Department implements Displayable {
             System.err.println("Error: Occupied beds (" + occupiedBeds +
                     ") exceeds bed capacity (" + bedCapacity + ").");
         }
+    }
+
+    public double getOccupancyRate() {
+        if (this.bedCapacity <= 0) {
+            return 0.0;
+        }
+
+        int occupiedBeds = this.bedCapacity - this.availableBeds;
+
+        if (occupiedBeds < 0) {
+            occupiedBeds = 0;
+        }
+
+        return (double) occupiedBeds / this.bedCapacity;
     }
 }
